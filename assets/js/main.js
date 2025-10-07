@@ -260,60 +260,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 3. Inisiasi Chatbot (Dengan Animasi & Styling Baru) ---
+    // --- 3. Inisiasi Chatbot (PENTING: Ambil elemen di sini) ---
     const chatbotBtn = document.getElementById('chatbot-btn');
     const chatbotModal = document.getElementById('chatbot-modal');
-    const chatbotContent = document.getElementById('chatbot-content'); // NEW: Ambil konten untuk animasi
-    const chatbotIcon = document.getElementById('chatbot-icon');       // NEW: Ambil icon
     const closeChatbot = document.getElementById('close-chatbot');
     const sendChat = document.getElementById('send-chat');
     const chatInput = document.getElementById('chat-input');
     const chatMessages = document.getElementById('chat-messages');
 
-    // FUNGSI ANIMASI BUKA
-    const openChatbot = () => {
-        chatbotModal.classList.remove('hidden');
-        // Hapus kelas 'hidden' dan tambahkan kelas animasi
-        setTimeout(() => {
-            chatbotContent.classList.remove('scale-95', 'opacity-0');
-            chatbotIcon.classList.remove('fa-comment-dots');
-            chatbotIcon.classList.add('fa-times'); // Ubah ikon menjadi 'X'
-        }, 50);
-
-        if (chatMessages && chatMessages.children.length === 0) {
-            // Berikan pesan sambutan setelah jeda singkat
-            setTimeout(() => addMessage(botResponsesDetail['greeting_message'], false), 500);
-        }
-        chatInput.focus();
-    };
-
-    // FUNGSI ANIMASI TUTUP
-    const closeChatbotFunc = () => {
-        // Tambahkan kelas animasi
-        chatbotContent.classList.add('scale-95', 'opacity-0');
-        chatbotIcon.classList.remove('fa-times');
-        chatbotIcon.classList.add('fa-comment-dots'); // Kembalikan ikon
-        
-        // Hapus kelas 'hidden' setelah transisi selesai
-        setTimeout(() => {
-            chatbotModal.classList.add('hidden');
-        }, 300); // Sesuaikan dengan durasi transisi CSS (duration-300)
-    };
-
     if (chatbotBtn && chatbotModal && chatInput) {
         chatbotBtn.addEventListener('click', () => {
-            if (chatbotModal.classList.contains('hidden')) {
-                openChatbot();
-            } else {
-                closeChatbotFunc();
+            chatbotModal.classList.toggle('hidden');
+            if (!chatbotModal.classList.contains('hidden')) {
+                // Opsional: Tambahkan salam pembuka awal jika chat kosong
+                if (chatMessages && chatMessages.children.length === 0) {
+                    addMessage(botResponses['halo'], false);
+                }
+                chatInput.focus();
             }
         });
     }
-    
-    if (closeChatbot) {
-        closeChatbot.addEventListener('click', closeChatbotFunc);
-    }
-    
+    if (closeChatbot && chatbotModal) {
+        closeChatbot.addEventListener('click', () => {
+            chatbotModal.classList.add('hidden');
+        });
     }
     if (sendChat) {
         sendChat.addEventListener('click', sendMessage);
