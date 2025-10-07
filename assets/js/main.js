@@ -1,64 +1,189 @@
-// Hapus semua konstanta getElementById di bagian atas, 
-// karena elemen Chatbot mungkin belum ada di DOM saat ini.
-// Kita akan mendefinisikannya di dalam DOMContentLoaded.
+// =======================================================
+// Chatbot Interaktif dengan Simulasi Pencarian & WA CTA
+// =======================================================
 
-// === Fungsionalitas Chatbot Responses (Biarkan di sini) ===
-const botResponses = {
-    'halo': 'Halo! Senang bertemu dengan Anda. Ada yang bisa saya bantu?',
-    'hai': 'Hai! Ada yang ingin Anda tanyakan tentang Emydn Group?',
-    'bisnis': 'Kami memiliki 4 lini bisnis: Sistem & Aplikasi, Edukasi, Esport, dan F&B. Mana yang ingin Anda ketahui lebih lanjut?',
-    'sistem': 'Lini bisnis Sistem & Aplikasi kami fokus pada pengembangan software, aplikasi mobile, dan sistem enterprise. Silakan kunjungi halaman Lini Bisnis untuk info lengkap!',
-    'edukasi': 'Kami menyediakan platform pembelajaran online dan pelatihan profesional. Kunjungi halaman Lini Bisnis untuk mengetahui lebih lanjut!',
-    'esport': 'Divisi Esport kami mengelola tim profesional dan menyelenggarakan turnamen. Tertarik bergabung?',
-    'fnb': 'Bisnis F&B kami menawarkan konsep kuliner modern dan inovatif. Cek halaman Lini Bisnis untuk detail!',
-    'kontak': 'Anda bisa menghubungi kami melalui WhatsApp di +62 858-1967-2814 atau email di emydngroup@gmail.com',
-    'alamat': 'Kantor kami berlokasi di Jakarta, Indonesia. Untuk informasi lebih lanjut, kunjungi halaman Kontak.',
-    'terima kasih': 'Sama-sama! Senang bisa membantu Anda 😊',
-    'default': 'Maaf, saya belum mengerti pertanyaan Anda. Silakan hubungi tim kami melalui WhatsApp atau halaman Kontak untuk bantuan lebih lanjut.'
+// --- Objek Respons Bot yang Lebih Detail ---
+// Gunakan kata kunci yang lebih spesifik untuk pencarian internal
+const botResponsesDetail = {
+    // 1. SISTEM & APLIKASI
+    'sistem': {
+        judul: 'Pengembangan Sistem & Aplikasi',
+        deskripsi: 'Emydn Group fokus pada jasa pengembangan **Website, Aplikasi Mobile (Android/iOS)**, dan **Sistem ERP/Manajemen** untuk bisnis. Kami menawarkan solusi yang aman, cepat, dan efisien.',
+        url: '/business/system.html'
+    },
+    'aplikasi': {
+        judul: 'Pengembangan Sistem & Aplikasi',
+        deskripsi: 'Emydn Group fokus pada jasa pengembangan **Website, Aplikasi Mobile (Android/iOS)**, dan **Sistem ERP/Manajemen** untuk bisnis. Kami menawarkan solusi yang aman, cepat, dan efisien.',
+        url: '/business/system.html'
+    },
+    'website': {
+        judul: 'Pengembangan Website & Sistem',
+        deskripsi: 'Kami menawarkan pengembangan website statis (landing page) hingga website dinamis dan sistem manajemen (CMS). Estimasi harga mulai dari Rp 750.000.',
+        url: '/business/system.html'
+    },
+    
+    // 2. F&B (KULINER)
+    'kuliner': {
+        judul: 'Lini Bisnis Kuliner (F&B)',
+        deskripsi: 'Bisnis F&B kami menawarkan konsep kuliner modern melalui berbagai partner individu di **Cilandak, Bangka, Setiabudi, dan Kemayoran**. Cek menu lengkap kami!',
+        url: '/business/fnb.html'
+    },
+    'fnb': {
+        judul: 'Lini Bisnis Kuliner (F&B)',
+        deskripsi: 'Bisnis F&B kami menawarkan konsep kuliner modern melalui berbagai partner individu di **Cilandak, Bangka, Setiabudi, dan Kemayoran**. Cek menu lengkap kami!',
+        url: '/business/fnb.html'
+    },
+
+    // 3. EDUKASI
+    'edukasi': {
+        judul: 'Pendidikan & E-Learning',
+        deskripsi: 'Kami menyediakan **Platform E-Learning** (SD-SMK/SMA) dan program **Bimbingan Tatap Muka Anak Usia Dini** (PAUD/BIMBA) di Jakarta Selatan.',
+        url: '/business/education.html'
+    },
+    'bimbel': {
+        judul: 'Pendidikan & E-Learning',
+        deskripsi: 'Kami menyediakan **Platform E-Learning** (SD-SMK/SMA) dan program **Bimbingan Tatap Muka Anak Usia Dini** (PAUD/BIMBA) di Jakarta Selatan.',
+        url: '/business/education.html'
+    },
+    
+    // 4. ESPORT
+    'esport': {
+        judul: 'Ekosistem Esport',
+        deskripsi: 'Divisi Esport kami fokus pada pelatihan, manajemen tim, dan penyelenggaraan turnamen. Kami membangun komunitas game yang profesional.',
+        url: '/business/esport.html'
+    },
+    'game': {
+        judul: 'Ekosistem Esport',
+        deskripsi: 'Divisi Esport kami fokus pada pelatihan, manajemen tim, dan penyelenggaraan turnamen. Kami membangun komunitas game yang profesional.',
+        url: '/business/esport.html'
+    },
+
+    // 5. UMUM & KONTAK
+    'kontak': {
+        judul: 'Informasi Kontak',
+        deskripsi: 'Anda bisa menghubungi tim kami secara langsung melalui WhatsApp atau email. Kami siap membantu konsultasi Anda!',
+        url: '/contact.html'
+    },
+    'harga': {
+        judul: 'Estimasi Biaya Proyek',
+        deskripsi: 'Estimasi biaya sangat bergantung pada kompleksitas fitur dan teknologi yang diminta. Silakan konsultasi gratis via WhatsApp untuk detail estimasi biaya yang rinci.',
+        url: '#', // Tidak perlu navigasi, fokus ke WA
+        isContact: true // Tandai sebagai pertanyaan kontak agar langsung muncul WA
+    },
+    'default_message': {
+        judul: 'Pencarian Tidak Ditemukan',
+        deskripsi: 'Maaf, saya tidak dapat menemukan hasil yang relevan. Silakan coba kata kunci seperti: sistem, kuliner, edukasi, atau esport.',
+        url: '#',
+    },
+    'greeting_message': {
+        judul: 'Hai!',
+        deskripsi: 'Halo! Saya asisten AI Emydn Group. Tanyakan tentang **Sistem, Kuliner, Edukasi, atau Esport**, dan saya akan carikan informasinya untuk Anda!',
+        url: '#',
+    }
 };
 
+// --- FUNGSI MENDAPATKAN RESPON BOT (Simulasi AI Search) ---
 function getBotResponse(message) {
     const lowerMessage = message.toLowerCase();
-    for (let key in botResponses) {
+    
+    // 1. Cek Salam Pembuka
+    if (lowerMessage.includes('halo') || lowerMessage.includes('hai') || lowerMessage.includes('selamat pagi')) {
+        return botResponsesDetail['greeting_message'];
+    }
+
+    // 2. Cek Kata Kunci Bisnis & Kontak
+    for (let key in botResponsesDetail) {
+        // Lewati pesan default dan greeting
+        if (key === 'default_message' || key === 'greeting_message') continue; 
+        
         if (lowerMessage.includes(key)) {
-            return botResponses[key];
+            return botResponsesDetail[key];
         }
     }
-    return botResponses['default'];
+
+    // 3. Jika tidak ada yang cocok, berikan default
+    return botResponsesDetail['default_message'];
 }
 
-function addMessage(text, isUser = false) {
-    const chatMessages = document.getElementById('chat-messages'); // Ambil di sini
-    if (!chatMessages) return; // Exit jika elemen belum ada
+
+// --- FUNGSI MENAMPILKAN PESAN (Dengan Tombol WA CTA) ---
+function addMessage(textOrObject, isUser = false) {
+    const chatMessages = document.getElementById('chat-messages');
+    if (!chatMessages) return;
 
     const messageDiv = document.createElement('div');
     messageDiv.className = `mb-4 ${isUser ? 'text-right' : 'text-left'}`;
     
-    const messageContent = document.createElement('p');
-    messageContent.className = `inline-block p-3 rounded-lg max-w-[80%] ${
+    const messageContent = document.createElement('div'); // Ubah ke div untuk menampung elemen lain
+    messageContent.className = `inline-block p-3 rounded-lg max-w-[85%] break-words shadow-md ${
         isUser ? 'bg-primary text-white' : 'bg-gray-100 text-gray-800'
     }`;
-    messageContent.textContent = text;
+
+    // Jika pesan dari user (hanya teks)
+    if (isUser) {
+        messageContent.textContent = textOrObject;
+        messageDiv.appendChild(messageContent);
+    } 
+    // Jika pesan dari bot (berbentuk objek dengan judul, deskripsi, WA CTA)
+    else {
+        const response = textOrObject;
+        
+        // Judul Hasil Pencarian (Simulasi AI)
+        const title = document.createElement('p');
+        title.className = 'font-extrabold text-primary border-b border-primary/20 pb-1 mb-2';
+        title.textContent = 'HASIL PENCARIAN (AI): ' + response.judul;
+        messageContent.appendChild(title);
+
+        // Deskripsi Hasil
+        const description = document.createElement('p');
+        description.className = 'text-sm mb-3';
+        description.innerHTML = response.deskripsi; // Menggunakan innerHTML karena deskripsi mengandung <b> tag
+
+        messageContent.appendChild(description);
+
+        // --- TOMBOL WA CTA ---
+        const waLink = 'https://wa.me/6285819672814?text=Halo%20Emydn%20Group%2C%20saya%20tertarik%20dengan%20' + encodeURIComponent(response.judul);
+        const waButton = document.createElement('a');
+        waButton.href = waLink;
+        waButton.target = '_blank';
+        waButton.className = 'mt-3 inline-block bg-green-500 text-white px-3 py-2 text-xs rounded-full font-semibold hover:bg-green-600 transition';
+        waButton.innerHTML = '<i class="fab fa-whatsapp mr-1"></i> Konsultasi Lebih Lanjut';
+
+        messageContent.appendChild(waButton);
+
+        // Tambahkan tombol Lihat Detail jika ada URL yang valid (bukan '#')
+        if (response.url && response.url !== '#') {
+            const detailButton = document.createElement('a');
+            detailButton.href = response.url;
+            detailButton.className = 'mt-3 ml-2 inline-block bg-secondary/80 text-gray-900 px-3 py-2 text-xs rounded-full font-semibold hover:bg-secondary transition';
+            detailButton.innerHTML = '<i class="fas fa-arrow-right mr-1"></i> Lihat Detail';
+            messageContent.appendChild(detailButton);
+        }
+
+        messageDiv.appendChild(messageContent);
+    }
     
-    messageDiv.appendChild(messageContent);
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Gunakan window.sendMessage agar bisa diakses
+
+// --- REVISI FUNGSI WINDOW.SENDMESSAGE ---
+// Fungsi ini harus memanggil addMessage dengan objek jika dari bot
 window.sendMessage = function() {
     const chatInput = document.getElementById('chat-input');
     if (!chatInput) return;
 
     const message = chatInput.value.trim();
     if (message) {
-        addMessage(message, true);
+        addMessage(message, true); // Tampilkan pesan pengguna
         chatInput.value = '';
         
         setTimeout(() => {
             const response = getBotResponse(message);
-            addMessage(response, false);
-        }, 500);
+            // Panggil addMessage dengan objek respons (bukan hanya teks)
+            addMessage(response, false); 
+        }, 800); // Jeda simulasi ketik
     }
 }
 // ---------------------------------------------------------------------------
