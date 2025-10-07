@@ -1,83 +1,51 @@
 // =======================================================
-// Chatbot Interaktif dengan Simulasi Pencarian & WA CTA
+// Chatbot Interaktif dengan Kata Kunci Sangat Detail
 // =======================================================
 
-// --- Objek Respons Bot yang Lebih Detail ---
-// Gunakan kata kunci yang lebih spesifik untuk pencarian internal
 const botResponsesDetail = {
-    // 1. SISTEM & APLIKASI
-    'sistem': {
-        judul: 'Pengembangan Sistem & Aplikasi',
-        deskripsi: 'Emydn Group fokus pada jasa pengembangan **Website, Aplikasi Mobile (Android/iOS)**, dan **Sistem ERP/Manajemen** untuk bisnis. Kami menawarkan solusi yang aman, cepat, dan efisien.',
-        url: '/business/system.html'
-    },
-    'aplikasi': {
-        judul: 'Pengembangan Sistem & Aplikasi',
-        deskripsi: 'Emydn Group fokus pada jasa pengembangan **Website, Aplikasi Mobile (Android/iOS)**, dan **Sistem ERP/Manajemen** untuk bisnis. Kami menawarkan solusi yang aman, cepat, dan efisien.',
-        url: '/business/system.html'
-    },
-    'website': {
-        judul: 'Pengembangan Website & Sistem',
-        deskripsi: 'Kami menawarkan pengembangan website statis (landing page) hingga website dinamis dan sistem manajemen (CMS). Estimasi harga mulai dari Rp 750.000.',
-        url: '/business/system.html'
-    },
-    
-    // 2. F&B (KULINER)
-    'kuliner': {
-        judul: 'Lini Bisnis Kuliner (F&B)',
-        deskripsi: 'Bisnis F&B kami menawarkan konsep kuliner modern melalui berbagai partner individu di **Cilandak, Bangka, Setiabudi, dan Kemayoran**. Cek menu lengkap kami!',
-        url: '/business/fnb.html'
-    },
-    'fnb': {
-        judul: 'Lini Bisnis Kuliner (F&B)',
-        deskripsi: 'Bisnis F&B kami menawarkan konsep kuliner modern melalui berbagai partner individu di **Cilandak, Bangka, Setiabudi, dan Kemayoran**. Cek menu lengkap kami!',
-        url: '/business/fnb.html'
-    },
+    // === 1. KULINER (F&B) - /business/fnb.html ===
+    'fnb': { judul: 'Lini Bisnis Kuliner (F&B)', deskripsi: 'Bisnis F&B kami menawarkan konsep kuliner modern melalui berbagai partner individu. Cek menu lengkap kami!', url: '/business/fnb.html' },
+    'kuliner': { judul: 'Lini Bisnis Kuliner (F&B)', deskripsi: 'Bisnis F&B kami menawarkan konsep kuliner modern melalui berbagai partner individu. Cek menu lengkap kami!', url: '/business/fnb.html' },
+    'martabak': { judul: 'Martabak Telur & Manis', deskripsi: 'Menu Martabak (Telur Mini dan Manis) tersedia di outlet partner kami di lokasi **Cilandak, Jakarta Selatan**.', url: '/business/fnb.html' },
+    'cilok': { judul: 'Cilok Kuah', deskripsi: 'Menu Cilok Kuah tersedia di outlet partner kami di lokasi **Bangka, Jakarta Selatan**.', url: '/business/fnb.html' },
+    'churros': { judul: 'Churros & Pancake', deskripsi: 'Menu Churros dan Pancake tersedia di outlet partner kami di lokasi **Setiabudi, Jakarta Selatan**.', url: '/business/fnb.html' },
+    'gorengan': { judul: 'Aneka Gorengan', deskripsi: 'Menu Aneka Gorengan tersedia di outlet partner kami di lokasi **Kemayoran, Jakarta Pusat**.', url: '/business/fnb.html' },
 
-    // 3. EDUKASI
-    'edukasi': {
-        judul: 'Pendidikan & E-Learning',
-        deskripsi: 'Kami menyediakan **Platform E-Learning** (SD-SMK/SMA) dan program **Bimbingan Tatap Muka Anak Usia Dini** (PAUD/BIMBA) di Jakarta Selatan.',
-        url: '/business/education.html'
-    },
-    'bimbel': {
-        judul: 'Pendidikan & E-Learning',
-        deskripsi: 'Kami menyediakan **Platform E-Learning** (SD-SMK/SMA) dan program **Bimbingan Tatap Muka Anak Usia Dini** (PAUD/BIMBA) di Jakarta Selatan.',
-        url: '/business/education.html'
-    },
-    
-    // 4. ESPORT
-    'esport': {
-        judul: 'Ekosistem Esport',
-        deskripsi: 'Divisi Esport kami fokus pada pelatihan, manajemen tim, dan penyelenggaraan turnamen. Kami membangun komunitas game yang profesional.',
-        url: '/business/esport.html'
-    },
-    'game': {
-        judul: 'Ekosistem Esport',
-        deskripsi: 'Divisi Esport kami fokus pada pelatihan, manajemen tim, dan penyelenggaraan turnamen. Kami membangun komunitas game yang profesional.',
-        url: '/business/esport.html'
-    },
+    // === 2. PENDIDIKAN (Edukasi) - /business/education.html ===
+    'edukasi': { judul: 'Lini Bisnis Pendidikan', deskripsi: 'Kami menyediakan Platform E-Learning (SD-SMK/SMA) dan program Bimbingan Tatap Muka Anak Usia Dini.', url: '/business/education.html' },
+    'bimbel': { judul: 'BIMBA (Bimbingan Belajar Anak)', deskripsi: 'Program BIMBA tatap muka kami berlokasi di Bintang Junior Bangka Raya, Jakarta Selatan, untuk anak usia 3 tahun ke atas.', url: '/business/education.html' },
+    'paud': { judul: 'PAUD/BIMBA', deskripsi: 'Program PAUD/BIMBA tatap muka kami berlokasi di Bintang Junior Bangka Raya, Jakarta Selatan, untuk anak usia 3 tahun ke atas.', url: '/business/education.html' },
+    'elearning': { judul: 'Sistem E-Learning', deskripsi: 'Kami menyediakan pembelajaran online interaktif untuk jenjang SD, SMP, hingga SMK/SMA. Fokus pada materi spesifik per-kursus.', url: '/business/education.html' },
 
-    // 5. UMUM & KONTAK
+    // === 3. SISTEM & APLIKASI - /business/system.html ===
+    'sistem': { judul: 'Pengembangan Sistem & Aplikasi', deskripsi: 'Fokus pada jasa pengembangan Website, Aplikasi Mobile (Android/iOS), dan Sistem ERP/Manajemen untuk bisnis.', url: '/business/system.html' },
+    'aplikasi': { judul: 'Pengembangan Aplikasi Mobile', deskripsi: 'Kami mengembangkan aplikasi native maupun hybrid untuk platform **Android** dan iOS, dengan penawaran harga kompetitif.', url: '/business/system.html' },
+    'android': { judul: 'Pengembangan Aplikasi Android', deskripsi: 'Kami mengembangkan aplikasi native maupun hybrid untuk platform Android dan iOS, dengan penawaran harga kompetitif.', url: '/business/system.html' },
+    'website': { judul: 'Pengembangan Website', deskripsi: 'Kami menawarkan pengembangan website statis (landing page) hingga sistem manajemen (CMS/CRM/ERP) berbasis web.', url: '/business/system.html' },
+
+    // === 4. ESPORT - /business/esport.html ===
+    'esport': { judul: 'Ekosistem Esport', deskripsi: 'Divisi Esport kami fokus pada pelatihan, manajemen tim, dan penyelenggaraan turnamen game. Kami membangun komunitas game yang profesional.', url: '/business/esport.html' },
+    'role': { judul: 'Peluang Role & Tim Esport', deskripsi: 'Kami merekrut dan melatih role-role spesifik untuk tim Esport kami. Kunjungi halaman Esport untuk informasi lebih lanjut mengenai peluang ini.', url: '/business/esport.html' },
+
+    // === 5. UMUM & KONTAK ===
+    'harga': {
+        judul: 'Estimasi Biaya Proyek',
+        deskripsi: 'Estimasi biaya sangat bergantung pada kompleksitas fitur. Silakan konsultasi gratis via WhatsApp untuk detail estimasi biaya yang rinci.',
+        url: '#' 
+    },
     'kontak': {
         judul: 'Informasi Kontak',
         deskripsi: 'Anda bisa menghubungi tim kami secara langsung melalui WhatsApp atau email. Kami siap membantu konsultasi Anda!',
         url: '/contact.html'
     },
-    'harga': {
-        judul: 'Estimasi Biaya Proyek',
-        deskripsi: 'Estimasi biaya sangat bergantung pada kompleksitas fitur dan teknologi yang diminta. Silakan konsultasi gratis via WhatsApp untuk detail estimasi biaya yang rinci.',
-        url: '#', // Tidak perlu navigasi, fokus ke WA
-        isContact: true // Tandai sebagai pertanyaan kontak agar langsung muncul WA
-    },
     'default_message': {
         judul: 'Pencarian Tidak Ditemukan',
-        deskripsi: 'Maaf, saya tidak dapat menemukan hasil yang relevan. Silakan coba kata kunci seperti: sistem, kuliner, edukasi, atau esport.',
+        deskripsi: 'Maaf, saya tidak dapat menemukan hasil yang relevan. Silakan coba kata kunci yang lebih spesifik atau tekan tombol WA untuk konsultasi langsung.',
         url: '#',
     },
     'greeting_message': {
         judul: 'Hai!',
-        deskripsi: 'Halo! Saya asisten AI Emydn Group. Tanyakan tentang **Sistem, Kuliner, Edukasi, atau Esport**, dan saya akan carikan informasinya untuk Anda!',
+        deskripsi: 'Halo! Saya asisten AI Emydn Group. Tanyakan tentang produk spesifik seperti **Martabak, BIMBA, Android, atau Harga Proyek**, dan saya akan carikan informasinya!',
         url: '#',
     }
 };
@@ -91,11 +59,12 @@ function getBotResponse(message) {
         return botResponsesDetail['greeting_message'];
     }
 
-    // 2. Cek Kata Kunci Bisnis & Kontak
+    // 2. Cek Kata Kunci Bisnis & Produk SPESIFIK
     for (let key in botResponsesDetail) {
         // Lewati pesan default dan greeting
         if (key === 'default_message' || key === 'greeting_message') continue; 
         
+        // Cek apakah pesan mengandung KATA KUNCI (termasuk kata kunci spesifik: martabak, bimbel, android, dll.)
         if (lowerMessage.includes(key)) {
             return botResponsesDetail[key];
         }
@@ -104,6 +73,9 @@ function getBotResponse(message) {
     // 3. Jika tidak ada yang cocok, berikan default
     return botResponsesDetail['default_message'];
 }
+
+// Fungsi addMessage dan sendMessage (tidak perlu diubah jika sudah menggunakan versi sebelumnya)
+// ... (Pastikan Anda menggunakan fungsi addMessage dan sendMessage dari jawaban saya sebelumnya)
 
 
 // --- FUNGSI MENAMPILKAN PESAN (Dengan Tombol WA CTA) ---
