@@ -1,61 +1,38 @@
-<header class="bg-[#8B0000] text-white shadow-lg">
-  <div class="container mx-auto flex justify-between items-center px-4 py-3">
-    <!-- Logo -->
-    <a href="/index.html" class="flex items-center gap-2">
-      <img src="/assets/img/logo.png" alt="Emydn Group Logo" class="h-10 w-auto">
-      <span class="font-semibold text-xl hidden sm:inline">Emydn Group</span>
-    </a>
+<header class="bg-[#8B0000] text-white shadow-lg fixed w-full top-0 z-40">
+  <div class="container mx-auto flex justify-between items-center px-4 py-3">
+        <a href="/index.html" class="flex items-center gap-2 z-50">
+      <img src="/assets/images/logo.png" alt="Emydn Group Logo" class="h-10 w-auto">
+      <span class="font-semibold text-xl hidden sm:inline">Emydn Group</span>
+    </a>
 
-    <!-- Tombol hamburger -->
-    <button id="menu-btn" class="sm:hidden text-white focus:outline-none">
-      <i class="fas fa-bars text-2xl"></i>
-    </button>
+        <button id="menu-btn" class="sm:hidden text-white focus:outline-none p-2 z-50" aria-label="Toggle Menu">
+      <i class="fas fa-bars text-2xl" id="menu-icon"></i>
+    </button>
 
-    <!-- Navigasi -->
-    <nav id="menu" class="hidden sm:flex items-center gap-6">
-      <a href="/index.html" class="hover:text-blue-300 transition">Beranda</a>
-      <a href="/line-of-business.html" class="hover:text-blue-300 transition">Line of Business</a>
-      <a href="/blog.html" class="hover:text-blue-300 transition">Blog</a>
-      <a href="/about.html" class="hover:text-blue-300 transition">Tentang Kami</a>
-      <a href="/contact.html" class="hover:text-blue-300 transition">Kontak</a>
-    </nav>
+        <nav id="menu" class="hidden sm:flex items-center gap-6">
+      <a href="/index.html" class="hover:text-secondary transition">Beranda</a>
+      <a href="/line-of-business.html" class="hover:text-secondary transition">Line of Business</a>
+      <a href="/blog.html" class="hover:text-secondary transition">Blog</a>
+      <a href="/about.html" class="hover:text-secondary transition">Tentang Kami</a>
+      <a href="/contact.html" class="hover:text-secondary transition">Kontak</a>
+    </nav>
 
-    <!-- Search -->
-    <div class="hidden sm:flex items-center border border-white/30 rounded-full px-3 py-1 bg-white/10 backdrop-blur-sm">
-      <input type="text" id="searchInput" placeholder="Cari sesuatu..." class="bg-transparent text-white placeholder-white/70 focus:outline-none text-sm w-32 sm:w-40">
-      <button id="searchBtn" class="ml-2 text-white"><i class="fas fa-search"></i></button>
-    </div>
-  </div>
+        <div class="hidden sm:flex items-center border border-white/30 rounded-full px-3 py-1 bg-white/10 backdrop-blur-sm">
+      <input type="text" id="searchInput" placeholder="Cari sesuatu..." class="bg-transparent text-white placeholder-white/70 focus:outline-none text-sm w-32 sm:w-40" onkeypress="if(event.key === 'Enter') handleInternalSearch('searchInput')">
+      <button id="searchBtn" class="ml-2 text-white"><i class="fas fa-search"></i></button>
+    </div>
+  </div>
 
-  <!-- Menu dropdown mobile -->
-  <div id="mobileMenu" class="hidden bg-[#7A0000] flex flex-col space-y-2 px-4 py-3 sm:hidden">
-    <a href="/index.html" class="hover:text-blue-300">Beranda</a>
-    <a href="/line-of-business.html" class="hover:text-blue-300">Line of Business</a>
-    <a href="/blog.html" class="hover:text-blue-300">Blog</a>
-    <a href="/about.html" class="hover:text-blue-300">Tentang Kami</a>
-    <a href="/contact.html" class="hover:text-blue-300">Kontak</a>
+    <div id="mobileMenu" class="hidden fixed inset-0 bg-primary/95 backdrop-blur-sm flex-col space-y-4 pt-20 px-6 pb-6 z-30 transition-all duration-300 ease-in-out">
+    <a href="/index.html" class="text-2xl hover:text-secondary transition border-b border-white/10 pb-2">Beranda</a>
+    <a href="/line-of-business.html" class="text-2xl hover:text-secondary transition border-b border-white/10 pb-2">Line of Business</a>
+    <a href="/blog.html" class="text-2xl hover:text-secondary transition border-b border-white/10 pb-2">Blog</a>
+    <a href="/about.html" class="text-2xl hover:text-secondary transition border-b border-white/10 pb-2">Tentang Kami</a>
+    <a href="/contact.html" class="text-2xl hover:text-secondary transition pb-2">Kontak</a>
 
-    <div class="flex items-center border border-white/20 rounded-full px-3 py-1 mt-2 bg-white/10">
-      <input type="text" id="searchInputMobile" placeholder="Cari..." class="bg-transparent text-white placeholder-white/70 focus:outline-none text-sm flex-grow">
-      <button id="searchBtnMobile" class="ml-2 text-white"><i class="fas fa-search"></i></button>
-    </div>
-  </div>
+    <div class="flex items-center border border-white/20 rounded-full px-3 py-1 mt-6 bg-white/10">
+      <input type="text" id="searchInputMobile" placeholder="Cari..." class="bg-transparent text-white placeholder-white/70 focus:outline-none text-lg flex-grow" onkeypress="if(event.key === 'Enter') handleInternalSearch('searchInputMobile')">
+      <button id="searchBtnMobile" class="ml-2 text-white"><i class="fas fa-search"></i></button>
+    </div>
+  </div>
 </header>
-
-<script>
-  // Toggle menu mobile
-  document.getElementById('menu-btn').addEventListener('click', () => {
-    document.getElementById('mobileMenu').classList.toggle('hidden');
-  });
-
-  // Fitur pencarian sederhana (redirect ke Google)
-  function handleSearch(inputId) {
-    const query = document.getElementById(inputId).value.trim();
-    if (query) {
-      window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' site:emydngroup.vercel.app')}`, '_blank');
-    }
-  }
-
-  document.getElementById('searchBtn').addEventListener('click', () => handleSearch('searchInput'));
-  document.getElementById('searchBtnMobile').addEventListener('click', () => handleSearch('searchInputMobile'));
-</script>
