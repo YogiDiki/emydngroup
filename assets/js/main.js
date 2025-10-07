@@ -1,4 +1,4 @@
-// =======================================================
+/// =======================================================
 // Chatbot Interaktif dengan Kata Kunci Sangat Detail
 // =======================================================
 
@@ -13,7 +13,19 @@ const botResponsesDetail = {
 
     // === 2. PENDIDIKAN (Edukasi) - /business/education.html ===
     'edukasi': { judul: 'Lini Bisnis Pendidikan', deskripsi: 'Kami menyediakan Platform E-Learning (SD-SMK/SMA) dan program Bimbingan Tatap Muka Anak Usia Dini.', url: '/business/education.html' },
-    'bimbel': { judul: 'BIMBA (Bimbingan Belajar Anak)', deskripsi: 'Program BIMBA tatap muka kami berlokasi di Bintang Junior Bangka Raya, Jakarta Selatan, untuk anak usia 3 tahun ke atas.', url: '/business/education.html' },
+    
+    // NEW KEY: 'bimba' added here
+    'bimbel': { 
+        judul: 'BIMBA/BIMBEL (Bimbingan Anak)', 
+        deskripsi: 'Program BIMBA/BIMBEL tatap muka berlokasi di Bintang Junior Bangka Raya, JakSel, untuk anak usia 3 tahun ke atas.', 
+        url: '/business/education.html' 
+    },
+    'bimba': { // <--- KEY BARU UNTUK MATCHING KATA KUNCI 'bimba'
+        judul: 'BIMBA/BIMBEL (Bimbingan Anak)', 
+        deskripsi: 'Program BIMBA/BIMBEL tatap muka berlokasi di Bintang Junior Bangka Raya, JakSel, untuk anak usia 3 tahun ke atas.', 
+        url: '/business/education.html' 
+    },
+    
     'paud': { judul: 'PAUD/BIMBA', deskripsi: 'Program PAUD/BIMBA tatap muka kami berlokasi di Bintang Junior Bangka Raya, Jakarta Selatan, untuk anak usia 3 tahun ke atas.', url: '/business/education.html' },
     'elearning': { judul: 'Sistem E-Learning', deskripsi: 'Kami menyediakan pembelajaran online interaktif untuk jenjang SD, SMP, hingga SMK/SMA. Fokus pada materi spesifik per-kursus.', url: '/business/education.html' },
 
@@ -27,7 +39,20 @@ const botResponsesDetail = {
     'esport': { judul: 'Ekosistem Esport', deskripsi: 'Divisi Esport kami fokus pada pelatihan, manajemen tim, dan penyelenggaraan turnamen game. Kami membangun komunitas game yang profesional.', url: '/business/esport.html' },
     'role': { judul: 'Peluang Role & Tim Esport', deskripsi: 'Kami merekrut dan melatih role-role spesifik untuk tim Esport kami. Kunjungi halaman Esport untuk informasi lebih lanjut mengenai peluang ini.', url: '/business/esport.html' },
 
-    // === 5. UMUM & KONTAK ===
+    // === 5. PERTANYAAN UMUM (Pendaftaran/Biaya) & KONTAK ===
+    
+    // NEW KEY: 'pendaftaran' and 'biaya' for generic fee/registration questions
+    'pendaftaran': { 
+        judul: 'Informasi Pendaftaran dan Biaya', 
+        deskripsi: 'Untuk info pendaftaran dan biaya program/layanan secara rinci (termasuk BIMBA/BIMBEL), silakan hubungi tim kami melalui tombol WhatsApp. Kami akan memberikan detail harga dan jadwal terbaru.', 
+        url: '#' 
+    },
+    'biaya': { 
+        judul: 'Informasi Pendaftaran dan Biaya', 
+        deskripsi: 'Untuk info pendaftaran dan biaya program/layanan secara rinci (termasuk BIMBA/BIMBEL), silakan hubungi tim kami melalui tombol WhatsApp. Kami akan memberikan detail harga dan jadwal terbaru.', 
+        url: '#' 
+    },
+    
     'harga': {
         judul: 'Estimasi Biaya Proyek',
         deskripsi: 'Estimasi biaya sangat bergantung pada kompleksitas fitur. Silakan konsultasi gratis via WhatsApp untuk detail estimasi biaya yang rinci.',
@@ -51,6 +76,7 @@ const botResponsesDetail = {
 };
 
 // --- FUNGSI MENDAPATKAN RESPON BOT (Simulasi AI Search) ---
+// Logika ini tetap sama, ia akan mencari KEY (seperti 'pendaftaran' atau 'bimba') yang ada di dalam pesan user
 function getBotResponse(message) {
     const lowerMessage = message.toLowerCase();
     
@@ -64,7 +90,7 @@ function getBotResponse(message) {
         // Lewati pesan default dan greeting
         if (key === 'default_message' || key === 'greeting_message') continue; 
         
-        // Cek apakah pesan mengandung KATA KUNCI (termasuk kata kunci spesifik: martabak, bimbel, android, dll.)
+        // Cek apakah pesan mengandung KATA KUNCI
         if (lowerMessage.includes(key)) {
             return botResponsesDetail[key];
         }
@@ -73,6 +99,8 @@ function getBotResponse(message) {
     // 3. Jika tidak ada yang cocok, berikan default
     return botResponsesDetail['default_message'];
 }
+
+// ... (fungsi addMessage dan sendMessage tidak perlu diubah)
 
 // Fungsi addMessage dan sendMessage (tidak perlu diubah jika sudah menggunakan versi sebelumnya)
 // ... (Pastikan Anda menggunakan fungsi addMessage dan sendMessage dari jawaban saya sebelumnya)
