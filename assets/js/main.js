@@ -8,6 +8,26 @@ if (mobileMenuBtn) {
     });
 }
 
+// ====== Load Header & Footer Secara Otomatis ======
+document.addEventListener('DOMContentLoaded', () => {
+    // Load Header
+    fetch('/partials/header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('header').innerHTML = data;
+        })
+        .catch(error => console.error('Gagal memuat header:', error));
+
+    // Load Footer
+    fetch('/partials/footer.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('footer').innerHTML = data;
+        })
+        .catch(error => console.error('Gagal memuat footer:', error));
+});
+
+
 // Smooth Scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -39,7 +59,7 @@ const botResponses = {
     'edukasi': 'Kami menyediakan platform pembelajaran online dan pelatihan profesional. Kunjungi halaman Bisnis Kami untuk mengetahui lebih lanjut!',
     'esport': 'Divisi Esport kami mengelola tim profesional dan menyelenggarakan turnamen. Tertarik bergabung?',
     'fnb': 'Bisnis F&B kami menawarkan konsep kuliner modern dan inovatif. Cek halaman Bisnis Kami untuk detail!',
-    'kontak': 'Anda bisa menghubungi kami melalui WhatsApp di +62 858-1967-2814 atau email di info@emydngroup.com',
+    'kontak': 'Anda bisa menghubungi kami melalui WhatsApp di +62 858-1967-2814 atau email di emydngroup@gmail.com',
     'alamat': 'Kantor kami berlokasi di Jakarta, Indonesia. Untuk informasi lebih lanjut, kunjungi halaman Kontak.',
     'terima kasih': 'Sama-sama! Senang bisa membantu Anda 😊',
     'default': 'Maaf, saya belum mengerti pertanyaan Anda. Silakan hubungi tim kami melalui WhatsApp atau halaman Kontak untuk bantuan lebih lanjut.'
