@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungi Kami - Emydn Group</title>
+    <meta name="description" content="Hubungi Emydn Group untuk konsultasi bisnis, kerjasama, atau pertanyaan lainnya. Kami siap membantu Anda.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000',
+                        secondary: '#87CEFA',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-white text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-primary shadow-lg fixed w-full z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-white text-2xl font-bold">Emydn Group</a>
+                <button id="mobile-menu-btn" class="lg:hidden text-white">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <div id="nav-links" class="hidden lg:flex space-x-8">
+                    <a href="/" class="text-white hover:text-secondary transition">Beranda</a>
+                    <a href="/line-of-business" class="text-white hover:text-secondary transition">Bisnis Kami</a>
+                    <a href="/blog" class="text-white hover:text-secondary transition">Blog</a>
+                    <a href="/about" class="text-white hover:text-secondary transition">Tentang</a>
+                    <a href="/contact" class="text-secondary font-semibold">Kontak</a>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden lg:hidden mt-4 space-y-2">
+                <a href="/" class="block text-white hover:text-secondary transition py-2">Beranda</a>
+                <a href="/line-of-business" class="block text-white hover:text-secondary transition py-2">Bisnis Kami</a>
+                <a href="/blog" class="block text-white hover:text-secondary transition py-2">Blog</a>
+                <a href="/about" class="block text-white hover:text-secondary transition py-2">Tentang</a>
+                <a href="/contact" class="block text-secondary font-semibold py-2">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-32 pb-16 bg-gradient-to-r from-primary to-red-800">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold text-white mb-4">Hubungi Kami</h1>
+            <p class="text-xl text-secondary">Kami Siap Membantu Anda</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Contact Form -->
+                <div>
+                    <h2 class="text-3xl font-bold text-primary mb-6">Kirim Pesan</h2>
+                    <form class="space-y-6" id="contact-form">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Nama Lengkap</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary" placeholder="Masukkan nama Anda" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                            <input type="email" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary" placeholder="email@example.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
+                            <input type="tel" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary" placeholder="+62 xxx xxxx xxxx">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Subjek</label>
+                            <select class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary" required>
+                                <option value="">Pilih Subjek</option>
+                                <option value="sistem">Sistem & Aplikasi</option>
+                                <option value="edukasi">Edukasi</option>
+                                <option value="esport">Esport</option>
+                                <option value="fnb">F&B</option>
+                                <option value="lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Pesan</label>
+                            <textarea rows="5" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-secondary" placeholder="Tulis pesan Anda di sini..." required></textarea>
+                        </div>
+                        <button type="submit" class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-900 transition w-full">
+                            Kirim Pesan <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h2 class="text-3xl font-bold text-primary mb-6">Informasi Kontak</h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Alamat</h3>
+                                <p class="text-gray-600">Jakarta, Indonesia</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Telepon</h3>
+                                <p class="text-gray-600">+62 858-1967-2814</p>
+                                <a href="https://wa.me/6285819672814" class="text-secondary hover:text-primary font-semibold inline-flex items-center mt-2">
+                                    <i class="fab fa-whatsapp mr-2"></i> Chat via WhatsApp
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Email</h3>
+                                <p class="text-gray-600">info@emydngroup.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-2">Jam Operasional</h3>
+                                <p class="text-gray-600">Senin - Jumat: 09:00 - 18:00 WIB</p>
+                                <p class="text-gray-600">Sabtu: 09:00 - 14:00 WIB</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Ikuti Kami</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-secondary transition">
+                                <i class="fab fa-facebook text-xl"></i>
+                            </a>
+                            <a href="#" class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-secondary transition">
+                                <i class="fab fa-instagram text-xl"></i>
+                            </a>
+                            <a href="#" class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-secondary transition">
+                                <i class="fab fa-twitter text-xl"></i>
+                            </a>
+                            <a href="#" class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-secondary transition">
+                                <i class="fab fa-linkedin text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-primary mb-8 text-center">Lokasi Kami</h2>
+            <div class="bg-gray-300 h-96 rounded-lg flex items-center justify-center">
+                <p class="text-gray-600 text-lg">
+                    <i class="fas fa-map-marked-alt text-4xl text-primary mb-4 block"></i>
+                    Map Embed Here (Google Maps)
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Emydn Group</h3>
+                    <p class="text-gray-300">
+                        We Build, Educate, and Innovate.<br>
+                        Membangun masa depan melalui teknologi, edukasi, dan inovasi.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Alamat</h4>
+                    <p class="text-gray-300">
+                        Jakarta, Indonesia<br>
+                        Email: info@emydngroup.com<br>
+                        Phone: +62 858-1967-2814
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Ikuti Kami</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2025 Emydn Group. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/6285819672814" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Chatbot Button -->
+    <button id="chatbot-btn" class="fixed bottom-24 right-6 bg-secondary text-primary w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-400 transition z-50">
+        <i class="fas fa-comments text-2xl"></i>
+    </button>
+
+    <!-- Chatbot Modal -->
+    <div id="chatbot-modal" class="hidden fixed bottom-44 right-6 w-80 bg-white rounded-lg shadow-2xl z-50">
+        <div class="bg-primary text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="font-semibold">Chat dengan Kami</h3>
+            <button id="close-chatbot" class="text-white hover:text-secondary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4 h-64 overflow-y-auto" id="chat-messages">
+            <div class="mb-4 text-gray-600">
+                <p class="bg-gray-100 p-3 rounded-lg inline-block">
+                    Halo! Saya asisten virtual Emydn Group. Ada yang bisa saya bantu?
+                </p>
+            </div>
+        </div>
+        <div class="p-4 border-t">
+            <div class="flex space-x-2">
+                <input type="text" id="chat-input" placeholder="Ketik pesan..." class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:border-secondary">
+                <button id="send-chat" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-red-900">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/main.js"></script>
+    <script>
+        // Form Submit Handler
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Terima kasih! Pesan Anda telah dikirim. Tim kami akan segera menghubungi Anda.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

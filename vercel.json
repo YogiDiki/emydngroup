@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/line-of-business", "destination": "/line-of-business.html" },
+    { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/articles/teknologi-edukasi-modern", "destination": "/articles/teknologi-edukasi-modern.html" },
+    { "source": "/articles/inovasi-esport-digital", "destination": "/articles/inovasi-esport-digital.html" },
+    { "source": "/articles/tren-fnb-2025", "destination": "/articles/tren-fnb-2025.html" }
+  ]
+}

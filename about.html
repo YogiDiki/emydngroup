@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tentang Kami - Emydn Group</title>
+    <meta name="description" content="Emydn Group adalah perusahaan inovatif yang berfokus pada teknologi, edukasi, esport, dan kuliner. Kenali visi, misi, dan nilai-nilai kami.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B0000',
+                        secondary: '#87CEFA',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-white text-gray-800">
+    <!-- Navbar -->
+    <nav class="bg-primary shadow-lg fixed w-full z-50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-white text-2xl font-bold">Emydn Group</a>
+                <button id="mobile-menu-btn" class="lg:hidden text-white">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <div id="nav-links" class="hidden lg:flex space-x-8">
+                    <a href="/" class="text-white hover:text-secondary transition">Beranda</a>
+                    <a href="/line-of-business" class="text-white hover:text-secondary transition">Bisnis Kami</a>
+                    <a href="/blog" class="text-white hover:text-secondary transition">Blog</a>
+                    <a href="/about" class="text-secondary font-semibold">Tentang</a>
+                    <a href="/contact" class="text-white hover:text-secondary transition">Kontak</a>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden lg:hidden mt-4 space-y-2">
+                <a href="/" class="block text-white hover:text-secondary transition py-2">Beranda</a>
+                <a href="/line-of-business" class="block text-white hover:text-secondary transition py-2">Bisnis Kami</a>
+                <a href="/blog" class="block text-white hover:text-secondary transition py-2">Blog</a>
+                <a href="/about" class="block text-secondary font-semibold py-2">Tentang</a>
+                <a href="/contact" class="block text-white hover:text-secondary transition py-2">Kontak</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-32 pb-16 bg-gradient-to-r from-primary to-red-800">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold text-white mb-4">Tentang Emydn Group</h1>
+            <p class="text-xl text-secondary">Membangun Masa Depan Melalui Inovasi</p>
+        </div>
+    </section>
+
+    <!-- Company Story -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-primary mb-8 text-center">Kisah Kami</h2>
+                <p class="text-lg text-gray-600 mb-6">
+                    Emydn Group didirikan dengan visi untuk menjadi perusahaan multi-bisnis terdepan yang mengintegrasikan teknologi, pendidikan, entertainment, dan kuliner dalam satu ekosistem yang saling mendukung. Kami percaya bahwa inovasi sejati lahir dari kolaborasi antar berbagai bidang industri.
+                </p>
+                <p class="text-lg text-gray-600 mb-6">
+                    Dimulai dari passion dalam teknologi dan edukasi, kami terus berkembang untuk menjawab kebutuhan pasar yang dinamis. Kini, dengan empat lini bisnis utama, kami hadir sebagai mitra terpercaya untuk transformasi digital, pengembangan SDM, industri esport, dan bisnis kuliner modern.
+                </p>
+                <p class="text-lg text-gray-600">
+                    Setiap hari, kami berkomitmen untuk memberikan solusi terbaik, menciptakan peluang baru, dan memberdayakan masyarakat melalui inovasi yang berkelanjutan.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision & Mission -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="bg-white p-10 rounded-lg shadow-lg">
+                    <div class="text-primary text-5xl mb-6">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-primary mb-6">Visi Kami</h2>
+                    <p class="text-lg text-gray-600">
+                        Menjadi grup perusahaan terdepan di Indonesia yang mengintegrasikan teknologi, edukasi, entertainment, dan kuliner untuk menciptakan ekosistem bisnis yang inovatif dan berkelanjutan, serta memberikan dampak positif bagi masyarakat dan ekonomi nasional.
+                    </p>
+                </div>
+                <div class="bg-white p-10 rounded-lg shadow-lg">
+                    <div class="text-primary text-5xl mb-6">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-primary mb-6">Misi Kami</h2>
+                    <ul class="space-y-4 text-lg text-gray-600">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <span>Mengembangkan solusi teknologi yang inovatif dan user-friendly</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <span>Meningkatkan kualitas SDM melalui program edukasi berkelas dunia</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <span>Membangun ekosistem esport profesional</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <span>Menghadirkan pengalaman kuliner yang memorable</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-primary mb-12 text-center">Nilai-Nilai Kami</h2>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="bg-primary text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Inovasi</h3>
+                    <p class="text-gray-600">
+                        Kami selalu mencari cara baru dan kreatif untuk memberikan solusi terbaik
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-primary text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Integritas</h3>
+                    <p class="text-gray-600">
+                        Kejujuran dan transparansi adalah fondasi setiap keputusan kami
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-primary text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Kolaborasi</h3>
+                    <p class="text-gray-600">
+                        Kami percaya kekuatan tim dan kerjasama menghasilkan hasil terbaik
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div class="bg-primary text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-primary mb-3">Excellence</h3>
+                    <p class="text-gray-600">
+                        Kami berkomitmen untuk memberikan kualitas terbaik di setiap hal yang kami lakukan
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-red-900">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-white mb-6">Bergabung dengan Kami</h2>
+            <p class="text-xl text-secondary mb-8">
+                Mari wujudkan inovasi bersama Emydn Group
+            </p>
+            <a href="/contact" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition">
+                Hubungi Kami
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Emydn Group</h3>
+                    <p class="text-gray-300">
+                        We Build, Educate, and Innovate.<br>
+                        Membangun masa depan melalui teknologi, edukasi, dan inovasi.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Alamat</h4>
+                    <p class="text-gray-300">
+                        Jakarta, Indonesia<br>
+                        Email: info@emydngroup.com<br>
+                        Phone: +62 858-1967-2814
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Ikuti Kami</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2025 Emydn Group. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/6285819672814" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- Chatbot Button -->
+    <button id="chatbot-btn" class="fixed bottom-24 right-6 bg-secondary text-primary w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-400 transition z-50">
+        <i class="fas fa-comments text-2xl"></i>
+    </button>
+
+    <!-- Chatbot Modal -->
+    <div id="chatbot-modal" class="hidden fixed bottom-44 right-6 w-80 bg-white rounded-lg shadow-2xl z-50">
+        <div class="bg-primary text-white p-4 rounded-t-lg flex justify-between items-center">
+            <h3 class="font-semibold">Chat dengan Kami</h3>
+            <button id="close-chatbot" class="text-white hover:text-secondary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4 h-64 overflow-y-auto" id="chat-messages">
+            <div class="mb-4 text-gray-600">
+                <p class="bg-gray-100 p-3 rounded-lg inline-block">
+                    Halo! Saya asisten virtual Emydn Group. Ada yang bisa saya bantu?
+                </p>
+            </div>
+        </div>
+        <div class="p-4 border-t">
+            <div class="flex space-x-2">
+                <input type="text" id="chat-input" placeholder="Ketik pesan..." class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:border-secondary">
+                <button id="send-chat" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-red-900">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
