@@ -1,57 +1,151 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pendidikan - Emydn Education</title>
-  <meta name="description" content="Program pendidikan online interaktif untuk anak SD dari Emydn Education.">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { theme: { extend: { colors: { primary: '#8B0000', secondary: '#87CEFA' }}}}
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pendidikan - Emydn Education</title>
+  <meta name="description" content="Program pendidikan E-Learning online dan bimbingan belajar offline dari Emydn Education.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { primary: '#8B0000', secondary: '#87CEFA' }}}}
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
-  <div id="header"></div>
+<body class="bg-white text-gray-800">
+  <div id="header"></div>
 
-  <section class="relative py-20 bg-gradient-to-r from-primary to-red-900 text-white text-center">
-    <img src="https://images.unsplash.com/photo-1596495577886-d920f1fb7238?auto=format&fit=crop&w=1500&q=80" class="absolute inset-0 w-full h-full object-cover opacity-20">
-    <div class="relative container mx-auto px-6">
-      <h1 class="text-5xl font-bold mb-4">Emydn Education</h1>
-      <p class="text-lg text-secondary">Belajar jadi menyenangkan dengan pendekatan interaktif & personal.</p>
-    </div>
-  </section>
 
-  <section class="py-20 bg-white">
-    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-      <div>
-        <h2 class="text-4xl font-bold text-primary mb-6">Belajar dengan Cara yang Tepat</h2>
-        <p class="text-gray-600 mb-6">Kami fokus membantu anak-anak sekolah dasar memahami pelajaran melalui quiz, diskusi, dan bimbingan personal.</p>
-        <ul class="space-y-3 text-gray-700">
-          <li><i class="fas fa-book-open text-secondary mr-3"></i> Pembelajaran Online Interaktif</li>
-          <li><i class="fas fa-users text-secondary mr-3"></i> Kelas Maksimal 10 Siswa</li>
-          <li><i class="fas fa-laptop text-secondary mr-3"></i> Dapat Diakses via Handphone</li>
-          <li><i class="fas fa-user-check text-secondary mr-3"></i> Mentor Profesional & Ramah Anak</li>
-        </ul>
+<section class="py-20 bg-white">
+  <div class="container mx-auto max-w-7xl px-6">
+    <h2 class="text-4xl font-bold text-center text-primary mb-12">Program Pendidikan Kami</h2>
+
+    <div class="grid lg:grid-cols-2 gap-10">
+      
+      <div class="space-y-8">
+          <h3 class="text-3xl font-bold text-gray-800 border-b pb-2">E-Learning SD-SMA/SMK</h3>
+          
+          <div class="p-6 bg-primary text-white rounded-xl shadow-lg">
+            <h4 class="text-2xl font-bold mb-4 border-b border-secondary pb-2">Keunggulan Belajar di Emydn</h4>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <i class="fas fa-magic text-secondary mr-3 mt-1 text-lg"></i>
+                <div>
+                  <p class="font-semibold">Fokus Materi Pilihan</p>
+                  <p class="text-sm opacity-90">Siswa dapat memilih mata pelajaran spesifik (per-kursus) yang benar-benar mereka butuhkan, memungkinkan fokus belajar yang mendalam dan terarah.</p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-users text-secondary mr-3 mt-1 text-lg"></i>
+                <div>
+                  <p class="font-semibold">Bimbingan Instruktur Berpengalaman</p>
+                  <p class="text-sm opacity-90">Materi e-learning dikemas interaktif dan didukung sesi Q&A langsung secara online dengan instruktur profesional untuk memastikan pemahaman maksimal.</p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-piggy-bank text-secondary mr-3 mt-1 text-lg"></i>
+                <div>
+                  <p class="font-semibold">Akses Kualitas dengan Harga Terjangkau</p>
+                  <p class="text-sm opacity-90">Kami berkomitmen memberikan pendidikan berkualitas tinggi dengan biaya yang sangat terjangkau, didukung diskon spesial hingga bulan November.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="p-8 bg-gray-50 rounded-xl shadow-lg border-t-4 border-secondary">
+            <div class="flex items-center mb-6">
+              <i class="fas fa-laptop-code text-4xl text-secondary mr-4"></i>
+              <h4 class="text-2xl font-bold text-gray-800">Sistem E-Learning Berbasis Kursus</h4>
+            </div>
+            
+            <p class="text-md text-gray-600 mb-4">Pembelajaran online interaktif untuk jenjang SD, SMP, hingga SMK/SMA. Siswa bebas memilih fokus mata pelajaran spesifik yang ingin diperdalam.</p>
+
+            <div class="mb-6 p-4 bg-white rounded-lg border">
+              <p class="font-semibold text-gray-700 mb-2 flex items-center"><i class="fas fa-list-alt mr-2 text-primary"></i> Kurikulum Pilihan:</p>
+              <p class="text-sm text-gray-600">Setiap pendaftaran berfokus pada satu kursus mata pelajaran (misal: Kursus Bahasa Inggris). Semua materi, kuis, dan sesi didedikasikan untuk topik tersebut.</p>
+            </div>
+
+            <div class="p-5 bg-red-100 rounded-lg border-2 border-red-500 text-center">
+              <p class="text-sm text-red-700 font-semibold">DISKON BERLAKU SAMPAI NOVEMBER!</p>
+              <p class="text-3xl font-extrabold text-primary">Rp 75.000,- / Kursus</p>
+              <p class="mt-2 text-sm text-gray-600">Harga berlaku untuk semua jenjang (SD-SMA/SMK) dan sudah termasuk sesi Q&A online mingguan dipandu instruktur.</p>
+            </div>
+          </div>
       </div>
-      <img src="https://images.unsplash.com/photo-1600326146083-6f55a52f3f0c?auto=format&fit=crop&w=900&q=80" alt="Education" class="rounded-xl shadow-lg">
+
+      <div class="space-y-8">
+          <h3 class="text-3xl font-bold text-gray-800 border-b pb-2">Bimbingan Tatap Muka Anak Usia Dini</h3>
+          
+          <div class="p-6 bg-secondary text-white rounded-xl shadow-lg">
+            <h4 class="text-2xl font-bold mb-4 border-b border-primary pb-2">Keunggulan Program Offline</h4>
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt text-primary mr-3 mt-1 text-lg"></i>
+                <div>
+                  <p class="font-semibold">Lokasi Strategis di Jakarta Selatan</p>
+                  <p class="text-sm opacity-90">Memudahkan akses bagi orang tua di kawasan Jakarta Selatan dan sekitarnya melalui kerja sama dengan mitra terpercaya kami.</p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-brain text-primary mr-3 mt-1 text-lg"></i>
+                <div>
+                  <p class="font-semibold">Pendekatan Smart Fun Learning</p>
+                  <p class="text-sm opacity-90">Metode belajar tatap muka yang menyenangkan, berfokus pada pembentukan karakter, ilmu, dan prestasi dasar (Calistung, Mengaji, English).</p>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-child text-primary mr-3 mt-1 text-lg"></i>
+                <div>
+                  <p class="font-semibold">Fokus pada Karakter dan Nilai</p>
+                  <p class="text-sm opacity-90">Sesuai dengan motto mitra kami ("Berkarakter, Berilmu, Berprestasi"), program ini menekankan pengembangan karakter positif sejak usia dini.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="p-8 bg-white rounded-xl shadow-lg border-t-4 border-primary">
+            <div class="flex items-center mb-6">
+              <i class="fas fa-home text-4xl text-primary mr-4"></i>
+              <h4 class="text-2xl font-bold text-gray-800">PAUD/BIMBA (Bimbingan Belajar Anak)</h4>
+            </div>
+            
+            <p class="text-md text-gray-600 mb-4">Program tatap muka yang berfokus pada pengembangan dasar anak usia 3 tahun ke atas.</p>
+
+            <div class="mb-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <p class="font-semibold text-gray-700 flex items-center"><i class="fas fa-handshake mr-2 text-primary"></i> Berlokasi di:</p>
+              <p class="text-lg font-bold text-primary">Bintang Junior Bangka Raya - Jakarta Selatan</p>
+              <p class="text-sm mt-1 text-gray-600 italic">Motto: "Berkarakter • Berilmu • Berprestasi"</p>
+            </div>
+
+            <div class="mb-6">
+              <ul class="space-y-2 text-gray-700 list-disc ml-5">
+                <li>Cakupan Materi: Baca Tulis Hitung (Calistung), English, dan Mengaji.</li>
+                <li>Metode Pembelajaran: Smart Fun Learning.</li>
+              </ul>
+            </div>
+
+            <div class="p-5 bg-red-100 rounded-lg border-2 border-red-500 text-center">
+              <p class="text-sm text-red-700 font-semibold">HARGA PROMO BULAN INI:</p>
+              <p class="text-xl text-gray-500 line-through">Rp 499.000,-</p>
+              <p class="text-4xl font-extrabold text-primary">Rp 399.000,-</p>
+            </div>
+          </div>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="py-20 bg-gradient-to-r from-primary to-red-900 text-center text-white">
-    <div class="container mx-auto px-6">
-      <h2 class="text-4xl font-bold mb-4">Gabung Batch Baru Sekarang!</h2>
-      <p class="text-xl text-secondary mb-8">Belajar seru, berani bertanya, dan raih prestasi bersama teman baru.</p>
-      <a href="/contact.html" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition">Daftar Sekarang</a>
-    </div>
-  </section>
 
-  <div id="footer"></div>
+  <div id="footer"></div>
 
-  <a href="https://wa.me/6285819672814" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
-    <i class="fab fa-whatsapp text-3xl"></i>
-  </a>
+    <a href="https://wa.me/6285819672814" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+  <button id="chatbot-btn" class="fixed bottom-24 right-6 bg-secondary text-primary w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-400 transition z-50">
+    <i class="fas fa-comments text-2xl"></i>
+  </button>
+    <div id="chatbot-modal" class="hidden fixed bottom-44 right-6 w-80 bg-white rounded-lg shadow-2xl z-50">
+        </div>
 
-  <script src="/assets/js/include.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>

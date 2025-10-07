@@ -1,57 +1,155 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emydn Food & Beverage</title>
-  <meta name="description" content="Emydn Food menawarkan berbagai produk kuliner seperti martabak, cireng isi, mie aceh, pancake, dan lainnya.">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { theme: { extend: { colors: { primary: '#8B0000', secondary: '#87CEFA' }}}}
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emydn Food & Beverage</title>
+    <meta name="description" content="Menu makanan dan minuman hits dari Emydn Group di berbagai lokasi Jakarta.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#8B0000', secondary: '#87CEFA' }}}}
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div id="header"></div>
+    <div id="header"></div>
 
-  <section class="relative py-20 bg-gradient-to-r from-primary to-red-900 text-white text-center">
-    <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?auto=format&fit=crop&w=1500&q=80" class="absolute inset-0 w-full h-full object-cover opacity-25">
-    <div class="relative container mx-auto px-6">
-      <h1 class="text-5xl font-bold mb-4">Emydn Food & Beverage</h1>
-      <p class="text-lg text-secondary">Hadirkan cita rasa autentik dalam setiap gigitan.</p>
-    </div>
-  </section>
 
-  <section class="py-20 bg-white">
-    <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
-      <div>
-        <h2 class="text-4xl font-bold text-primary mb-6">Rasa Lokal, Kualitas Premium</h2>
-        <p class="text-gray-600 mb-6">Kami memproduksi aneka jajanan dan makanan khas yang digemari banyak orang — dari Martabak Mini hingga Pancake.</p>
-        <ul class="space-y-3 text-gray-700">
-          <li><i class="fas fa-utensils text-secondary mr-3"></i> Martabak Telor Mini</li>
-          <li><i class="fas fa-cookie-bite text-secondary mr-3"></i> Cireng Isi & Bakso</li>
-          <li><i class="fas fa-bread-slice text-secondary mr-3"></i> Bolu Mini & Pancake</li>
-          <li><i class="fas fa-concierge-bell text-secondary mr-3"></i> Nasi Box & Mie Aceh</li>
-        </ul>
-      </div>
-      <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=900&q=80" alt="Food" class="rounded-xl shadow-lg">
-    </div>
-  </section>
+    <section class="py-20 bg-white">
+        <div class="container mx-auto max-w-7xl px-6">
+            <h2 class="text-4xl font-bold text-center text-primary mb-12">Daftar Menu Partner Kami Berdasarkan Lokasi</h2>
+            <p class="text-1xl font-bold text-center text-primary mb-12">(Bagian dari Keluarga Besar Emydn Group)</p>
 
-  <section class="py-20 bg-gradient-to-r from-primary to-red-900 text-center text-white">
-    <div class="container mx-auto px-6">
-      <h2 class="text-4xl font-bold mb-4">Ingin Cicipi Produk Kami?</h2>
-      <p class="text-xl text-secondary mb-8">Pesan untuk acara, reseller, atau event Anda.</p>
-      <a href="/contact.html" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition">Pesan Sekarang</a>
-    </div>
-  </section>
 
-  <div id="footer"></div>
+            <div class="overflow-x-auto shadow-2xl rounded-xl">
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Menu Andalan</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Deskripsi Singkat</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">Harga (Estimasi)</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wider">Lokasi Outlet</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-100">
 
-  <a href="https://wa.me/6285819672814" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
-    <i class="fab fa-whatsapp text-3xl"></i>
-  </a>
+                        <tr class="bg-red-50 border-t-2 border-primary/50">
+                            <td colspan="4" class="px-6 py-3 font-extrabold text-primary uppercase text-center text-lg">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Cilandak, Jakarta Selatan
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Martabak Telur Mini</td>
+                            <td class="px-6 py-4 text-gray-700">Martabak telur renyah ukuran mini, cocok untuk camilan.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 10.000 - Rp 15.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cilandak</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Martabak Manis</td>
+                            <td class="px-6 py-4 text-gray-700">Pilihan rasa klasik dan premium.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 20.000 - Rp 30.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cilandak</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Bolu Aneka Rasa</td>
+                            <td class="px-6 py-4 text-gray-700">Kue bolu lembut dengan berbagai varian rasa premium.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 60.000 - Rp 150.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cilandak</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Siomay</td>
+                            <td class="px-6 py-4 text-gray-700">Siomay ikan dengan bumbu kacang khas.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 10.000 - Rp 15.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Cilandak</td>
+                        </tr>
 
-  <script src="/assets/js/include.js"></script>
+                        <tr class="bg-red-50 border-t-2 border-primary/50">
+                            <td colspan="4" class="px-6 py-3 font-extrabold text-primary uppercase text-center text-lg">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Bangka, Jakarta Selatan
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Cilok Kuah</td>
+                            <td class="px-6 py-4 text-gray-700">Cilok lembut dengan pilihan kuah pedas atau tidak pedas.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 10.000 - Rp 15.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Bangka</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Coco Jely</td>
+                            <td class="px-6 py-4 text-gray-700">Minuman jeli dengan rasa Stroberi, Vanilla, dan Coklat.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 8.000 - Rp 15.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Bangka</td>
+                        </tr>
+
+                        <tr class="bg-red-50 border-t-2 border-primary/50">
+                            <td colspan="4" class="px-6 py-3 font-extrabold text-primary uppercase text-center text-lg">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Setiabudi, Jakarta Selatan
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Churros</td>
+                            <td class="px-6 py-4 text-gray-700">Churros renyah disajikan dengan topping manis.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 10.000 - Rp 15.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Setiabudi</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Pancake</td>
+                            <td class="px-6 py-4 text-gray-700">Pancake lembut dengan pilihan sauce Vanilla, Coklat, Stroberi.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 10.000 - Rp 15.000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Setiabudi</td>
+                        </tr>
+
+                        <tr class="bg-red-50 border-t-2 border-primary/50">
+                            <td colspan="4" class="px-6 py-3 font-extrabold text-primary uppercase text-center text-lg">
+                                <i class="fas fa-map-marker-alt mr-2"></i> Kemayoran, Jakarta Pusat
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Aneka Gorengan</td>
+                            <td class="px-6 py-4 text-gray-700">Tempe, tahu, bakwan, dan lainnya disajikan hangat.</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Rp 1.000 / pcs</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">Kemayoran</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+    </section>
+
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto max-w-7xl px-6 text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Pesan Online Lebih Mudah & Cepat!</h2>
+            <p class="text-lg text-gray-600 mb-8">Pilih menu favorit Anda dan nikmati pengiriman melalui aplikasi pilihan Anda, atau kunjungi langsung outlet kami.</p>
+
+            <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+                <a href="#" class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition shadow-lg text-lg flex items-center">
+                    <i class="fas fa-motorcycle mr-2"></i> Pesan via GoFood
+                </a>
+                <a href="#" class="bg-lime-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-lime-600 transition shadow-lg text-lg flex items-center">
+                    <i class="fas fa-shopping-bag mr-2"></i> Pesan via GrabFood
+                </a>
+                <a href="#" class="bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition shadow-lg text-lg flex items-center">
+                    <i class="fas fa-box mr-2"></i> Pesan via ShopeeFood
+                </a>
+                
+                <a href="/contact.html" class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-800 transition shadow-lg text-lg flex items-center">
+                    <i class="fas fa-store mr-2"></i> Kunjungi Outlet
+                </a>
+                
+                <a href="https://wa.me/6285819672814" target="_blank" class="bg-green-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-600 transition shadow-lg text-lg flex items-center">
+                    <i class="fab fa-whatsapp mr-2"></i> Tanya via WA
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <a href="https://wa.me/6285819672814" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+    
+    <script src="/assets/js/main.js"></script>
 </body>
 </html>
