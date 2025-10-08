@@ -1,9 +1,8 @@
 /// =======================================================
-// main.js - Fungsi Utama Website (Dibersihkan dari Fetch)
+// main.js - Fungsi Utama Website (Ditambahkan Tawk.to Show)
 // =======================================================
 
 // --- Fungsionalitas Pencarian Internal ---
-// NOTE: Menggunakan alert() diganti menjadi console.log() sesuai panduan platform
 window.handleInternalSearch = function(inputId) {
     const inputElement = document.getElementById(inputId);
     if (!inputElement) return;
@@ -29,7 +28,6 @@ window.handleInternalSearch = function(inputId) {
         window.location.href = '/line-of-business.html';
     } else {
         console.log('Pencarian: Hasil pencarian tidak ditemukan. Coba kata kunci yang lebih umum.');
-        // Ganti alert() dengan visual feedback lain jika perlu.
     }
 
     // Tutup menu mobile setelah pencarian
@@ -46,11 +44,22 @@ window.handleInternalSearch = function(inputId) {
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. Inisiasi Fungsionalitas Header ---
-    // Dipanggil langsung karena elemen Header & Footer sudah terintegrasi dalam HTML.
     initHeaderFunctionality();
 
+    // --- 2. SOLUSI: Memastikan Tawk.to Tetap Terlihat ---
+    if (typeof Tawk_API !== 'undefined') {
+        // Tawk.to API ready, paksa widget untuk muncul
+        Tawk_API.showWidget(); 
+        Tawk_API.maximize(); // Opsional: Memaksimalkan jendela chat (hapus jika hanya ingin ikon)
+        Tawk_API.onLoad = function(){
+            // Memastikan tetap muncul setelah Tawk.to selesai loading
+            Tawk_API.showWidget();
+            Tawk_API.maximize();
+        };
+    }
 
-    // --- 2. Inisiasi Smooth Scroll ---
+
+    // --- 3. Inisiasi Smooth Scroll ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -62,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- 3. Animation on Scroll ---
+    // --- 4. Animation on Scroll ---
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -84,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // --- 4. Scroll to Top Button (Mengganti window.scrollY) ---
-    // Catatan: Kelas 'scrolled' tidak memiliki definisi CSS di HTML Anda, namun logika JS dipertahankan.
+    // --- 5. Scroll (dipertahankan) ---
     window.addEventListener('scroll', () => {
         if (window.scrollY > 300) {
             document.body.classList.add('scrolled');
@@ -129,7 +137,6 @@ function initHeaderFunctionality() {
     const searchBtn = document.getElementById('searchBtn');
     const searchBtnMobile = document.getElementById('searchBtnMobile');
     
-    // Logika ini sudah memanggil window.handleInternalSearch yang ada di atas
     if (searchBtn) {
         searchBtn.addEventListener('click', () => handleInternalSearch('searchInput'));
     }
