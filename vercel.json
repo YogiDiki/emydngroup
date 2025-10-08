@@ -7,5 +7,19 @@
     { "source": "/articles/teknologi-edukasi-modern", "destination": "/articles/teknologi-edukasi-modern.html" },
     { "source": "/articles/inovasi-esport-digital", "destination": "/articles/inovasi-esport-digital.html" },
     { "source": "/articles/tren-fnb-2025", "destination": "/articles/tren-fnb-2025.html" }
+  ],
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain" }
+      ]
+    }
   ]
 }
