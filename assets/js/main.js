@@ -1,8 +1,9 @@
 /// =======================================================
-// main.js - Fungsi Utama Website (Tanpa Chatbot AI)
+// main.js - Fungsi Utama Website (Dibersihkan dari Fetch)
 // =======================================================
 
-// --- Fungsionalitas Pencarian Internal (Dipertahankan) ---
+// --- Fungsionalitas Pencarian Internal ---
+// NOTE: Menggunakan alert() diganti menjadi console.log() sesuai panduan platform
 window.handleInternalSearch = function(inputId) {
     const inputElement = document.getElementById(inputId);
     if (!inputElement) return;
@@ -27,7 +28,8 @@ window.handleInternalSearch = function(inputId) {
     } else if (query.includes('bisnis') || query.includes('line of business') || query.includes('lob')) {
         window.location.href = '/line-of-business.html';
     } else {
-        alert('Hasil pencarian tidak ditemukan. Coba kata kunci yang lebih umum.');
+        console.log('Pencarian: Hasil pencarian tidak ditemukan. Coba kata kunci yang lebih umum.');
+        // Ganti alert() dengan visual feedback lain jika perlu.
     }
 
     // Tutup menu mobile setelah pencarian
@@ -43,22 +45,9 @@ window.handleInternalSearch = function(inputId) {
 // === Fungsi Utama yang Dijalankan Setelah DOM Dimuat ===
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- 1. Load Header & Footer ---
-    Promise.all([
-        fetch('/partials/header.html').then(response => response.text()),
-        fetch('/partials/footer.html').then(response => response.text())
-    ])
-    .then(([headerData, footerData]) => {
-        // Isi kontainer
-        const headerEl = document.getElementById('header');
-        const footerEl = document.getElementById('footer');
-        if (headerEl) headerEl.innerHTML = headerData;
-        if (footerEl) footerEl.innerHTML = footerData;
-
-        // Panggil fungsi inisiasi header setelah elemen ada
-        initHeaderFunctionality();
-    })
-    .catch(error => console.error('Gagal memuat partials:', error));
+    // --- 1. Inisiasi Fungsionalitas Header ---
+    // Dipanggil langsung karena elemen Header & Footer sudah terintegrasi dalam HTML.
+    initHeaderFunctionality();
 
 
     // --- 2. Inisiasi Smooth Scroll ---
@@ -73,11 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- KODE CHATBOT AI LAMA (Bagian 3) DIHAPUS ---
-    // (Semua inisiasi tombol dan logika chatbot telah dihapus)
-
-
-    // --- 3. Animation on Scroll (Disesuaikan penomoran) ---
+    // --- 3. Animation on Scroll ---
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -99,7 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(el);
     });
 
-    // --- 4. Scroll to Top Button (Disesuaikan penomoran) ---
+    // --- 4. Scroll to Top Button (Mengganti window.scrollY) ---
+    // Catatan: Kelas 'scrolled' tidak memiliki definisi CSS di HTML Anda, namun logika JS dipertahankan.
     window.addEventListener('scroll', () => {
         if (window.scrollY > 300) {
             document.body.classList.add('scrolled');
@@ -110,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// === Fungsionalitas Header yang Terpisah (Dipertahankan) ===
+// === Fungsionalitas Header yang Terpisah ===
 function initHeaderFunctionality() {
     const menuBtn = document.getElementById('menu-btn');
     const mobileMenu = document.getElementById('mobileMenu');

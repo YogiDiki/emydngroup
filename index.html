@@ -20,19 +20,78 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- PENTING: Menghapus Custom CSS Override Tawk.to sebelumnya. 
-       Sekarang Tawk.to akan kembali ke posisi default (Kanan Bawah). -->
     <style>
         .whatsapp-float {
             z-index: 50; /* Pastikan WA di atas konten lain */
         }
-        /* Jika Tawk.to masih ada di Kanan, coba hapus cache browser atau ganti 
-           URL Tawk.to di script-nya. Seharusnya sekarang tombol ini bekerja. */
     </style>
+    
+    <!-- START: Script Tawk.to di HEAD agar dimuat lebih dulu dan stabil -->
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/68e624c711d1b11954cbdae0/1j71fvbrm';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    <!-- END: Script Tawk.to -->
+
 </head>
 <body class="bg-white text-gray-800">
     
-    <div id="header"></div>
+    <!-- START: HEADER (Diambil dari partials/header.html) -->
+    <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 transition-all duration-300">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="/" class="flex-shrink-0">
+                    <img src="/assets/images/logo.png" alt="Emydn Group Logo" class="h-10 w-auto"> 
+                </a>
+
+                <div class="hidden lg:flex items-center space-x-6">
+                    <a href="/" class="text-gray-700 hover:text-primary font-medium transition">Beranda</a>
+                    <a href="/about.html" class="text-gray-700 hover:text-primary font-medium transition">Tentang Kami</a>
+                    <a href="/line-of-business.html" class="text-gray-700 hover:text-primary font-medium transition">Lini Bisnis</a>
+                    <a href="/blog.html" class="text-gray-700 hover:text-primary font-medium transition">Blog</a>
+                    <a href="/contact.html" class="text-gray-700 hover:text-primary font-medium transition">Kontak</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center border border-gray-300 rounded-full overflow-hidden">
+                        <input type="text" id="searchInput" placeholder="Cari..." class="px-4 py-2 text-sm w-40 focus:outline-none">
+                        <button id="searchBtn" class="bg-primary text-white px-3 py-2 hover:bg-red-900 transition">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    
+                    <button id="menu-btn" class="text-2xl text-primary lg:hidden focus:outline-none">
+                        <i id="menu-icon" class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobileMenu" class="hidden lg:hidden bg-white shadow-xl pt-2 pb-4 border-t z-30">
+            <div class="px-6 space-y-3">
+                <a href="/" class="block text-gray-700 hover:text-primary font-medium transition py-1">Beranda</a>
+                <a href="/about.html" class="block text-gray-700 hover:text-primary font-medium transition py-1">Tentang Kami</a>
+                <a href="/line-of-business.html" class="block text-gray-700 hover:text-primary font-medium transition py-1 border-t pt-3">Lini Bisnis</a>
+                <a href="/blog.html" class="block text-gray-700 hover:text-primary font-medium transition py-1">Blog</a>
+                <a href="/contact.html" class="block text-gray-700 hover:text-primary font-medium transition py-1">Kontak</a>
+
+                <div class="mt-4 pt-3 border-t flex items-center">
+                    <input type="text" id="searchInputMobile" placeholder="Cari di Emydn Group..." class="flex-1 border rounded-l-lg px-4 py-2 text-sm focus:outline-none focus:border-primary">
+                    <button id="searchBtnMobile" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-red-900 transition">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- END: HEADER -->
 
     <section class="pt-24 pb-20 bg-gradient-to-r from-primary to-red-800">
         <div class="container mx-auto px-6 text-center">
@@ -47,7 +106,7 @@
         </div>
     </section>
 
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-gray-50" id="linibisnis">
         <div class="container mx-auto px-6">
             <h2 class="text-4xl font-bold text-center text-primary mb-12">Lini Bisnis Kami</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -108,7 +167,7 @@
 
     <section class="py-20 bg-white">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center text-primary mb-12">Artikel Terbaru</h2>
+            <h2 class="text-4xl font-bold text-center text-primary mb-12">Artikel Terbaru </h2>
             <div class="grid md:grid-cols-3 gap-8">
                 <article class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
                     <div class="h-48 bg-gradient-to-r from-primary to-secondary"></div>
@@ -159,28 +218,50 @@
             </div>
         </div>
     </section>
+    
+    <!-- START: FOOTER (Diambil dari partials/footer.html) -->
+    <footer class="bg-primary text-white py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Emydn Group</h3>
+                    <p class="text-gray-300">
+                        We Build, Educate, and Innovate.<br>
+                        Membangun masa depan melalui teknologi, edukasi, dan inovasi.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Alamat</h4>
+                    <p class="text-gray-300">
+                        Jl Wijaya 1 No 54, Kebayoran Baru, Jakarta, Indonesia<br>
+                        Email: emydngroup@gmail.com<br>
+                        Phone: +62 858-1967-2814
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4">Ikuti Kami</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-2xl hover:text-secondary transition"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2025 Emydn Group.
+            </div>
+        </div>
+    </footer>
+    <!-- END: FOOTER -->
 
-    <div id="footer"></div>
-
-    <!-- Tombol WhatsApp Anda SUDAH DIPINDAHKAN ke KIRI BAWAH dengan "left-6" -->
+    <!-- Tombol WhatsApp Anda di KIRI BAWAH -->
     <a href="https://wa.me/6285819672814" target="_blank" class="whatsapp-float fixed bottom-20 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50 transform hover:scale-110">
         <i class="fab fa-whatsapp text-3xl"></i>
     </a>
     
+    <!-- Memuat main.js yang sekarang hanya berisi fungsionalitas menu dan scroll -->
     <script src="/assets/js/main.js"></script>
-    
-    <!-- Script Tawk.to Live Chat (akan muncul di Kanan Bawah secara default) -->
-    <script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/68e624c711d1b11954cbdae0/1j71fvbrm';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
 
-    </script>
 </body>
 </html>
