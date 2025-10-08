@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.emydngroup.com/sitemap.xml
+
+Sitemap: https://emydngroup.com/sitemap.xml
