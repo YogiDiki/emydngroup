@@ -32,6 +32,32 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+<url>
+  <loc>https://www.emydngroup.com/business/system.html</loc>
+  <lastmod>2025-10-08</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.emydngroup.com/business/education.html</loc>
+  <lastmod>2025-10-08</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.emydngroup.com/business/esport.html</loc>
+  <lastmod>2025-10-08</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.emydngroup.com/business/fnb.html</loc>
+  <lastmod>2025-10-08</lastmod>
+  <changefreq>monthly</changefreq>
+  <priority>0.8</priority>
+</url>
+
+
 
   <!-- Halaman Blog / Artikel -->
   <url>
