@@ -1,8 +1,8 @@
 {
   "redirects": [
     {
-      "source": "https://www.emydngroup.com/(.*)",
-      "destination": "https://emydngroup.com/$1",
+      "source": "/www.emydngroup.com/(.*)",
+      "destination": "/$1",
       "permanent": true
     }
   ],
