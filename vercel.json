@@ -11,6 +11,10 @@
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/line-of-business", "destination": "/line-of-business.html" },
     { "source": "/blog", "destination": "/blog.html" },
+    { "source": "/business/education", "destination": "/business/education.html" },
+    { "source": "/business/esport", "destination": "/business/esport.html" },
+    { "source": "/business/fnb", "destination": "/business/fnb.html" },
+    { "source": "/business/system", "destination": "/business/system.html" },
     { "source": "/articles/teknologi-edukasi-modern", "destination": "/articles/teknologi-edukasi-modern.html" },
     { "source": "/articles/inovasi-esport-digital", "destination": "/articles/inovasi-esport-digital.html" },
     { "source": "/articles/tren-fnb-2025", "destination": "/articles/tren-fnb-2025.html" }

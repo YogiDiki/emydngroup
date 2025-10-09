@@ -13,19 +13,19 @@ window.handleInternalSearch = function(inputId) {
 
     // Logika Pencarian untuk Navigasi Halaman
     if (query.includes('makan') || query.includes('food') || query.includes('f&b')) {
-        window.location.href = '/business/fnb.html';
+        window.location.href = '/business/fnb';
     } else if (query.includes('edukasi') || query.includes('belajar') || query.includes('education')) {
-        window.location.href = '/business/education.html';
+        window.location.href = '/business/education';
     } else if (query.includes('sistem') || query.includes('aplikasi') || query.includes('system') || query.includes('website')) {
-        window.location.href = '/business/system.html';
+        window.location.href = '/business/system';
     } else if (query.includes('esport') || query.includes('game')) {
-        window.location.href = '/business/esport.html';
+        window.location.href = '/business/esport';
     } else if (query.includes('kontak') || query.includes('hubungi')) {
-        window.location.href = '/contact.html';
+        window.location.href = '/contact';
     } else if (query.includes('tentang') || query.includes('about')) {
-        window.location.href = '/about.html';
+        window.location.href = '/about';
     } else if (query.includes('bisnis') || query.includes('line of business') || query.includes('lob')) {
-        window.location.href = '/line-of-business.html';
+        window.location.href = '/line-of-business';
     } else {
         console.log('Pencarian: Hasil pencarian tidak ditemukan. Coba kata kunci yang lebih umum.');
     }
