@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
 
+# Disallow admin and private directories
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /backup/
+
+# Allow important directories
+Allow: /assets/
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Sitemap location
 Sitemap: https://emydngroup.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

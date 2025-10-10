@@ -3,8 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emydn Group - We Build, Educate, and Innovate</title>
-    <meta name="description" content="Emydn Group adalah perusahaan multi-bisnis yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B. Kami membangun, mendidik, dan berinovasi untuk masa depan.">
+    <title>Emydn Group - Jasa Pembuatan Website Murah Jakarta | We Build, Educate, and Innovate</title>
+    <meta name="description" content="Emydn Group adalah platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B. Kami membangun, mendidik, dan berinovasi untuk masa depan.">
+    <meta name="keywords" content="jasa pembuatan website murah, pembuatan website jakarta, jasa website, pembuatan aplikasi mobile, kursus programming online, esport management, jasa F&B, platform multi-layanan">
+    <meta name="author" content="Emydn Group">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Indonesian">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Emydn Group - Jasa Pembuatan Website Murah Jakarta">
+    <meta property="og:description" content="Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B. Kami membangun, mendidik, dan berinovasi untuk masa depan.">
+    <meta property="og:image" content="https://emydngroup.com/assets/images/logocopy.png">
+    <meta property="og:url" content="https://emydngroup.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Emydn Group">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Emydn Group - Jasa Pembuatan Website Murah Jakarta">
+    <meta name="twitter:description" content="Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B.">
+    <meta name="twitter:image" content="https://emydngroup.com/assets/images/logocopy.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://emydngroup.com">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Emydn Group",
+      "url": "https://emydngroup.com",
+      "logo": "https://emydngroup.com/assets/images/logocopy.png",
+      "description": "Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B. Kami membangun, mendidik, dan berinovasi untuk masa depan.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jl Wijaya 1 No 54, Kebayoran Baru",
+        "addressLocality": "Jakarta",
+        "addressCountry": "Indonesia"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+62-858-1967-2814",
+        "contactType": "customer service",
+        "email": "info@emydngroup.com"
+      },
+      "sameAs": [
+        "https://www.facebook.com/rinduu28/",
+        "https://www.instagram.com/emydnn_/",
+        "https://x.com/diki_yogi",
+        "https://www.tiktok.com/@emydn.group"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Layanan Emydn Group",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pembuatan Website",
+              "description": "Jasa pembuatan website murah dan profesional"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Pembuatan Aplikasi Mobile",
+              "description": "Pengembangan aplikasi mobile untuk Android dan iOS"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Kursus Programming Online",
+              "description": "Program edukasi dan pelatihan programming online"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Manajemen Esport",
+              "description": "Layanan manajemen tim esport dan turnamen"
+            }
+          }
+        ]
+      }
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,10 +109,29 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/assets/images/logocopy.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/images/logocopy.png">
+    <link rel="apple-touch-icon" href="/assets/images/logocopy.png">
     
     <style>
         .whatsapp-float {
             z-index: 50; /* Pastikan WA di atas konten lain */
+        }
+        
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fade-in 1s ease-out forwards;
+            opacity: 0;
         }
     </style>
     
@@ -55,7 +164,7 @@
                     <a href="/" class="text-gray-700 hover:text-primary font-medium transition">Beranda</a>
                     <a href="/about" class="text-gray-700 hover:text-primary font-medium transition">Tentang Kami</a>
                     <a href="/line-of-business" class="text-gray-700 hover:text-primary font-medium transition">Lini Bisnis</a>
-                    <a href="/blog" class="text-gray-700 hover:text-primary font-medium transition">Blog</a>
+                    <a href="/blog" class="text-gray-700 hover:text-primary font-medium transition">Berita</a>
                     <a href="/contact" class="text-gray-700 hover:text-primary font-medium transition">Kontak</a>
                 </div>
 
@@ -79,7 +188,7 @@
                 <a href="/" class="block text-gray-700 hover:text-primary font-medium transition py-1">Beranda</a>
                 <a href="/about" class="block text-gray-700 hover:text-primary font-medium transition py-1">Tentang Kami</a>
                 <a href="/line-of-business" class="block text-gray-700 hover:text-primary font-medium transition py-1 border-t pt-3">Lini Bisnis</a>
-                <a href="/blog" class="block text-gray-700 hover:text-primary font-medium transition py-1">Blog</a>
+                <a href="/blog" class="block text-gray-700 hover:text-primary font-medium transition py-1">Berita</a>
                 <a href="/contact" class="block text-gray-700 hover:text-primary font-medium transition py-1">Kontak</a>
 
                 <div class="mt-4 pt-3 border-t flex items-center">
@@ -93,16 +202,28 @@
     </nav>
     <!-- END: HEADER -->
 
-    <section class="pt-24 pb-20 bg-gradient-to-r from-primary to-red-800">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6">Welcome to Emydn Group</h1>
-            <p class="text-2xl text-secondary mb-8">We Build, Educate, and Innovate</p>
+    <section class="pt-24 pb-20 relative overflow-hidden">
+        <!-- Background Image with Overlay -->
+        <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2070&q=80');"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-red-800/90"></div>
+        
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-4 -left-4 w-72 h-72 bg-white/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -bottom-8 -right-4 w-72 h-72 bg-secondary/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-white/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 4s;"></div>
+        </div>
+        
+        <!-- Content -->
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 animate-fade-in">Selamat Datang di Emydn Group</h1>
+            <p class="text-2xl text-secondary mb-8 animate-fade-in" style="animation-delay: 0.5s;">We Build, Educate, and Innovate</p>
             
-            <p class="text-xl md:text-2xl text-white opacity-90 mb-10 max-w-3xl mx-auto">
+            <p class="text-xl md:text-2xl text-white opacity-90 mb-10 max-w-3xl mx-auto animate-fade-in" style="animation-delay: 1s;">
                 Kami adalah platform multi-layanan yang memadukan inovasi teknologi, pendidikan, esport, dan kuliner modern, menjadi wadah bagi mitra bisnis individu.
             </p>
 
-            <a href="#linibisnis" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition shadow-lg text-lg inline-block">Jelajahi Bisnis Kami</a>
+            <a href="#linibisnis" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition shadow-lg text-lg inline-block animate-fade-in transform hover:scale-105" style="animation-delay: 1.5s;">Jelajahi Bisnis Kami</a>
         </div>
     </section>
 
@@ -167,7 +288,7 @@
 
     <section class="py-20 bg-white">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center text-primary mb-12">Artikel Terbaru </h2>
+            <h2 class="text-4xl font-bold text-center text-primary mb-12">Berita Terbaru </h2>
             <div class="grid md:grid-cols-3 gap-8">
                 <article class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
                     <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80');"></div>
@@ -213,7 +334,7 @@
             </div>
             <div class="text-center mt-12">
                 <a href="/blog" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-red-900 transition">
-                    Lihat Semua Artikel
+                    Lihat Semua Berita
                 </a>
             </div>
         </div>
@@ -234,7 +355,7 @@
                     <h4 class="text-xl font-semibold mb-4">Alamat</h4>
                     <p class="text-gray-300">
                         Jl Wijaya 1 No 54, Kebayoran Baru, Jakarta, Indonesia<br>
-                        Email: emydngroup@gmail.com<br>
+                        Email: info@emydngroup.com<br>
                         Phone: +62 858-1967-2814
                     </p>
                 </div>
@@ -249,7 +370,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
-                <p class="text-gray-300">&copy; 2025 Emydn Group.
+                <p class="text-gray-300">&copy; 2025 Emydn Group. All rights reserved.</p>
             </div>
         </div>
     </footer>
