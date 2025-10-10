@@ -126,18 +126,53 @@
                     </div>
                 </div>
 
-                <!-- Share & Back Button -->
-                <div class="flex justify-between items-center mt-12 pt-8 border-t">
-                    <a href="/blog" class="text-primary hover:text-secondary font-semibold">
-                        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Blog
+                <!-- Like & Share + Back -->
+                <div class="mt-12 pt-8 border-t flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <a href="/blog" class="text-primary hover:text-secondary font-semibold order-2 md:order-1">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali ke Berita
                     </a>
-                    <div class="flex space-x-4">
-                        <span class="text-gray-600">Bagikan:</span>
-                        <a href="#" class="text-primary hover:text-secondary"><i class="fab fa-facebook text-xl"></i></a>
-                        <a href="#" class="text-primary hover:text-secondary"><i class="fab fa-twitter text-xl"></i></a>
-                        <a href="#" class="text-primary hover:text-secondary"><i class="fab fa-linkedin text-xl"></i></a>
-                        <a href="#" class="text-primary hover:text-secondary"><i class="fab fa-whatsapp text-xl"></i></a>
+                    <div class="order-1 md:order-2 flex items-center gap-4">
+                        <button id="likeBtn" class="bg-white text-gray-700 border border-gray-200 rounded-full px-4 py-2 flex items-center gap-2 hover:shadow transition">
+                            <i id="likeIcon" class="fas fa-heart text-red-600"></i>
+                            <span id="likeCount" class="text-sm font-semibold">0</span>
+                        </button>
+                        <div class="flex items-center gap-2">
+                            <span class="text-gray-600 text-sm">Bagikan</span>
+                            <span class="text-xs bg-gray-200 text-gray-700 rounded-full px-2 py-1">
+                                <span id="shareTotal">532</span> total
+                            </span>
+                        </div>
+                        <button data-share="facebook" class="bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:shadow transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button data-share="twitter" class="bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:shadow transition">
+                            <i class="fab fa-x-twitter"></i>
+                        </button>
+                        <button data-share="whatsapp" class="bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:shadow transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button id="copyLinkBtn" class="bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center hover:shadow transition">
+                            <i class="fas fa-link"></i>
+                        </button>
                     </div>
+                </div>
+
+                <!-- Disqus Comments -->
+                <div class="mt-12">
+                    <div id="disqus_thread"></div>
+                    <script>
+                      var disqus_config = function () {
+                        this.page.url = window.location.href;
+                        this.page.identifier = window.location.pathname.replace(/\.html$/, '');
+                      };
+                      (function() {
+                        var d = document, s = d.createElement('script');
+                        s.src = 'https://https-www-emydngroup-com.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                      })();
+                    </script>
+                    <noscript>Silakan aktifkan JavaScript untuk melihat <a href="https://disqus.com/?ref_noscript">komentar yang didukung Disqus</a>.</noscript>
                 </div>
             </div>
         </div>
@@ -190,5 +225,6 @@
 
     <script src="/assets/js/include.js"></script>
     <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/article-interactions.js"></script>
 </body>
 </html>
