@@ -97,6 +97,14 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Artikel Berita - Jasa Website Jakarta Selatan -->
+  <url>
+    <loc>https://emydngroup.com/articles/jasa-website-murah-jakarta-selatan</loc>
+    <lastmod>2025-01-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Halaman Layanan Tambahan untuk SEO -->
   <url>
     <loc>https://emydngroup.com/services/website-development</loc>
