@@ -153,14 +153,6 @@
     <priority>0.6</priority>
   </url>
 
-  <!-- Halaman Testimonial untuk SEO -->
-  <url>
-    <loc>https://emydngroup.com/testimonials</loc>
-    <lastmod>2025-01-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
   <!-- Halaman Pricing untuk SEO -->
   <url>
     <loc>https://emydngroup.com/pricing</loc>
