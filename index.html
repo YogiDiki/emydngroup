@@ -8,27 +8,15 @@
     <meta name="keywords" content="jasa pembuatan website murah, pembuatan website jakarta, jasa website, pembuatan aplikasi mobile, kursus programming online, esport management, jasa F&B, platform multi-layanan">
     <meta name="author" content="Emydn Group">
     <meta name="robots" content="index, follow">
-    <meta name="language" content="Indonesian">
-    <meta name="revisit-after" content="7 days">
     
-    <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Emydn Group - Jasa Pembuatan Website Murah Jakarta">
-    <meta property="og:description" content="Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B. Kami membangun, mendidik, dan berinovasi untuk masa depan.">
+    <meta property="og:description" content="Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B.">
     <meta property="og:image" content="https://emydngroup.com/assets/images/logocopy.png">
     <meta property="og:url" content="https://emydngroup.com">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Emydn Group">
     
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Emydn Group - Jasa Pembuatan Website Murah Jakarta">
-    <meta name="twitter:description" content="Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B.">
-    <meta name="twitter:image" content="https://emydngroup.com/assets/images/logocopy.png">
-    
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://emydngroup.com">
     
-    <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -36,7 +24,7 @@
       "name": "Emydn Group",
       "url": "https://emydngroup.com",
       "logo": "https://emydngroup.com/assets/images/logocopy.png",
-      "description": "Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B. Kami membangun, mendidik, dan berinovasi untuk masa depan.",
+      "description": "Platform multi-layanan yang bergerak di bidang Sistem & Aplikasi, Edukasi, Esport, dan F&B.",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Jl Wijaya 1 No 54, Kebayoran Baru",
@@ -46,52 +34,7 @@
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+62-858-1967-2814",
-        "contactType": "customer service",
-        "email": "info@emydngroup.com"
-      },
-      "sameAs": [
-        "https://www.facebook.com/rinduu28/",
-        "https://www.instagram.com/emydnn_/",
-        "https://x.com/diki_yogi",
-        "https://www.tiktok.com/@emydn.group"
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Layanan Emydn Group",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Pembuatan Website",
-              "description": "Jasa pembuatan website murah dan profesional"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Pembuatan Aplikasi Mobile",
-              "description": "Pengembangan aplikasi mobile untuk Android dan iOS"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Kursus Programming Online",
-              "description": "Program edukasi dan pelatihan programming online"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Manajemen Esport",
-              "description": "Layanan manajemen tim esport dan turnamen"
-            }
-          }
-        ]
+        "contactType": "customer service"
       }
     }
     </script>
@@ -109,16 +52,24 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="favicon.ico">
     
     <style>
         .whatsapp-float {
             z-index: 50;
         }
         
-        @keyframes fade-in {
+        @keyframes fade-in-down {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fade-in-up {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -129,9 +80,67 @@
             }
         }
         
-        .animate-fade-in {
-            animation: fade-in 1s ease-out forwards;
+        @keyframes float-animation {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @keyframes slide-in-left {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slide-in-right {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-fade-in-down {
+            animation: fade-in-down 1s ease-out forwards;
+        }
+        
+        .animate-fade-in-up {
+            animation: fade-in-up 1s ease-out forwards;
             opacity: 0;
+        }
+        
+        .animate-float {
+            animation: float-animation 3s ease-in-out infinite;
+        }
+        
+        .animate-slide-in-left {
+            animation: slide-in-left 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .animate-slide-in-right {
+            animation: slide-in-right 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
     </style>
     
@@ -150,7 +159,7 @@
 </head>
 <body class="bg-white text-gray-800">
     
-    <!-- START: HEADER -->
+    <!-- HEADER -->
     <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-40 transition-all duration-300">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -198,9 +207,9 @@
             </div>
         </div>
     </nav>
-    <!-- END: HEADER -->
 
-    <section class="pt-24 pb-20 relative overflow-hidden">
+    <!-- HERO SECTION -->
+    <section class="pt-24 pb-20 relative overflow-hidden min-h-screen flex items-center">
         <div class="absolute inset-0 bg-cover bg-center md:bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2070&q=80');"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-red-800/90"></div>
         
@@ -210,70 +219,122 @@
             <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-white/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 4s;"></div>
         </div>
         
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 animate-fade-in">Selamat Datang di Emydn Group</h1>
-            <p class="text-2xl text-secondary mb-8 animate-fade-in" style="animation-delay: 0.5s;">We Build, Educate, and Innovate</p>
+        <div class="container mx-auto px-6 text-center relative z-10 w-full">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 animate-fade-in-down">Selamat Datang di Emydn Group</h1>
+            <p class="text-2xl text-secondary mb-8 animate-fade-in-down" style="animation-delay: 0.3s;">We Build, Educate, and Innovate</p>
             
-            <p class="text-xl md:text-2xl text-white opacity-90 mb-10 max-w-3xl mx-auto animate-fade-in" style="animation-delay: 1s;">
-                Kami adalah platform multi-layanan yang memadukan inovasi teknologi, pendidikan, esport, dan kuliner modern, menjadi wadah bagi mitra bisnis individu.
+            <p class="text-lg md:text-xl text-white opacity-90 mb-10 max-w-3xl mx-auto animate-fade-in-down" style="animation-delay: 0.6s;">
+                Kami adalah platform multi-layanan yang memadukan inovasi teknologi, pendidikan, esport, dan kuliner modern, menjadi wadah bagi mitra bisnis individu untuk berkembang dan berinovasi.
             </p>
 
-            <a href="#linibisnis" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition shadow-lg text-lg inline-block animate-fade-in transform hover:scale-105" style="animation-delay: 1.5s;">Jelajahi Bisnis Kami</a>
+            <div class="space-y-4 md:space-y-0 md:space-x-4 animate-fade-in-down" style="animation-delay: 0.9s;">
+                <a href="#linibisnis" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition shadow-lg text-lg inline-block transform hover:scale-105">
+                    Jelajahi Bisnis Kami
+                </a>
+                <a href="#berita" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition shadow-lg text-lg inline-block transform hover:scale-105">
+                    Baca Artikel
+                </a>
+            </div>
         </div>
     </section>
 
-    <section class="py-20 bg-gray-50" id="linibisnis">
+    <!-- TENTANG EMYDN GROUP -->
+    <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center text-primary mb-12">Lini Bisnis Kami</h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="animate-slide-in-left" style="animation-delay: 0s;">
+                    <h2 class="text-4xl font-bold text-primary mb-6">Tentang Emydn Group</h2>
+                    <p class="text-gray-600 text-lg mb-4 leading-relaxed">
+                        Kami adalah platform multi-layanan yang memadukan inovasi teknologi, pendidikan, esport, dan kuliner modern, menjadi wadah bagi mitra bisnis individu untuk berkembang dan berinovasi.
+                    </p>
+                    <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                        Dengan pengalaman lebih dari 3 tahun, kami telah bermitra dengan ratusan UMKM dan enterprise untuk mentransformasi bisnis mereka melalui teknologi digital, pelatihan SDM, dan inovasi berkelanjutan. Tim kami siap membantu Anda mencapai target bisnis.
+                    </p>
+                    <a href="/about" class="text-secondary hover:text-primary font-semibold text-lg">
+                        Pelajari Lebih Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                <div class="animate-slide-in-right" style="animation-delay: 0.2s;">
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                            <div class="text-4xl font-bold text-primary mb-2">500+</div>
+                            <p class="text-gray-600">Klien Puas</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                            <div class="text-4xl font-bold text-primary mb-2">3+</div>
+                            <p class="text-gray-600">Tahun Pengalaman</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                            <div class="text-4xl font-bold text-primary mb-2">4</div>
+                            <p class="text-gray-600">Lini Bisnis</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                            <div class="text-4xl font-bold text-primary mb-2">24/7</div>
+                            <p class="text-gray-600">Support Tersedia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LINI BISNIS -->
+    <section class="py-20 bg-white" id="linibisnis">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center text-primary mb-4">Lini Bisnis Kami</h2>
+            <p class="text-center text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
+                Kami menyediakan solusi lengkap di empat bidang utama untuk membantu bisnis Anda berkembang dan berinovasi.
+            </p>
+            
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition transform hover:-translate-y-2">
+                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-primary">
                     <div class="text-primary text-5xl mb-4">
                         <i class="fas fa-code"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-primary">Sistem & Aplikasi</h3>
                     <p class="text-gray-600 mb-6">
-                        Pengembangan software, aplikasi mobile, dan sistem enterprise untuk berbagai kebutuhan bisnis digital.
+                        Pengembangan website, aplikasi mobile, dan sistem enterprise yang scalable dan user-friendly untuk mengakselerasi transformasi digital bisnis Anda.
                     </p>
-                    <a href="/line-of-business#sistem" class="text-secondary hover:text-primary font-semibold">
+                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
                         Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition transform hover:-translate-y-2">
-                    <div class="text-primary text-5xl mb-4">
+                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-secondary">
+                    <div class="text-secondary text-5xl mb-4">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-primary">Edukasi</h3>
                     <p class="text-gray-600 mb-6">
-                        Platform pembelajaran online, pelatihan profesional, dan program sertifikasi untuk meningkatkan kompetensi.
+                        Platform pembelajaran online, pelatihan profesional, dan program sertifikasi yang dirancang untuk meningkatkan kompetensi SDM Anda.
                     </p>
-                    <a href="/line-of-business#edukasi" class="text-secondary hover:text-primary font-semibold">
+                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
                         Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition transform hover:-translate-y-2">
+                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-primary">
                     <div class="text-primary text-5xl mb-4">
                         <i class="fas fa-gamepad"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-primary">Esport</h3>
                     <p class="text-gray-600 mb-6">
-                        Manajemen tim esport, turnamen gaming, dan pengembangan ekosistem industri esport profesional.
+                        Manajemen tim esport profesional, organizer turnamen gaming, dan ekosistem industri esport yang berkembang pesat di Indonesia.
                     </p>
-                    <a href="/line-of-business#esport" class="text-secondary hover:text-primary font-semibold">
+                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
                         Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
 
-                <div class="bg-white rounded-lg shadow-lg p-8 hover:shadow-xl transition transform hover:-translate-y-2">
-                    <div class="text-primary text-5xl mb-4">
+                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-secondary">
+                    <div class="text-secondary text-5xl mb-4">
                         <i class="fas fa-utensils"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-4 text-primary">F&B</h3>
                     <p class="text-gray-600 mb-6">
-                        Bisnis kuliner modern dengan konsep inovatif, layanan catering, dan manajemen restoran profesional.
+                        Bisnis kuliner modern dengan konsep inovatif, layanan catering berkualitas, dan manajemen restoran yang profesional dan menguntungkan.
                     </p>
-                    <a href="/line-of-business#fnb" class="text-secondary hover:text-primary font-semibold">
+                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
                         Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
                     </a>
                 </div>
@@ -281,14 +342,20 @@
         </div>
     </section>
 
-    <section class="py-20 bg-white">
+    <!-- BERITA TERBARU -->
+    <section class="py-20 bg-gray-50" id="berita">
         <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center text-primary mb-12">Berita Terbaru</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <article class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+            <h2 class="text-4xl font-bold text-center text-primary mb-4">Berita & Artikel Terbaru</h2>
+            <p class="text-center text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
+                Dapatkan insights dan tips terkini tentang digital marketing, e-commerce, dan tren bisnis modern.
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <!-- Artikel 1 -->
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
                     <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Strategi Digital Marketing untuk UMKM" class="w-full h-48 object-cover">
                     <div class="p-6">
-                        <span class="text-sm text-gray-500">15 Mei 2025</span>
+                        <span class="text-sm text-secondary font-semibold">DIGITAL MARKETING</span>
                         <h3 class="text-xl font-bold text-primary mt-2 mb-3">Strategi Digital Marketing untuk UMKM</h3>
                         <p class="text-gray-600 mb-4 text-sm">
                             Panduan lengkap meningkatkan penjualan UMKM melalui strategi digital marketing yang tepat dan terbukti efektif.
@@ -299,10 +366,11 @@
                     </div>
                 </article>
 
-                <article class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                <!-- Artikel 2 -->
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
                     <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80" alt="Cara Membuat Toko Online yang Sukses" class="w-full h-48 object-cover">
                     <div class="p-6">
-                        <span class="text-sm text-gray-500">22 Agustus 2025</span>
+                        <span class="text-sm text-secondary font-semibold">E-COMMERCE</span>
                         <h3 class="text-xl font-bold text-primary mt-2 mb-3">Cara Membuat Toko Online yang Sukses</h3>
                         <p class="text-gray-600 mb-4 text-sm">
                             Tips membangun toko online yang menghasilkan penjualan konsisten dan berkelanjutan dengan strategi proven.
@@ -313,11 +381,12 @@
                     </div>
                 </article>
 
-                <article class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                <!-- Artikel 3 -->
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
                     <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Jasa Pembuatan Website untuk UMKM Jakarta Selatan" class="w-full h-48 object-cover">
                     <div class="p-6">
-                        <span class="text-sm text-gray-500">9 Januari 2025</span>
-                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">Jasa Pembuatan Website Murah dan Terpercaya di Jakarta Selatan</h3>
+                        <span class="text-sm text-secondary font-semibold">SISTEM & APLIKASI</span>
+                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">Jasa Pembuatan Website untuk UMKM Jakarta</h3>
                         <p class="text-gray-600 mb-4 text-sm">
                             Solusi website profesional dengan harga terjangkau untuk UMKM dan bisnis di Jakarta Selatan.
                         </p>
@@ -327,12 +396,13 @@
                     </div>
                 </article>
 
-                <article class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                    <div class="h-48 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80');"></div>
+                <!-- Artikel 4 -->
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Teknologi Edukasi Modern" class="w-full h-48 object-cover">
                     <div class="p-6">
-                        <span class="text-sm text-gray-500">5 Oktober 2025</span>
+                        <span class="text-sm text-secondary font-semibold">EDUKASI</span>
                         <h3 class="text-xl font-bold text-primary mt-2 mb-3">Teknologi Edukasi Modern di Era Digital</h3>
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-gray-600 mb-4 text-sm">
                             Bagaimana teknologi mengubah cara kita belajar dan mengajar di abad ke-21.
                         </p>
                         <a href="/articles/teknologi-edukasi-modern" class="text-secondary hover:text-primary font-semibold">
@@ -340,16 +410,65 @@
                         </a>
                     </div>
                 </article>
+
+                <!-- Artikel 5 -->
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="Inovasi Esport Digital Indonesia" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm text-secondary font-semibold">ESPORT</span>
+                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">Inovasi Esport Digital Indonesia</h3>
+                        <p class="text-gray-600 mb-4 text-sm">
+                            Melihat perkembangan industri esport Indonesia dan peluang masa depannya.
+                        </p>
+                        <a href="/articles/inovasi-esport-digital" class="text-secondary hover:text-primary font-semibold">
+                            Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Artikel 6 -->
+                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                    <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80" alt="Tren F&B 2025" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm text-secondary font-semibold">F&B</span>
+                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">Tren F&B 2025: Inovasi Kuliner Digital</h3>
+                        <p class="text-gray-600 mb-4 text-sm">
+                            Eksplorasi tren terbaru di industri makanan dan minuman tahun 2025.
+                        </p>
+                        <a href="/articles/tren-fnb-2025" class="text-secondary hover:text-primary font-semibold">
+                            Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </article>
             </div>
-            <div class="text-center mt-12">
-                <a href="/blog" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-red-900 transition">
-                    Lihat Semua Berita
+
+            <div class="text-center">
+                <a href="/blog" class="bg-primary text-white px-8 py-3 rounded-full font-semibold hover:bg-red-900 transition inline-block transform hover:scale-105">
+                    Lihat Semua Artikel
                 </a>
             </div>
         </div>
     </section>
-    
-    <!-- START: FOOTER -->
+
+    <!-- CTA SECTION -->
+    <section class="py-20 bg-gradient-to-r from-primary to-red-800 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+            <div class="absolute bottom-0 right-0 w-96 h-96 bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float" style="animation-delay: 1s;"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Siap Mengembangkan Bisnis Anda?</h2>
+            <p class="text-xl text-secondary mb-8 max-w-2xl mx-auto">
+                Konsultasikan kebutuhan bisnis Anda dengan tim expert kami dan dapatkan solusi yang tepat untuk mencapai target Anda.
+            </p>
+            <a href="/contact" class="bg-white text-primary px-8 py-4 rounded-full font-semibold hover:bg-secondary hover:text-white transition shadow-lg text-lg inline-block transform hover:scale-105">
+                Hubungi Kami Sekarang
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer class="bg-primary text-white py-12">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-3 gap-8">
@@ -363,14 +482,15 @@
                 <div>
                     <h4 class="text-xl font-semibold mb-4">Alamat</h4>
                     <p class="text-gray-300">
-                        Jl Wijaya 1 No 54, Kebayoran Baru, Jakarta, Indonesia<br>
-                        Email: info@emydngroup.com<br>
-                        Phone: +62 858-1967-2814
+                        Jl Wijaya 1 No 54, Kebayoran Baru<br>
+                        Jakarta Selatan, Indonesia<br>
+                        <a href="mailto:info@emydngroup.com" class="hover:text-secondary transition">Email: info@emydngroup.com</a><br>
+                        <a href="tel:+6285819672814" class="hover:text-secondary transition">Phone: +62 858-1967-2814</a>
                     </p>
                 </div>
                 <div>
                     <h4 class="text-xl font-semibold mb-4">Ikuti Kami</h4>
-                    <div class="flex space-x-4">
+                    <div class="flex space-x-4 mb-6">
                         <a href="https://www.facebook.com/rinduu28/" target="_blank" class="text-2xl hover:text-secondary transition"><i class="fab fa-facebook"></i></a>
                         <a href="https://www.instagram.com/emydnn_/" target="_blank" class="text-2xl hover:text-secondary transition"><i class="fab fa-instagram"></i></a>
                         <a href="https://x.com/diki_yogi" target="_blank" class="text-2xl hover:text-secondary transition"><i class="fab fa-twitter"></i></a>
@@ -383,8 +503,8 @@
             </div>
         </div>
     </footer>
-    <!-- END: FOOTER -->
 
+    <!-- WhatsApp Button -->
     <a href="https://wa.me/6285819672814" target="_blank" class="whatsapp-float fixed bottom-20 left-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition z-50 transform hover:scale-110">
         <i class="fab fa-whatsapp text-3xl"></i>
     </a>
