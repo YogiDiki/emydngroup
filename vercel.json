@@ -11,13 +11,23 @@
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/line-of-business", "destination": "/line-of-business.html" },
     { "source": "/blog", "destination": "/blog.html" },
+
     { "source": "/business/education", "destination": "/business/education.html" },
     { "source": "/business/esport", "destination": "/business/esport.html" },
     { "source": "/business/fnb", "destination": "/business/fnb.html" },
     { "source": "/business/system", "destination": "/business/system.html" },
+
     { "source": "/articles/teknologi-edukasi-modern", "destination": "/articles/teknologi-edukasi-modern.html" },
     { "source": "/articles/inovasi-esport-digital", "destination": "/articles/inovasi-esport-digital.html" },
-    { "source": "/articles/tren-fnb-2025", "destination": "/articles/tren-fnb-2025.html" }
+    { "source": "/articles/tren-fnb-2025", "destination": "/articles/tren-fnb-2025.html" },
+    { "source": "/articles/website-untuk-umkm", "destination": "/articles/website-untuk-umkm.html" },
+    { "source": "/articles/asahotak_digital", "destination": "/articles/asahotak_digital.html" },
+    { "source": "/articles/chatgpt-atlas-website-umkm", "destination": "/articles/chatgpt-atlas-website-umkm.html" },
+    { "source": "/articles/jasa-website-murah-jakarta-selatan", "destination": "/articles/jasa-website-murah-jakarta-selatan.html" },
+    { "source": "/articles/strategi-digital", "destination": "/articles/strategi-digital.html" },
+    { "source": "/articles/toko-online", "destination": "/articles/toko-online.html" },
+
+    { "source": "/articles/:slug", "destination": "/articles/:slug.html" }
   ],
   "headers": [
     {
@@ -34,4 +44,3 @@
     }
   ]
 }
-    
