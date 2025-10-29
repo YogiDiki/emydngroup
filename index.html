@@ -46,6 +46,8 @@
                     colors: {
                         primary: '#8B0000',
                         secondary: '#87CEFA',
+                        cream: '#FFF8F0',
+                        light: '#FFFAF5'
                     }
                 }
             }
@@ -142,6 +144,215 @@
             transform: translateY(-8px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
+
+        /* New Styles for Business Section from Second File */
+        .business-section {
+            padding: 120px 20px;
+            background: white;
+        }
+
+        .business-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .business-header h2 {
+            font-size: 3rem;
+            color: #8B0000;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .business-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .business-strip {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            max-width: 1400px;
+            margin: 0 auto 100px;
+            padding: 0 20px;
+        }
+
+        .business-strip:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .business-visual {
+            flex: 1;
+            position: relative;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .business-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .business-strip:hover .business-visual img {
+            transform: scale(1.05);
+        }
+
+        .business-content {
+            flex: 1;
+        }
+
+        .business-icon {
+            font-size: 3.5rem;
+            color: #8B0000;
+            margin-bottom: 1.5rem;
+        }
+
+        .business-content h3 {
+            font-size: 2.2rem;
+            color: #8B0000;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .business-content p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .business-btn {
+            position: relative;
+            display: inline-block;
+            padding: 14px 40px;
+            background: transparent;
+            border: 2px solid #8B0000;
+            color: #8B0000;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .business-btn::after {
+            content: '';
+            position: absolute;
+            left: -100%;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: #8B0000;
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .business-btn:hover {
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 0, 0, 0.3);
+        }
+
+        .business-btn:hover::after {
+            left: 0;
+        }
+
+        /* Scroll Animation for Business Section */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsiveness for Business Section */
+        @media (max-width: 768px) {
+            .business-strip {
+                flex-direction: column !important;
+                gap: 30px;
+                margin-bottom: 60px;
+            }
+
+            .business-visual {
+                height: 300px;
+            }
+
+            .business-header h2 {
+                font-size: 2rem;
+            }
+
+            .business-content h3 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* New Styles for Video in About Section */
+       /* Tambahkan di bagian style */
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Diperbesar dari 300px */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.survey-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(139, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* New Styles for Light Hero Section */
+        .light-hero {
+            background: linear-gradient(135deg, #FFFAF5 0%, #FFF8F0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .light-hero-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(135, 206, 250, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 0, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 50%);
+        }
+
+        .survey-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(139, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
     </style>
     
     <script type="text/javascript">
@@ -208,41 +419,46 @@
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section class="pt-24 pb-20 relative overflow-hidden min-h-screen flex items-center">
-        <div class="absolute inset-0 bg-cover bg-center md:bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2070&q=80');"></div>
-        <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-red-800/90"></div>
+    <!-- NEW LIGHT HERO SECTION -->
+    <section class="pt-32 pb-20 min-h-screen flex items-center relative bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1525547719578-0b625a8a1498?auto=format&fit=crop&w=2070&q=80');">
+        <div class="absolute inset-0 bg-black/40"></div>
         
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute -top-4 -left-4 w-72 h-72 bg-white/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-            <div class="absolute -bottom-8 -right-4 w-72 h-72 bg-secondary/20 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 2s;"></div>
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-white/5 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 4s;"></div>
-        </div>
-        
-        <div class="container mx-auto px-6 text-center relative z-10 w-full">
-            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 animate-fade-in-down">Selamat Datang di Emydn Group</h1>
-            <p class="text-2xl text-secondary mb-8 animate-fade-in-down" style="animation-delay: 0.3s;">We Build, Educate, and Innovate</p>
-            
-            <p class="text-lg md:text-xl text-white opacity-90 mb-10 max-w-3xl mx-auto animate-fade-in-down" style="animation-delay: 0.6s;">
-                Kami adalah platform multi-layanan yang memadukan inovasi teknologi, pendidikan, esport, dan kuliner modern, menjadi wadah bagi mitra bisnis individu untuk berkembang dan berinovasi.
-            </p>
-
-            <div class="space-y-4 md:space-y-0 md:space-x-4 animate-fade-in-down" style="animation-delay: 0.9s;">
-                <a href="#linibisnis" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-secondary hover:text-white transition shadow-lg text-lg inline-block transform hover:scale-105">
-                    Jelajahi Bisnis Kami
-                </a>
-                <a href="#berita" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition shadow-lg text-lg inline-block transform hover:scale-105">
-                    Baca Artikel
-                </a>
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="survey-card text-center bg-white/95 backdrop-blur-sm">
+                <div class="mb-8">
+                    <h1 class="text-4xl md:text-5xl font-bold text-primary mb-4">LOVINSTEIN INC.</h1>
+                    <div class="w-20 h-1 bg-secondary mx-auto mb-6"></div>
+                    <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-2">Lead Generation Survey</h2>
+                    <p class="text-lg text-gray-600 mb-8">We value your time and insights</p>
+                </div>
+                
+                <button class="bg-primary text-white px-12 py-4 rounded-full font-semibold text-lg hover:bg-red-900 transition transform hover:scale-105 shadow-lg">
+                    LET'S BEGIN!
+                </button>
+                
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <p class="text-sm text-gray-500">Emydn Group - We Build, Educate, and Innovate</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- TENTANG EMYDN GROUP -->
+    <!-- TENTANG EMYDN GROUP WITH VIDEO -->
     <section class="py-20 bg-gray-50">
         <div class="container mx-auto px-6">
             <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="animate-slide-in-left" style="animation-delay: 0s;">
+                <!-- Video Section - Diperbesar -->
+                <div class="animate-slide-in-left flex justify-center" style="animation-delay: 0s;">
+                    <div class="video-container w-full max-w-md">
+                        <video autoplay muted loop playsinline class="w-full h-auto rounded-2xl shadow-2xl">
+                            <source src="/assets/videos/iklan_emydn.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                
+                <!-- Text Content -->
+                <div class="animate-slide-in-right" style="animation-delay: 0.2s;">
                     <h2 class="text-4xl font-bold text-primary mb-6">Tentang Emydn Group</h2>
                     <p class="text-gray-600 text-lg mb-4 leading-relaxed">
                         Kami adalah platform multi-layanan yang memadukan inovasi teknologi, pendidikan, esport, dan kuliner modern, menjadi wadah bagi mitra bisnis individu untuk berkembang dan berinovasi.
@@ -250,94 +466,102 @@
                     <p class="text-gray-600 text-lg mb-6 leading-relaxed">
                         Dengan pengalaman lebih dari 3 tahun, kami telah bermitra dengan ratusan UMKM dan enterprise untuk mentransformasi bisnis mereka melalui teknologi digital, pelatihan SDM, dan inovasi berkelanjutan. Tim kami siap membantu Anda mencapai target bisnis.
                     </p>
-                    <a href="/about" class="text-secondary hover:text-primary font-semibold text-lg">
-                        Pelajari Lebih Lanjut <i class="fas fa-arrow-right ml-2"></i>
+                    <a href="/about" class="inline-flex items-center bg-primary text-white px-6 py-3 rounded-full font-semibold hover:bg-red-900 transition transform hover:scale-105">
+                        Pelajari Lebih Lanjut 
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
-                </div>
-                <div class="animate-slide-in-right" style="animation-delay: 0.2s;">
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
-                            <div class="text-4xl font-bold text-primary mb-2">500+</div>
-                            <p class="text-gray-600">Klien Puas</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
-                            <div class="text-4xl font-bold text-primary mb-2">3+</div>
-                            <p class="text-gray-600">Tahun Pengalaman</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
-                            <div class="text-4xl font-bold text-primary mb-2">4</div>
-                            <p class="text-gray-600">Lini Bisnis</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
-                            <div class="text-4xl font-bold text-primary mb-2">24/7</div>
-                            <p class="text-gray-600">Support Tersedia</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- LINI BISNIS -->
-    <section class="py-20 bg-white" id="linibisnis">
-        <div class="container mx-auto px-6">
-            <h2 class="text-4xl font-bold text-center text-primary mb-4">Lini Bisnis Kami</h2>
-            <p class="text-center text-gray-600 text-lg mb-12 max-w-2xl mx-auto">
-                Kami menyediakan solusi lengkap di empat bidang utama untuk membantu bisnis Anda berkembang dan berinovasi.
+    <!-- LINI BISNIS - NEW DESIGN -->
+    <section class="business-section" id="linibisnis">
+        <div class="business-header">
+            <h2>Lini Bisnis Kami</h2>
+            <p>
+                Kami menyediakan solusi lengkap di empat bidang utama untuk membantu 
+                bisnis Anda berkembang dan berinovasi.
             </p>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-primary">
-                    <div class="text-primary text-5xl mb-4">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 text-primary">Sistem & Aplikasi</h3>
-                    <p class="text-gray-600 mb-6">
-                        Pengembangan website, aplikasi mobile, dan sistem enterprise yang scalable dan user-friendly untuk mengakselerasi transformasi digital bisnis Anda.
-                    </p>
-                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
-                        Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
-                </div>
+        </div>
 
-                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-secondary">
-                    <div class="text-secondary text-5xl mb-4">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 text-primary">Edukasi</h3>
-                    <p class="text-gray-600 mb-6">
-                        Platform pembelajaran online, pelatihan profesional, dan program sertifikasi yang dirancang untuk meningkatkan kompetensi SDM Anda.
-                    </p>
-                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
-                        Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
+        <!-- Business Strip 1 -->
+        <div class="business-strip fade-in">
+            <div class="business-visual">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" alt="Sistem & Aplikasi">
+            </div>
+            <div class="business-content">
+                <div class="business-icon">
+                    <i class="fas fa-code"></i>
                 </div>
+                <h3>Sistem & Aplikasi</h3>
+                <p>
+                    Pengembangan website, aplikasi mobile, dan sistem enterprise yang scalable 
+                    dan user-friendly untuk mengakselerasi transformasi digital bisnis Anda.
+                </p>
+                <button class="business-btn" onclick="window.location.href='/line-of-business'">
+                    Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
 
-                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-primary">
-                    <div class="text-primary text-5xl mb-4">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 text-primary">Esport</h3>
-                    <p class="text-gray-600 mb-6">
-                        Manajemen tim esport profesional, organizer turnamen gaming, dan ekosistem industri esport yang berkembang pesat di Indonesia.
-                    </p>
-                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
-                        Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
+        <!-- Business Strip 2 -->
+        <div class="business-strip fade-in">
+            <div class="business-visual">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&q=80" alt="Edukasi">
+            </div>
+            <div class="business-content">
+                <div class="business-icon">
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
+                <h3>Edukasi</h3>
+                <p>
+                    Platform pembelajaran online, pelatihan profesional, dan program sertifikasi 
+                    yang dirancang untuk meningkatkan kompetensi SDM Anda.
+                </p>
+                <button class="business-btn" onclick="window.location.href='/line-of-business'">
+                    Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
 
-                <div class="card-hover bg-white rounded-lg shadow-lg p-8 border-t-4 border-secondary">
-                    <div class="text-secondary text-5xl mb-4">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 text-primary">F&B</h3>
-                    <p class="text-gray-600 mb-6">
-                        Bisnis kuliner modern dengan konsep inovatif, layanan catering berkualitas, dan manajemen restoran yang profesional dan menguntungkan.
-                    </p>
-                    <a href="/line-of-business" class="text-secondary hover:text-primary font-semibold">
-                        Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                    </a>
+        <!-- Business Strip 3 -->
+        <div class="business-strip fade-in">
+            <div class="business-visual">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80" alt="Esport">
+            </div>
+            <div class="business-content">
+                <div class="business-icon">
+                    <i class="fas fa-gamepad"></i>
                 </div>
+                <h3>Esport</h3>
+                <p>
+                    Manajemen tim esport profesional, organizer turnamen gaming, dan ekosistem 
+                    industri esport yang berkembang pesat di Indonesia.
+                </p>
+                <button class="business-btn" onclick="window.location.href='/line-of-business'">
+                    Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Business Strip 4 -->
+        <div class="business-strip fade-in">
+            <div class="business-visual">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=80" alt="F&B">
+            </div>
+            <div class="business-content">
+                <div class="business-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>F&B</h3>
+                <p>
+                    Bisnis kuliner modern dengan konsep inovatif, layanan catering berkualitas, 
+                    dan manajemen restoran yang profesional dan menguntungkan.
+                </p>
+                <button class="business-btn" onclick="window.location.href='/line-of-business'">
+                    Selengkapnya <i class="fas fa-arrow-right"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -391,51 +615,6 @@
                             Solusi website profesional dengan harga terjangkau untuk UMKM dan bisnis di Jakarta Selatan.
                         </p>
                         <a href="/articles/website-untuk-umkm.html" class="text-secondary hover:text-primary font-semibold">
-                            Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Artikel 4 -->
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                    <img src="https://images.pexels.com/photos/941555/pexels-photo-941555.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Teknologi Edukasi Modern" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <span class="text-sm text-secondary font-semibold">GAMES EDUCATION</span>
-                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">Strategi Asah Otak Digital: Mengapa Karyawan dan Pelaku UMKM Perlu Latihan Kognitif untuk Unggul di Era Kecerdasan Buatan (AI)</h3>
-                        <p class="text-gray-600 mb-4 text-sm">
-                            Bagaimana teknologi mengubah cara kita belajar dan mengajar di abad ke-21.
-                        </p>
-                        <a href="/articles/asahotak_digital.html" class="text-secondary hover:text-primary font-semibold">
-                            Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Artikel 5 -->
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80" alt="Inovasi Esport Digital Indonesia" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <span class="text-sm text-secondary font-semibold">ESPORT</span>
-                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">Inovasi Esport Digital Indonesia</h3>
-                        <p class="text-gray-600 mb-4 text-sm">
-                            Melihat perkembangan industri esport Indonesia dan peluang masa depannya.
-                        </p>
-                        <a href="/articles/inovasi-esport-digital" class="text-secondary hover:text-primary font-semibold">
-                            Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- Artikel ChatGPT Atlas vs Website UMKM -->
-                <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="ChatGPT Atlas vs Website UMKM" class="w-full h-48 object-cover">
-                    <div class="p-6">
-                        <span class="text-sm text-secondary font-semibold">AI & STRATEGI DIGITAL</span>
-                        <h3 class="text-xl font-bold text-primary mt-2 mb-3">ChatGPT Atlas vs Website: Mana yang Lebih Penting untuk UMKM?</h3>
-                        <p class="text-gray-600 mb-4 text-sm">
-                            ChatGPT Atlas untuk riset cepat, tapi hanya website yang bisa bangun kepercayaan pelanggan UMKM. Temukan strategi terbaik!
-                        </p>
-                        <a href="/articles/chatgpt-atlas-website-umkm.html" class="text-secondary hover:text-primary font-semibold">
                             Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
                         </a>
                     </div>
@@ -510,6 +689,52 @@
     </a>
     
     <script src="/assets/js/main.js"></script>
+
+    <!-- Scroll Animation Script for Business Section -->
+    <script>
+        // Intersection Observer untuk Scroll Animation pada Business Section
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe semua elemen dengan class fade-in di business section
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+
+// Tambahkan di bagian script
+document.addEventListener('DOMContentLoaded', function() {
+    const video = document.querySelector('video');
+    if (video) {
+        video.muted = true;
+        video.setAttribute('playsinline', '');
+        video.setAttribute('webkit-playsinline', '');
+        
+        // Force play video
+        const playVideo = () => {
+            video.play().catch(function(error) {
+                console.log('Video autoplay failed:', error);
+                // Retry after user interaction
+                document.addEventListener('click', function() {
+                    video.play();
+                }, { once: true });
+            });
+        };
+        
+        playVideo();
+    }
+});
+    </script>
 
 </body>
 </html>
