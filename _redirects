@@ -6,14 +6,8 @@
 /business/esport /business/esport.html 200
 /business/fnb /business/fnb.html 200
 /business/system /business/system.html 200
-
-# Aturan Rewrite untuk semua File di Folder /articles/ (Clean URLs)
-/articles/asahotak-digital-umkm /articles/asahotak-digital-umkm.html 200
-/articles/chatgpt-alias-website-umkm /articles/chatgpt-alias-website-umkm.html 200
-/articles/inovasi-esport-digital /articles/inovasi-esport-digital.html 200
-/articles/jasa-website-murah-jakarta-selatan /articles/jasa-website-murah-jakarta-selatan.html 200
-/articles/strategi-digital /articles/strategi-digital.html 200
 /articles/teknologi-edukasi-modern /articles/teknologi-edukasi-modern.html 200
-/articles/toko-online /articles/toko-online.html 200
+/articles/inovasi-esport-digital /articles/inovasi-esport-digital.html 200
 /articles/tren-fnb-2025 /articles/tren-fnb-2025.html 200
 /articles/website-untuk-umkm /articles/website-untuk-umkm.html 200
+/articles/asahotak_digital /articles/asahotak_digital.html 200
