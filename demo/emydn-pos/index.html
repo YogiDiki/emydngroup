@@ -50,9 +50,12 @@
     <!-- Demo Notice -->
     <div class="bg-red-800 text-white py-3">
         <div class="container mx-auto px-4">
-            <p class="text-center text-sm md:text-base">
-                🎯 <strong>SISTEM DEMO</strong> - Data tersimpan di device Anda. Hubungi Emydn Group untuk implementasi lengkap.
-            </p>
+                <p class="font-bold mb-2">🎯 SISTEM DEMO</p>
+                <p class="text-xs md:text-sm opacity-90">
+                    Data yang ditampilkan hanya bersifat sementara dan tersimpan di perangkat Anda.
+                    Ini adalah versi demo untuk menunjukkan cara kerja sistem kasir digital kami.
+                    Butuh fitur lengkap atau custom khusus sesuai kebutuhan bisnis Anda, silakan hubungi Emydn Group.
+                </p>
         </div>
     </div>
 
@@ -198,6 +201,18 @@
 
     <!-- Struk Print -->
     <div id="struk-print" style="display:none;"></div>
+
+           <!-- Struk Modal -->
+    <div id="struk-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <h3 class="text-xl font-bold text-red-800 mb-4">Struk Pembayaran</h3>
+            <div id="struk-preview" class="bg-gray-50 p-4 rounded border-2 border-gray-200 mb-4 font-mono text-sm"></div>
+            <div class="flex gap-2">
+                <button onclick="printStruk()" class="flex-1 bg-red-800 text-white py-2 rounded-lg font-semibold hover:bg-red-900">🖨️ Cetak Struk</button>
+                <button onclick="closeStrukModal()" class="flex-1 bg-gray-200 py-2 rounded-lg font-semibold hover:bg-gray-300">Tutup</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Menu Data
@@ -488,7 +503,7 @@
             transactions.push(transaction);
             localStorage.setItem('emydn_transactions', JSON.stringify(transactions));
 
-            printStruk(transaction);
+            showStrukModal(transaction);
             cart = [];
             voucherApplied = null;
             document.getElementById('voucher-input').value = '';
@@ -499,7 +514,67 @@
             showToast('✅ Pembayaran berhasil!', 'success');
         }
 
-        function printStruk(transaction) {
+        let currentTransaction = null;
+
+        function showStrukModal(transaction) {
+            currentTransaction = transaction;
+            const modal = document.getElementById('struk-modal');
+            const preview = document.getElementById('struk-preview');
+            
+            preview.innerHTML = `
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="images/logo.png" alt="Logo" style="width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 8px; display: block;" onerror="this.style.display='none'">
+                    <h2 style="margin: 0; font-size: 18px; font-weight: bold;">EMYDN POS</h2>
+                    <p style="margin: 5px 0; font-size: 10px;">${transaction.date} ${transaction.time}</p>
+                    <p style="margin: 10px 0;">============================</p>
+                </div>
+                <div style="font-size: 11px;">
+                    ${transaction.items.map(item => `
+                        <div style="margin-bottom: 8px;">
+                            <div>${item.name}</div>
+                            <div style="padding-left: 10px; font-size: 10px; display: flex; justify-content: space-between;">
+                                <span>${item.qty} x ${formatCurrency(item.price)}</span>
+                                <span>${formatCurrency(item.qty * item.price)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <p style="margin: 10px 0;">============================</p>
+                    <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                        <span>Subtotal:</span>
+                        <span>${formatCurrency(transaction.subtotal)}</span>
+                    </div>
+                    ${transaction.discount > 0 ? `
+                    <div style="display: flex; justify-content: space-between; margin: 5px 0; color: green;">
+                        <span>Diskon (${transaction.discountLabel}):</span>
+                        <span>- ${formatCurrency(transaction.discount)}</span>
+                    </div>
+                    ` : ''}
+                    <div style="display: flex; justify-content: space-between; margin: 5px 0;">
+                        <span>PPN 11%:</span>
+                        <span>${formatCurrency(transaction.tax)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">
+                        <span>TOTAL:</span>
+                        <span>${formatCurrency(transaction.total)}</span>
+                    </div>
+                    <p style="margin: 10px 0; text-align: center;">============================</p>
+                    <p style="text-align: center; font-size: 10px; margin: 5px 0;">Terima kasih atas kunjungan Anda!</p>
+                    <p style="text-align: center; font-size: 10px; margin: 5px 0;">www.emydngroup.com</p>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeStrukModal() {
+            document.getElementById('struk-modal').classList.add('hidden');
+            currentTransaction = null;
+        }
+
+        function printStruk() {
+            if (!currentTransaction) return;
+            
+            const transaction = currentTransaction;
             const strukDiv = document.getElementById('struk-print');
             strukDiv.style.display = 'block';
             strukDiv.style.width = '80mm';
@@ -509,8 +584,9 @@
             
             strukDiv.innerHTML = `
                 <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="images/logo.png" alt="Logo" style="width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 8px; display: block;" onerror="this.style.display='none'">
                     <h2 style="margin: 0; font-size: 18px;">EMYDN POS</h2>
-                    <p style="margin: 5px 0; font-size: 10px;">${transaction.date}, ${transaction.time}</p>
+                    <p style="margin: 5px 0; font-size: 10px;">${transaction.date} ${transaction.time}</p>
                     <p style="margin: 10px 0;">============================</p>
                 </div>
                 <div style="font-size: 11px;">
@@ -545,13 +621,17 @@
                         <span>${formatCurrency(transaction.total)}</span>
                     </div>
                     <p style="margin: 10px 0; text-align: center;">============================</p>
-                    <p style="text-align: center; font-size: 10px;">Terima kasih!</p>
+                    <p style="text-align: center; font-size: 10px; margin: 5px 0;">Terima kasih atas kunjungan Anda!</p>
+                    <p style="text-align: center; font-size: 10px; margin: 5px 0;">www.emydngroup.com</p>
                 </div>
             `;
             
             setTimeout(() => {
                 window.print();
-                setTimeout(() => strukDiv.style.display = 'none', 500);
+                setTimeout(() => {
+                    strukDiv.style.display = 'none';
+                    closeStrukModal();
+                }, 500);
             }, 100);
         }
 
