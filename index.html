@@ -337,6 +337,93 @@
             display: block;
         }
 
+        /* NEW DEMO SECTION STYLES */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.demo-card {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.demo-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.demo-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.demo-card:nth-child(3) {
+    animation-delay: 0.5s;
+}
+
+.demo-card:hover {
+    transform: translateY(-10px);
+}
+
+.demo-btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.demo-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.demo-btn:hover::before {
+    left: 100%;
+}
+
+.demo-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.4);
+}
+
+.new-badge {
+    animation: pulse 2s infinite;
+}
+
+.heart-icon {
+    transition: all 0.3s ease;
+}
+
+.heart-icon:hover {
+    transform: scale(1.2);
+    color: #DC2626;
+}
+
+.product-image {
+    transition: transform 0.5s ease;
+}
+
+.demo-card:hover .product-image {
+    transform: scale(1.1);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, #8B0000 0%, #DC2626 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+        
+
         /* New Styles for Light Hero Section */
         .light-hero {
             background: linear-gradient(135deg, #FFFAF5 0%, #FFF8F0 100%);
@@ -355,6 +442,8 @@
                 radial-gradient(circle at 80% 20%, rgba(139, 0, 0, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.8) 0%, transparent 50%);
         }
+
+
 
         .survey-card {
             background: white;
@@ -655,116 +744,170 @@
         </div>
     </section>
 
-    <!-- DEMO SECTION -->
+ <!-- DEMO SECTION - UPDATED -->
 <section class="py-20 bg-gradient-to-br from-gray-50 to-white" id="demo">
     <div class="container mx-auto px-6">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-bold text-primary mb-4">Demo Produk Kami</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        <div class="text-center mb-16 float-animation">
+            <h2 class="text-5xl md:text-6xl font-bold gradient-text mb-6">Demo Produk Kami</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Lihat langsung bagaimana solusi kami dapat membantu bisnis Anda. 
                 Coba demo interaktif produk-produk unggulan Emydn Group.
             </p>
         </div>
 
-<!-- Tombol Aksi di Demo Produk (Versi Lebih Menarik) -->
-<div class="mt-10 flex justify-center">
-  <a href="https://www.emydn-group-website/demo/index.html"
-     target="_blank"
-     class="relative inline-flex items-center justify-center px-10 py-4 overflow-hidden font-semibold text-white rounded-full group bg-gradient-to-r from-red-600 via-indigo-600 to-purple-600 shadow-lg transition-all duration-500 ease-out hover:scale-105">
-     
-    <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-red-500 transition-all duration-300 opacity-0 group-hover:opacity-100 blur-xl"></span>
-    <span class="relative z-10 flex items-center gap-2">
-      <i class="fas fa-play-circle text-white text-xl"></i>
-      Lihat Demo Sekarang
-    </span>
-  </a>
-</div>
-
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Demo 1 - EMYDN POS -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 group">
-                <div class="h-48 bg-gradient-to-r from-primary to-red-700 flex items-center justify-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <i class="fas fa-cash-register text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
+        <div class="grid md:grid-cols-3 gap-8 mb-16">
+            
+            <!-- Demo Card 1 - EMYDN POS -->
+            <div class="demo-card bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-primary relative group">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="new-badge bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                        NEW
+                    </span>
                 </div>
-                <div class="p-6">
+                
+                <button class="absolute top-4 right-4 z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg heart-icon">
+                    <i class="far fa-heart text-primary text-xl"></i>
+                </button>
+
+                <div class="h-64 bg-gradient-to-br from-red-50 to-red-100 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80" 
+                         alt="EMYDN POS System" 
+                         class="product-image w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+
+                <div class="p-8">
                     <h3 class="text-2xl font-bold text-primary mb-3">EMYDN POS</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        Sistem Point of Sale modern dengan inventory management, laporan penjualan real-time, dan integrasi pembayaran lengkap.
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Sistem Point of Sale modern dengan inventory management, laporan penjualan real-time, dan integrasi pembayaran lengkap untuk bisnis Anda.
                     </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">POS System</span>
-                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">Inventory</span>
-                        <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">Reports</span>
-                    </div>
-                    <a href="/demo/emydn-pos/index.html" target="_blank" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-red-900 transition flex items-center justify-center gap-2">
-                        <i class="fas fa-play-circle"></i>
-                        Coba Demo
+                    
+                    <a href="/demo/emydn-pos/index.html" 
+                       target="_blank" 
+                       class="demo-btn w-full bg-gradient-to-r from-primary to-red-700 text-white py-4 rounded-full font-bold text-lg hover:from-red-700 hover:to-primary transition-all duration-300 flex items-center justify-center gap-3 shadow-lg">
+                        <i class="fas fa-play-circle text-2xl"></i>
+                        Lihat Demo Sekarang
                     </a>
                 </div>
             </div>
 
-            <!-- Demo 2 - EMYDN LMS -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 group">
-                <div class="h-48 bg-gradient-to-r from-blue-500 to-blue-700 flex items-center justify-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <i class="fas fa-graduation-cap text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
+            <!-- Demo Card 2 - EMYDN LMS -->
+            <div class="demo-card bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-primary relative group">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="new-badge bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                        NEW
+                    </span>
                 </div>
-                <div class="p-6">
+                
+                <button class="absolute top-4 right-4 z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg heart-icon">
+                    <i class="far fa-heart text-primary text-xl"></i>
+                </button>
+
+                <div class="h-64 bg-gradient-to-br from-blue-50 to-blue-100 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=800&q=80" 
+                         alt="EMYDN LMS Platform" 
+                         class="product-image w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+
+                <div class="p-8">
                     <h3 class="text-2xl font-bold text-primary mb-3">EMYDN LMS</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        Platform pembelajaran online dengan kursus interaktif, tracking progress, dan sertifikasi digital untuk pengembangan skill.
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Platform pembelajaran online dengan kursus interaktif, tracking progress, dan sertifikasi digital untuk pengembangan skill profesional.
                     </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">E-Learning</span>
-                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">Courses</span>
-                        <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">Certification</span>
-                    </div>
-                    <button class="w-full bg-gray-300 text-gray-600 py-3 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center gap-2">
-                        <i class="fas fa-clock"></i>
+                    
+                    <button class="demo-btn w-full bg-gray-300 text-gray-600 py-4 rounded-full font-bold text-lg cursor-not-allowed flex items-center justify-center gap-3 shadow-lg">
+                        <i class="fas fa-clock text-2xl"></i>
                         Coming Soon
                     </button>
                 </div>
             </div>
 
-            <!-- Demo 3 - EMYDN ECOMMERCE -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 group">
-                <div class="h-48 bg-gradient-to-r from-green-500 to-green-700 flex items-center justify-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <i class="fas fa-shopping-cart text-white text-6xl relative z-10 group-hover:scale-110 transition-transform duration-300"></i>
+            <!-- Demo Card 3 - EMYDN ECOMMERCE -->
+            <div class="demo-card bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-primary relative group">
+                <div class="absolute top-4 left-4 z-10">
+                    <span class="new-badge bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                        NEW
+                    </span>
                 </div>
-                <div class="p-6">
+                
+                <button class="absolute top-4 right-4 z-10 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg heart-icon">
+                    <i class="far fa-heart text-primary text-xl"></i>
+                </button>
+
+                <div class="h-64 bg-gradient-to-br from-green-50 to-green-100 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=800&q=80" 
+                         alt="EMYDN Ecommerce Platform" 
+                         class="product-image w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                </div>
+
+                <div class="p-8">
                     <h3 class="text-2xl font-bold text-primary mb-3">EMYDN ECOMMERCE</h3>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        Toko online lengkap dengan manajemen produk, berbagai metode pembayaran, dan dashboard analytics untuk optimasi penjualan.
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Toko online lengkap dengan manajemen produk, berbagai metode pembayaran, dan dashboard analytics untuk optimasi penjualan maksimal.
                     </p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium">Online Store</span>
-                        <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium">Payments</span>
-                        <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium">Analytics</span>
-                    </div>
-                    <button class="w-full bg-gray-300 text-gray-600 py-3 rounded-lg font-semibold cursor-not-allowed flex items-center justify-center gap-2">
-                        <i class="fas fa-clock"></i>
+                    
+                    <button class="demo-btn w-full bg-gray-300 text-gray-600 py-4 rounded-full font-bold text-lg cursor-not-allowed flex items-center justify-center gap-3 shadow-lg">
+                        <i class="fas fa-clock text-2xl"></i>
                         Coming Soon
                     </button>
                 </div>
             </div>
+
         </div>
 
-        <div class="text-center mt-12">
-            <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 max-w-4xl mx-auto">
-                <h3 class="text-2xl font-bold text-primary mb-4">Ingin Demo Kustom untuk Bisnis Anda?</h3>
-                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                    Kami dapat membuat demo khusus yang sesuai dengan kebutuhan spesifik bisnis Anda. 
-                    Jadwalkan sesi konsultasi gratis dengan tim kami.
+        <!-- CTA Box -->
+        <div class="bg-gradient-to-r from-primary to-red-800 rounded-3xl p-12 shadow-2xl relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+            </div>
+            
+            <div class="relative z-10 text-center">
+                <div class="mb-6">
+                    <i class="fas fa-gift text-6xl text-white mb-4"></i>
+                </div>
+                <h3 class="text-4xl font-bold text-white mb-4">Demo Gratis Sekarang!</h3>
+                <p class="text-xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed">
+                    Rasakan pengalaman menggunakan fitur-fitur canggih kami tanpa biaya. 
+                    Dapatkan akses penuh ke semua demo produk dan lihat bagaimana solusi kami 
+                    dapat meningkatkan efisiensi bisnis Anda hingga 300%. Jangan lewatkan kesempatan 
+                    untuk mencoba teknologi terdepan yang sudah dipercaya oleh ribuan bisnis!
                 </p>
-                <a href="/contact" class="inline-flex items-center bg-primary text-white px-8 py-4 rounded-full font-semibold hover:bg-red-900 transition transform hover:scale-105 shadow-lg">
-                    <i class="fas fa-calendar-alt mr-2"></i>
-                    Jadwalkan Demo Kustom
-                </a>
+                
+                <div class="flex flex-wrap gap-6 justify-center items-center mb-8">
+                    <div class="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+                        <i class="fas fa-check-circle text-white text-2xl"></i>
+                        <span class="text-white font-semibold text-lg">Tanpa Kartu Kredit</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+                        <i class="fas fa-rocket text-white text-2xl"></i>
+                        <span class="text-white font-semibold text-lg">Akses Instan</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+                        <i class="fas fa-star text-white text-2xl"></i>
+                        <span class="text-white font-semibold text-lg">Fitur Premium</span>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <a href="https://www.emydn-group-website/demo/index.html" 
+                       target="_blank" 
+                       class="demo-btn inline-flex items-center gap-3 bg-white text-primary px-10 py-5 rounded-full font-bold text-xl hover:bg-gray-100 transition-all duration-300 shadow-2xl">
+                        <i class="fas fa-play-circle text-2xl"></i>
+                        Mulai Demo Gratis
+                        <i class="fas fa-arrow-right text-xl"></i>
+                    </a>
+                </div>
+
+                <p class="text-white/80 mt-6 text-sm">
+                    <i class="fas fa-shield-alt mr-2"></i>
+                    100% Aman & Terpercaya • Trusted by 1000+ Businesses
+                </p>
             </div>
         </div>
+
     </div>
 </section>
 
@@ -913,6 +1056,23 @@
             observer.observe(el);
         });
 
+
+        // Heart icon animation
+document.querySelectorAll('.heart-icon').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const icon = this.querySelector('i');
+        if (icon.classList.contains('far')) {
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+            icon.style.color = '#DC2626';
+        } else {
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+            icon.style.color = '#8B0000';
+        }
+    });
+});
 
 // Tambahkan di bagian script
 document.addEventListener('DOMContentLoaded', function() {
