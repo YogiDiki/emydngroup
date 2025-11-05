@@ -136,20 +136,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.emydngroup.com/demo</loc>
-    **<lastmod>2025-10-17</lastmod>**
+    <loc>https://www.emydngroup.com/demo/</loc>
+    <lastmod>2025-10-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
-    <url>
-    <loc>https://www.emydngroup.com/demo/emydn-pos</loc>
-    **<lastmod>2025-10-17</lastmod>**
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-    <url>
-    <loc>https://www.emydngroup.com/demo/emydn-pos/index.html</loc>
-    **<lastmod>2025-10-17</lastmod>**
+  <url>
+    <loc>https://www.emydngroup.com/demo/emydn-pos/</loc>
+    <lastmod>2025-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
