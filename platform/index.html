@@ -4,13 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Emydn Langit</title>
+
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1e293b">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+
+  <!-- Style -->
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="icons/icon-192.png">
-  <link rel="manifest" href="manifest.json">
- <meta name="theme-color" content="#1e293b">
-
 </head>
+
 <body>
   <header>
     <h1>🌙 Emydn Langit</h1>
@@ -37,45 +41,72 @@
       <h2>Ayat Harian</h2>
       <blockquote id="dailyAyah">Memuat ayat...</blockquote>
     </section>
-    
-    
 
-   <section id="habit" class="page">
-  <h2>Catatan Habit Ibadah</h2>
+    <section id="habit" class="page">
+      <h2>Catatan Habit Ibadah</h2>
 
-  <div id="stats" style="margin-bottom:1rem;">
-    <p>🌟 <b>Poin:</b> <span id="points">0</span> | 🧭 <b>Level:</b> <span id="level">1</span></p>
-    <div style="background:#e2e8f0;border-radius:6px;overflow:hidden;width:80%;margin:0 auto;">
-      <div id="levelProgress" style="height:8px;background:#38bdf8;width:0%;transition:width .3s;"></div>
-    </div>
-  </div>
+      <div id="stats" style="margin-bottom:1rem;">
+        <p>🌟 <b>Poin:</b> <span id="points">0</span> | 🧭 <b>Level:</b> <span id="level">1</span></p>
+        <div style="background:#e2e8f0;border-radius:6px;overflow:hidden;width:80%;margin:0 auto;">
+          <div id="levelProgress" style="height:8px;background:#38bdf8;width:0%;transition:width .3s;"></div>
+        </div>
+      </div>
 
-  <ul id="habitList"></ul>
-  <button onclick="addHabit()">+ Tambah Habit</button>
-</section>
+      <ul id="habitList"></ul>
+      <button onclick="addHabit()">+ Tambah Habit</button>
 
+      <!-- Tombol Install PWA -->
+      <button id="installBtn" style="margin-top:10px; display:none;">
+        📱 Instal Emydn Langit
+      </button>
+    </section>
   </main>
 
   <footer>
     <p>© 2025 Emydn Langit</p>
   </footer>
 
+  <!-- Scripts -->
   <script src="app.js"></script>
   <script src="notification.js"></script>
   <script src="js/dataHandler.js"></script>
   <script src="js/stats.js"></script>
   <script src="js/prayerTimes.js"></script>
 
+  <!-- Service Worker -->
   <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js')
-      .then(() => console.log('✅ Service Worker aktif'))
-      .catch(err => console.log('SW gagal:', err));
-  });
-}
-</script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('✅ Service Worker aktif'))
+        .catch(err => console.log('SW gagal:', err));
+    });
+  }
+  </script>
 
+  <!-- Install Button Handler -->
+  <script>
+  let deferredPrompt;
+  const installBtn = document.getElementById("installBtn");
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = "block";
+
+    installBtn.addEventListener("click", async () => {
+      installBtn.style.display = "none";
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        console.log("User accepted install");
+      } else {
+        console.log("User dismissed install");
+      }
+      deferredPrompt = null;
+    });
+  });
+  </script>
 
 </body>
 </html>

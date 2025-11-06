@@ -1,12 +1,11 @@
 {
   "name": "Emydn Langit",
   "short_name": "Langit",
-  "description": "Ibadah Habit Tracker - Bantu kamu konsisten ibadah harian",
   "start_url": "/platform/index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
+  "background_color": "#f8fafc",
   "theme_color": "#1e293b",
-  "orientation": "portrait",
+  "description": "Aplikasi Islami — pengingat sholat, ayat harian, dan habit ibadah.",
   "icons": [
     {
       "src": "icons/icon-192.png",
