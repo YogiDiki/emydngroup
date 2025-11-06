@@ -1,13 +1,24 @@
-/about /about.html 200
-/contact /contact.html 200
-/line-of-business /line-of-business.html 200
-/blog /blog.html 200
-/business/education /business/education.html 200
-/business/esport /business/esport.html 200
-/business/fnb /business/fnb.html 200
-/business/system /business/system.html 200
-/articles/teknologi-edukasi-modern /articles/teknologi-edukasi-modern.html 200
-/articles/inovasi-esport-digital /articles/inovasi-esport-digital.html 200
-/articles/tren-fnb-2025 /articles/tren-fnb-2025.html 200
-/articles/website-untuk-umkm /articles/website-untuk-umkm.html 200
-/articles/asahotak_digital /articles/asahotak_digital.html 200
+/about    /about.html    200
+/contact  /contact.html  200
+/line-of-business  /line-of-business.html  200
+/blog     /blog.html     200
+
+# Bagian Business
+/business/education  /business/education.html  200
+/business/esport     /business/esport.html     200
+/business/fnb        /business/fnb.html        200
+/business/system     /business/system.html     200
+
+# Bagian Articles
+/articles/teknologi-edukasi-modern              /articles/teknologi-edukasi-modern.html              200
+/articles/inovasi-esport-digital                /articles/inovasi-esport-digital.html                200
+/articles/tren-fnb-2025                         /articles/tren-fnb-2025.html                         200
+/articles/website-untuk-umkm                    /articles/website-untuk-umkm.html                    200
+/articles/asahotak_digital                      /articles/asahotak_digital.html                      200
+/articles/chatgpt-atlas-website-umkm            /articles/chatgpt-atlas-website-umkm.html            200
+/articles/jasa-website-murah-jakarta-selatan    /articles/jasa-website-murah-jakarta-selatan.html    200
+/articles/strategi-digital                      /articles/strategi-digital.html                      200
+/articles/toko-online                           /articles/toko-online.html                           200
+
+# Tambahkan aturan umum agar semua artikel otomatis bisa tanpa .html
+/articles/:slug   /articles/:slug.html   200

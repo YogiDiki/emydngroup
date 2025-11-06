@@ -1,0 +1,63 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background: #f8fafc;
+  color: #222;
+  margin: 0;
+  text-align: center;
+}
+
+header {
+  background: #1e293b;
+  color: white;
+  padding: 1rem;
+}
+
+nav button {
+  background: #334155;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+nav button:hover {
+  background: #475569;
+}
+
+.page {
+  display: none;
+  padding: 1rem;
+}
+
+.page.active {
+  display: block;
+}
+
+footer {
+  background: #e2e8f0;
+  padding: 1rem;
+  font-size: 0.8rem;
+}
+
+
+#habitList {
+  list-style: none;
+  padding: 0;
+  margin: 1rem auto;
+  max-width: 400px;
+  text-align: left;
+}
+
+#habitList li {
+  background: #fff;
+  margin: 0.4rem 0;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+#habitList input[type="checkbox"] {
+  transform: scale(1.2);
+}
