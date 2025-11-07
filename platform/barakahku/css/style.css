@@ -1,6 +1,0 @@
-/* Custom minimal */
-:root { --primary: #0f5132; --accent: #b38600; }
-body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-
-/* small helpers for dark mode etc */
-.dark body { background: #07140b; color: #e6f7ee; }
