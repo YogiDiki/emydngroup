@@ -1,0 +1,34 @@
+{
+  "zones": {
+    "WIB": {
+      "label": "WIB (UTC+7)",
+      "default_times": {
+        "Fajr": "04:30",
+        "Dhuhr": "11:55",
+        "Asr": "15:15",
+        "Maghrib": "18:05",
+        "Isha": "19:20"
+      }
+    },
+    "WITA": {
+      "label": "WITA (UTC+8)",
+      "default_times": {
+        "Fajr": "04:40",
+        "Dhuhr": "12:05",
+        "Asr": "15:25",
+        "Maghrib": "18:15",
+        "Isha": "19:30"
+      }
+    },
+    "WIT": {
+      "label": "WIT (UTC+9)",
+      "default_times": {
+        "Fajr": "04:50",
+        "Dhuhr": "12:15",
+        "Asr": "15:35",
+        "Maghrib": "18:25",
+        "Isha": "19:40"
+      }
+    }
+  }
+}

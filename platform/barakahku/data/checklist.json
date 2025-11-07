@@ -1,0 +1,7 @@
+{
+  "items": [
+    { "id": "shalat", "name": "Shalat 5 waktu", "desc": "Tunaikan 5 waktu tepat", "done": false },
+    { "id": "dzikir", "name": "Dzikir pagi & petang", "desc": "Dzikir pagi/ petang minimal 1x", "done": false },
+    { "id": "sedekah", "name": "Sedekah", "desc": "Sedekah harian meski sedikit", "done": false }
+  ]
+}

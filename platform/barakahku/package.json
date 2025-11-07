@@ -1,0 +1,10 @@
+{
+  "name": "barakahku",
+  "version": "1.0.0",
+  "main": "generate-surah-json.js",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}

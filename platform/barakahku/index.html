@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id" x-data="appData()" x-init="initApp()">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BarakahKu - Platform Islami</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <!-- Icon -->
+  <link rel="icon" href="./assets/icons/favicon.ico">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Meta Theme -->
+  <meta name="theme-color" content="#16A34A">
+</head>
+
+<body class="bg-green-50 text-gray-900 font-sans flex flex-col min-h-screen">
+  <!-- Header -->
+  <header class="bg-green-600 text-white text-center py-4 shadow-md">
+    <h1 class="text-2xl font-bold">BarakahKu 🌙</h1>
+  </header>
+
+  <!-- Konten -->
+  <main class="flex-1 p-4">
+    <template x-if="page === 'home'">
+      <div class="text-center space-y-4">
+        <h2 class="text-xl font-semibold">Assalamu’alaikum 👋</h2>
+        <p class="text-gray-700">Selamat datang di <b>BarakahKu</b>, teman ibadah harian Anda.</p>
+
+        <div class="grid grid-cols-2 gap-4 mt-6">
+          <button @click="page='quran'" class="p-4 bg-white rounded-2xl shadow hover:bg-green-100">
+            📖 <br> <b>Al-Qur’an Digital</b>
+          </button>
+          <button @click="page='doa'" class="p-4 bg-white rounded-2xl shadow hover:bg-green-100">
+            🤲 <br> <b>Doa Harian</b>
+          </button>
+          <button @click="page='checklist'" class="p-4 bg-white rounded-2xl shadow hover:bg-green-100">
+            ✅ <br> <b>Checklist Ibadah</b>
+          </button>
+          <button @click="page='jadwal'" class="p-4 bg-white rounded-2xl shadow hover:bg-green-100">
+            🕋 <br> <b>Jadwal Sholat</b>
+          </button>
+        </div>
+
+        <!-- Tombol Install -->
+        <button id="installBtn" class="mt-6 px-6 py-3 bg-yellow-400 rounded-full text-black font-semibold shadow-md hover:bg-yellow-300 hidden">
+          ➕ Instal Aplikasi
+        </button>
+      </div>
+    </template>
+
+    <!-- Halaman Al-Qur’an -->
+    <template x-if="page === 'quran'">
+      <div>
+        <button @click="page='home'" class="mb-3 text-green-600 font-semibold">← Kembali</button>
+        <h2 class="text-xl font-bold mb-4">📖 Al-Qur’an Digital</h2>
+        <div id="quranList" class="space-y-2"></div>
+      </div>
+    </template>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-600 text-white text-center py-3 text-sm">
+    © 2025 BarakahKu - Semua Hak Dilindungi
+  </footer>
+
+  <!-- JS -->
+  <script src="./js/app.js"></script>
+</body>
+</html>
