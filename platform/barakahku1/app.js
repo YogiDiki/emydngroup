@@ -1,66 +1,70 @@
 // ==============================
-// BarakahKu - app.js (FIXED VERSION)
+// BarakahKu - app.js (Complete with Firebase v8)
 // ==============================
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging
+// Helper function to load external scripts
+// ------------------------------
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+    document.head.appendChild(script);
+  });
+}
+
+// ------------------------------
+// Fungsi inisialisasi Firebase Messaging (v8 Compat)
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
-    // Cek permission dulu sebelum init
     if (Notification.permission !== 'granted') {
       console.log('⚠️ Notifikasi belum diizinkan, skip Firebase Messaging init');
       return;
     }
 
-    // Dynamic import dari CDN (versi modular)
-    const firebaseAppModule = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js');
-    const firebaseMessagingModule = await import('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging.js');
-
-    const { initializeApp } = firebaseAppModule;
-    const { getMessaging, getToken, onMessage } = firebaseMessagingModule;
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
-      authDomain: "barakahku-app.firebaseapp.com",
-      projectId: "barakahku-app",
-      storageBucket: "barakahku-app.firebasestorage.app",
-      messagingSenderId: "510231053293",
-      appId: "1:510231053293:web:921b9e574fc614492b5de4",
-      measurementId: "G-EQPYKJJGG7"
-    };
-
-    // Inisialisasi Firebase App
-    const fbApp = initializeApp(firebaseConfig);
+    console.log('📦 Loading Firebase Compat SDK...');
     
-    // ✅ KUNCI: Cari atau register SW dulu sebelum getMessaging
-    let registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+    // Load Firebase App Compat
+    if (!window.firebase) {
+      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
+    }
     
-    if (!registration) {
-      console.log('📝 Registering Firebase SW...');
-      registration = await navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js', {
-        scope: '/platform/barakahku1/'
-      });
-      console.log('✅ Firebase SW registered manually');
+    // Load Firebase Messaging Compat
+    if (!window.firebase.messaging) {
+      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
     }
 
-    // Pass registration ke getMessaging
-    const messaging = getMessaging(fbApp);
+    console.log('✅ Firebase Compat scripts loaded');
 
-    console.log('✅ Firebase App initialized');
+    // Initialize Firebase (cek apakah sudah diinit)
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
+        authDomain: "barakahku-app.firebaseapp.com",
+        projectId: "barakahku-app",
+        storageBucket: "barakahku-app.firebasestorage.app",
+        messagingSenderId: "510231053293",
+        appId: "1:510231053293:web:921b9e574fc614492b5de4",
+        measurementId: "G-EQPYKJJGG7"
+      });
+      console.log('✅ Firebase App initialized');
+    }
 
-    // Ambil token FCM dengan SW registration
+    // Get messaging instance
+    const messaging = firebase.messaging();
+
+    // Get token dengan VAPID key
     try {
-      const vapidKey = 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM';
-
-      const currentToken = await getToken(messaging, { 
-        vapidKey,
-        serviceWorkerRegistration: registration 
+      const currentToken = await messaging.getToken({ 
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
       });
       
       if (currentToken) {
         console.log('🔑 FCM token diperoleh:', currentToken);
-        // TODO: Simpan token ini ke database jika perlu
+        console.log('💾 Simpan token ini untuk backend:', currentToken);
       } else {
         console.warn('⚠️ Tidak mendapatkan FCM token');
       }
@@ -68,8 +72,8 @@ async function initFirebaseMessaging() {
       console.error('❌ Gagal mengambil FCM token:', err);
     }
 
-    // Handler notifikasi ketika app dalam keadaan foreground
-    onMessage(messaging, (payload) => {
+    // Handler untuk foreground messages
+    messaging.onMessage((payload) => {
       console.log('📩 Pesan FCM diterima (foreground):', payload);
       try {
         const title = payload?.notification?.title || 'BarakahKu - Notifikasi';
@@ -97,7 +101,7 @@ async function initFirebaseMessaging() {
       } catch (err) {
         console.error('❌ Error menampilkan notifikasi foreground:', err);
       }
-    }); // ✅ INI YANG KURANG - tutup kurung onMessage
+    });
 
   } catch (error) {
     console.error('❌ Firebase Messaging initialization failed:', error);
@@ -455,6 +459,25 @@ function createApp() {
 
     registerServiceWorker() {
       if ('serviceWorker' in navigator) {
+        // Register Firebase Messaging SW PERTAMA (penting untuk FCM)
+        navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js', {
+          scope: '/platform/barakahku1/'
+        })
+          .then(registration => {
+            console.log('✅ Firebase Messaging SW terdaftar:', registration.scope);
+            
+            if (Notification.permission === 'granted') {
+              console.log('🔔 Notifikasi sudah diizinkan, inisialisasi Firebase Messaging...');
+              // Tunggu lebih lama agar SW benar-benar ready
+              setTimeout(() => {
+                initFirebaseMessaging();
+              }, 2000);
+            }
+          })
+          .catch(err => {
+            console.error('❌ Gagal register firebase-messaging-sw.js:', err);
+          });
+
         // Register PWA Service Worker (untuk caching)
         navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
           scope: '/platform/barakahku1/'
@@ -465,25 +488,6 @@ function createApp() {
           .catch(err => {
             console.error('❌ Gagal register service-worker.js:', err);
           });
-
-        // Register Firebase Messaging SW (di subdirectory yang sama)
-        navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js', {
-          scope: '/platform/barakahku1/'
-        })
-          .then(registration => {
-            console.log('✅ Firebase Messaging SW terdaftar:', registration.scope);
-            
-            if (Notification.permission === 'granted') {
-              console.log('🔔 Notifikasi sudah diizinkan, inisialisasi Firebase Messaging...');
-              setTimeout(() => {
-                initFirebaseMessaging();
-              }, 1000);
-            }
-          })
-          .catch(err => {
-            console.error('❌ Gagal register firebase-messaging-sw.js:', err);
-            console.error('Detail error:', err.message);
-          });
       } else {
         console.warn('⚠️ Service Worker tidak didukung browser');
       }
@@ -491,7 +495,7 @@ function createApp() {
   };
 }
 
-// ✅ EKSPOS ke Alpine.js dengan cara yang benar
+// ✅ EKSPOS ke Alpine.js
 document.addEventListener('alpine:init', () => {
   Alpine.data('app', createApp);
 });
