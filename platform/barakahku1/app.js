@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js (Fixed Version)
+// BarakahKu - app.js (Android Fix Version)
 // ==============================
 
 // ------------------------------
@@ -16,21 +16,32 @@ function loadScript(src) {
 }
 
 // ------------------------------
-// Firebase Messaging Initialization
+// Firebase Messaging Initialization dengan Android Fix
 // ------------------------------
 let messaging = null;
 
 async function initFirebaseMessaging() {
   try {
+    // Cek platform
+    const isAndroid = /Android/.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    console.log(`📱 Platform: ${isAndroid ? 'Android' : isIOS ? 'iOS' : 'Desktop'}`);
+
     // Cek apakah service worker sudah aktif
-    if (!navigator.serviceWorker || !navigator.serviceWorker.controller) {
-      console.log('⏳ Service Worker belum aktif, tunggu beberapa saat...');
-      setTimeout(initFirebaseMessaging, 3000);
+    if (!navigator.serviceWorker) {
+      console.log('⚠️ Service Worker tidak didukung');
+      return;
+    }
+
+    const registration = await navigator.serviceWorker.ready;
+    if (!registration) {
+      console.log('⏳ Service Worker belum ready');
+      setTimeout(initFirebaseMessaging, 2000);
       return;
     }
 
     if (Notification.permission !== 'granted') {
-      console.log('⚠️ Notifikasi belum diizinkan, skip Firebase Messaging init');
+      console.log('⚠️ Notifikasi belum diizinkan');
       return;
     }
 
@@ -62,20 +73,22 @@ async function initFirebaseMessaging() {
       console.log('✅ Firebase App initialized');
     }
 
-    // Get messaging instance dengan konfigurasi Service Worker
+    // Get messaging instance
     messaging = firebase.messaging();
 
-    // KONFIGURASI PENTING: Set Service Worker yang sudah ada
+    // KONFIGURASI KHUSUS ANDROID
     try {
-      // Daftarkan Service Worker untuk Firebase Messaging
-      const registration = await navigator.serviceWorker.ready;
-      
       // Gunakan Service Worker yang sudah terdaftar
       await messaging.useServiceWorker(registration);
       
+      // Konfigurasi untuk Android PWA
+      if (isAndroid) {
+        console.log('📱 Konfigurasi khusus Android...');
+      }
+      
       console.log('✅ Firebase Messaging menggunakan Service Worker yang ada');
     } catch (swError) {
-      console.error('❌ Error setting up Service Worker for Firebase:', swError);
+      console.error('❌ Error setting up Service Worker:', swError);
     }
 
     // Set up foreground message handler
@@ -88,24 +101,34 @@ async function initFirebaseMessaging() {
       );
     });
 
-    // Get FCM token
+    // Get FCM token dengan konfigurasi Android
     try {
       const currentToken = await messaging.getToken({ 
         vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-        serviceWorkerRegistration: await navigator.serviceWorker.ready
+        serviceWorkerRegistration: registration
       });
       
       if (currentToken) {
         console.log('🔑 FCM token diperoleh:', currentToken);
-        console.log('💾 Simpan token ini untuk backend:', currentToken);
+        console.log('📱 Platform Token:', isAndroid ? 'Android' : 'Desktop');
         
-        // Simpan token ke localStorage untuk penggunaan backend
+        // Simpan token dengan platform info
         localStorage.setItem('fcm_token', currentToken);
+        localStorage.setItem('fcm_platform', isAndroid ? 'android' : 'desktop');
+        localStorage.setItem('fcm_token_timestamp', new Date().toISOString());
+        
+        // Log untuk debugging
+        console.log('💾 Token saved with info:', {
+          token: currentToken.substring(0, 20) + '...',
+          platform: isAndroid ? 'android' : 'desktop',
+          timestamp: new Date().toLocaleString()
+        });
       } else {
         console.warn('⚠️ Tidak mendapatkan FCM token');
       }
     } catch (tokenError) {
       console.error('❌ Gagal mengambil FCM token:', tokenError);
+      console.log('🔧 Detail error:', tokenError.message);
     }
 
     console.log('✅ Firebase Messaging initialized successfully');
@@ -301,7 +324,7 @@ function createApp() {
         {
           id: 10,
           judul: 'Doa Ketika Turun Hujan',
-          arab: 'اَللَّهُمَّ صَيِّبًا نَافِعًا',
+          arab: 'اَللَّهُمَّ صَيِّbًا نَافِعًا',
           latin: 'Allahumma shayyiban naafi\'aa',
           terjemah: 'Ya Allah, turunkanlah hujan yang bermanfaat'
         }
@@ -544,6 +567,16 @@ function createApp() {
       } else {
         console.warn('⚠️ Service Worker tidak didukung browser');
       }
+    },
+
+    // Method untuk debug FCM
+    debugFCM() {
+      console.log('🔧 Debug FCM Info:');
+      console.log('- Notification Permission:', Notification.permission);
+      console.log('- FCM Token:', localStorage.getItem('fcm_token'));
+      console.log('- Platform:', localStorage.getItem('fcm_platform'));
+      console.log('- Service Worker:', navigator.serviceWorker?.controller);
+      console.log('- User Agent:', navigator.userAgent);
     }
   };
 }
@@ -564,3 +597,6 @@ window.addEventListener('appinstalled', () => {
   console.log('✅ BarakahKu berhasil diinstall!');
   window.deferredPrompt = null;
 });
+
+// Export untuk debugging
+window.initFirebaseMessaging = initFirebaseMessaging;
