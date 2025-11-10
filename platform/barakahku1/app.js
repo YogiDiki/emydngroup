@@ -62,8 +62,21 @@ async function initFirebaseMessaging() {
       console.log('✅ Firebase App initialized');
     }
 
-    // Get messaging instance
+    // Get messaging instance dengan konfigurasi Service Worker
     messaging = firebase.messaging();
+
+    // KONFIGURASI PENTING: Set Service Worker yang sudah ada
+    try {
+      // Daftarkan Service Worker untuk Firebase Messaging
+      const registration = await navigator.serviceWorker.ready;
+      
+      // Gunakan Service Worker yang sudah terdaftar
+      await messaging.useServiceWorker(registration);
+      
+      console.log('✅ Firebase Messaging menggunakan Service Worker yang ada');
+    } catch (swError) {
+      console.error('❌ Error setting up Service Worker for Firebase:', swError);
+    }
 
     // Set up foreground message handler
     messaging.onMessage((payload) => {
@@ -74,6 +87,26 @@ async function initFirebaseMessaging() {
         payload.notification?.click_action || 'https://www.emydngroup.com/platform/barakahku1/'
       );
     });
+
+    // Get FCM token
+    try {
+      const currentToken = await messaging.getToken({ 
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+        serviceWorkerRegistration: await navigator.serviceWorker.ready
+      });
+      
+      if (currentToken) {
+        console.log('🔑 FCM token diperoleh:', currentToken);
+        console.log('💾 Simpan token ini untuk backend:', currentToken);
+        
+        // Simpan token ke localStorage untuk penggunaan backend
+        localStorage.setItem('fcm_token', currentToken);
+      } else {
+        console.warn('⚠️ Tidak mendapatkan FCM token');
+      }
+    } catch (tokenError) {
+      console.error('❌ Gagal mengambil FCM token:', tokenError);
+    }
 
     console.log('✅ Firebase Messaging initialized successfully');
 
@@ -476,25 +509,34 @@ function createApp() {
 
           // Tunggu service worker aktif
           if (registration.installing) {
+            console.log('⏳ Service Worker installing...');
             registration.installing.addEventListener('statechange', (event) => {
+              console.log('🔄 Service Worker state:', event.target.state);
               if (event.target.state === 'activated') {
                 console.log('🎉 Service Worker aktif!');
                 // Cek permission notifikasi dan inisialisasi Firebase
                 if (Notification.permission === 'granted') {
+                  console.log('🔔 Inisialisasi Firebase Messaging...');
                   setTimeout(() => {
                     initFirebaseMessaging();
-                  }, 2000);
+                  }, 1000);
                 }
               }
             });
           } else if (registration.active) {
             console.log('🎉 Service Worker sudah aktif!');
             if (Notification.permission === 'granted') {
+              console.log('🔔 Inisialisasi Firebase Messaging...');
               setTimeout(() => {
                 initFirebaseMessaging();
-              }, 2000);
+              }, 1000);
             }
           }
+
+          // Listen for updates
+          registration.addEventListener('updatefound', () => {
+            console.log('🔄 Service Worker update found!');
+          });
 
         } catch (error) {
           console.error('❌ Gagal register Service Worker:', error);

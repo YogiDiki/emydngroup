@@ -2,8 +2,7 @@
 // 🔥 PWA Service Worker + Firebase Cloud Messaging
 // ====================================================
 
-// PWA Cache Configuration
-const CACHE_NAME = 'barakahku-cache-v4';
+const CACHE_NAME = 'barakahku-cache-v5';
 const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
@@ -11,8 +10,7 @@ const urlsToCache = [
   '/platform/barakahku1/manifest.json',
   '/platform/barakahku1/assets/icons/icon-192.png',
   '/platform/barakahku1/assets/icons/icon-512.png',
-  'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js',
-  'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js'
+  'https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js'
 ];
 
 // ====================================================
@@ -25,7 +23,7 @@ importScripts('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-comp
 
 // Initialize Firebase in Service Worker
 try {
-  firebase.initializeApp({
+  const firebaseConfig = {
     apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
     authDomain: "barakahku-app.firebaseapp.com",
     projectId: "barakahku-app",
@@ -33,32 +31,43 @@ try {
     messagingSenderId: "510231053293",
     appId: "1:510231053293:web:921b9e574fc614492b5de4",
     measurementId: "G-EQPYKJJGG7"
-  });
+  };
+
+  firebase.initializeApp(firebaseConfig);
 
   const messaging = firebase.messaging();
 
-  // Handle background messages
+  // Background message handler
   messaging.onBackgroundMessage((payload) => {
-    console.log('📩 [SW] Background message received:', payload);
-    
+    console.log('📩 [SW] Received background message:', payload);
+
     const notificationTitle = payload.notification?.title || 'BarakahKu';
     const notificationOptions = {
-      body: payload.notification?.body || 'Notifikasi baru dari BarakahKu',
+      body: payload.notification?.body || 'Pesan baru dari BarakahKu',
       icon: '/platform/barakahku1/assets/icons/icon-192.png',
       badge: '/platform/barakahku1/assets/icons/icon-192.png',
-      tag: 'barakahku-notification',
-      requireInteraction: false,
-      vibrate: [200, 100, 200],
+      tag: 'barakahku-bg-notification',
+      requireInteraction: true,
+      actions: [
+        {
+          action: 'open',
+          title: 'Buka Aplikasi'
+        },
+        {
+          action: 'close',
+          title: 'Tutup'
+        }
+      ],
       data: {
-        url: payload.notification?.click_action || 'https://www.emydngroup.com/platform/barakahku1/',
-        timestamp: new Date().toISOString()
+        url: payload.data?.click_action || payload.notification?.click_action || '/platform/barakahku1/',
+        payload: JSON.stringify(payload)
       }
     };
 
     return self.registration.showNotification(notificationTitle, notificationOptions);
   });
 
-  console.log('✅ [SW] Firebase Messaging initialized successfully');
+  console.log('✅ [SW] Firebase Messaging initialized');
 
 } catch (error) {
   console.error('❌ [SW] Firebase initialization failed:', error);
@@ -68,7 +77,6 @@ try {
 // NOTIFICATION HANDLERS
 // ====================================================
 
-// Handle notification click
 self.addEventListener('notificationclick', (event) => {
   console.log('🔔 [SW] Notification clicked:', event.notification.tag);
   event.notification.close();
@@ -77,17 +85,17 @@ self.addEventListener('notificationclick', (event) => {
 
   event.waitUntil(
     clients.matchAll({ 
-      type: 'window', 
+      type: 'window',
       includeUncontrolled: true 
     }).then((clientList) => {
-      // Cari tab yang sudah terbuka
+      // Cari tab yang sudah terbuka dengan scope yang sama
       for (const client of clientList) {
         if (client.url.includes('/platform/barakahku1/') && 'focus' in client) {
           return client.focus();
         }
       }
       
-      // Jika tidak ada, buka tab baru
+      // Jika tidak ada client yang terbuka, buka tab baru
       if (clients.openWindow) {
         return clients.openWindow(urlToOpen);
       }
@@ -95,7 +103,6 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Handle notification close
 self.addEventListener('notificationclose', (event) => {
   console.log('🔔 [SW] Notification closed:', event.notification.tag);
 });
@@ -104,7 +111,6 @@ self.addEventListener('notificationclose', (event) => {
 // PWA CACHING LOGIC
 // ====================================================
 
-// Install SW
 self.addEventListener('install', (event) => {
   console.log('✅ [SW] Installing Service Worker...');
   
@@ -118,13 +124,9 @@ self.addEventListener('install', (event) => {
         console.log('✅ [SW] All resources cached');
         return self.skipWaiting();
       })
-      .catch(error => {
-        console.error('❌ [SW] Cache installation failed:', error);
-      })
   );
 });
 
-// Activate SW & clean old caches
 self.addEventListener('activate', (event) => {
   console.log('✅ [SW] Activating Service Worker...');
   
@@ -147,13 +149,15 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event with improved caching strategy
 self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
-  // Skip Chrome extensions
-  if (event.request.url.startsWith('chrome-extension://')) return;
+  // Skip Chrome extensions and external resources
+  if (event.request.url.startsWith('chrome-extension://') || 
+      !event.request.url.startsWith('http')) {
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request)
@@ -171,13 +175,12 @@ self.addEventListener('fetch', (event) => {
               return response;
             }
 
-            // Clone the response
+            // Clone the response for caching
             const responseToCache = response.clone();
 
-            // Cache the new response
+            // Cache the new response for same-origin requests
             caches.open(CACHE_NAME)
               .then((cache) => {
-                // Only cache same-origin requests
                 if (event.request.url.startsWith(self.location.origin)) {
                   cache.put(event.request, responseToCache);
                 }
@@ -187,7 +190,7 @@ self.addEventListener('fetch', (event) => {
           })
           .catch((error) => {
             console.error('❌ [SW] Fetch failed:', error);
-            // You could return a custom offline page here
+            // Return offline page or fallback here if needed
           });
       })
   );
@@ -195,6 +198,8 @@ self.addEventListener('fetch', (event) => {
 
 // Handle messages from main app
 self.addEventListener('message', (event) => {
+  console.log('📨 [SW] Message received:', event.data);
+  
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
