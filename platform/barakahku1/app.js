@@ -16,10 +16,19 @@ function loadScript(src) {
 }
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8 Compat)
+// Firebase Messaging Initialization
 // ------------------------------
+let messaging = null;
+
 async function initFirebaseMessaging() {
   try {
+    // Cek apakah service worker sudah aktif
+    if (!navigator.serviceWorker || !navigator.serviceWorker.controller) {
+      console.log('⏳ Service Worker belum aktif, tunggu beberapa saat...');
+      setTimeout(initFirebaseMessaging, 3000);
+      return;
+    }
+
     if (Notification.permission !== 'granted') {
       console.log('⚠️ Notifikasi belum diizinkan, skip Firebase Messaging init');
       return;
@@ -33,13 +42,13 @@ async function initFirebaseMessaging() {
     }
     
     // Load Firebase Messaging Compat
-    if (!window.firebase.messaging) {
+    if (!window.firebase?.messaging) {
       await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
     }
 
     console.log('✅ Firebase Compat scripts loaded');
 
-    // Initialize Firebase (cek apakah sudah diinit)
+    // Initialize Firebase
     if (!firebase.apps.length) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
@@ -54,57 +63,50 @@ async function initFirebaseMessaging() {
     }
 
     // Get messaging instance
-    const messaging = firebase.messaging();
+    messaging = firebase.messaging();
 
-    // Get token dengan VAPID key
-    try {
-      const currentToken = await messaging.getToken({ 
-        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
-      });
-      
-      if (currentToken) {
-        console.log('🔑 FCM token diperoleh:', currentToken);
-        console.log('💾 Simpan token ini untuk backend:', currentToken);
-      } else {
-        console.warn('⚠️ Tidak mendapatkan FCM token');
-      }
-    } catch (err) {
-      console.error('❌ Gagal mengambil FCM token:', err);
-    }
-
-    // Handler untuk foreground messages
+    // Set up foreground message handler
     messaging.onMessage((payload) => {
       console.log('📩 Pesan FCM diterima (foreground):', payload);
-      try {
-        const title = payload?.notification?.title || 'BarakahKu - Notifikasi';
-        const body = payload?.notification?.body || '';
-        
-        if (Notification.permission === 'granted') {
-          const notification = new Notification(title, {
-            body,
-            icon: '/platform/barakahku1/assets/icons/icon-192.png',
-            badge: '/platform/barakahku1/assets/icons/icon-192.png',
-            tag: 'barakahku-notification',
-            requireInteraction: false,
-            vibrate: [200, 100, 200],
-            data: {
-              url: payload.notification?.click_action || 'https://www.emydngroup.com/platform/barakahku1/'
-            }
-          });
-
-          notification.onclick = function(event) {
-            event.preventDefault();
-            window.focus();
-            notification.close();
-          };
-        }
-      } catch (err) {
-        console.error('❌ Error menampilkan notifikasi foreground:', err);
-      }
+      showLocalNotification(
+        payload?.notification?.title || 'BarakahKu - Notifikasi',
+        payload?.notification?.body || '',
+        payload.notification?.click_action || 'https://www.emydngroup.com/platform/barakahku1/'
+      );
     });
+
+    console.log('✅ Firebase Messaging initialized successfully');
 
   } catch (error) {
     console.error('❌ Firebase Messaging initialization failed:', error);
+  }
+}
+
+// Helper function untuk menampilkan notifikasi lokal
+function showLocalNotification(title, body, clickAction) {
+  if (Notification.permission === 'granted') {
+    try {
+      const notification = new Notification(title, {
+        body,
+        icon: '/platform/barakahku1/assets/icons/icon-192.png',
+        badge: '/platform/barakahku1/assets/icons/icon-192.png',
+        tag: 'barakahku-notification',
+        requireInteraction: false,
+        vibrate: [200, 100, 200],
+        data: { url: clickAction }
+      });
+
+      notification.onclick = function(event) {
+        event.preventDefault();
+        window.focus();
+        if (clickAction) {
+          window.location.href = clickAction;
+        }
+        notification.close();
+      };
+    } catch (err) {
+      console.error('❌ Error menampilkan notifikasi foreground:', err);
+    }
   }
 }
 
@@ -141,7 +143,9 @@ function createApp() {
       this.loadJadwal();
       this.loadChecklist();
       await this.loadMurotalList();
-      this.registerServiceWorker();
+      
+      // Register Service Worker terlebih dahulu
+      await this.registerServiceWorker();
 
       // Auto-stop murottal feature
       document.addEventListener('play', function (e) {
@@ -434,6 +438,9 @@ function createApp() {
       if (Notification.permission === 'granted') {
         alert('✅ Izin notifikasi sudah diberikan!');
         console.log('🔔 Permission sudah granted');
+        
+        // Inisialisasi Firebase Messaging setelah permission granted
+        await initFirebaseMessaging();
         return;
       }
       
@@ -457,39 +464,41 @@ function createApp() {
       }
     },
 
-    registerServiceWorker() {
+    async registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        // HANYA REGISTER SATU SERVICE WORKER
-        navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
-          scope: '/platform/barakahku1/'
-        })
-          .then(registration => {
-            console.log('✅ Service Worker terdaftar:', registration.scope);
-            
-            // Tunggu service worker aktif
-            if (registration.active && Notification.permission === 'granted') {
-              console.log('🔔 Service Worker aktif, inisialisasi Firebase Messaging...');
-              setTimeout(() => {
-                initFirebaseMessaging();
-              }, 2000);
-            }
+        try {
+          // HANYA REGISTER SATU SERVICE WORKER
+          const registration = await navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
+            scope: '/platform/barakahku1/'
+          });
+          
+          console.log('✅ PWA Service Worker terdaftar:', registration.scope);
 
-            // Listen untuk service worker yang baru aktif
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'activated' && Notification.permission === 'granted') {
-                  console.log('🔔 Service Worker baru aktif, inisialisasi Firebase Messaging...');
+          // Tunggu service worker aktif
+          if (registration.installing) {
+            registration.installing.addEventListener('statechange', (event) => {
+              if (event.target.state === 'activated') {
+                console.log('🎉 Service Worker aktif!');
+                // Cek permission notifikasi dan inisialisasi Firebase
+                if (Notification.permission === 'granted') {
                   setTimeout(() => {
                     initFirebaseMessaging();
                   }, 2000);
                 }
-              });
+              }
             });
-          })
-          .catch(err => {
-            console.error('❌ Gagal register Service Worker:', err);
-          });
+          } else if (registration.active) {
+            console.log('🎉 Service Worker sudah aktif!');
+            if (Notification.permission === 'granted') {
+              setTimeout(() => {
+                initFirebaseMessaging();
+              }, 2000);
+            }
+          }
+
+        } catch (error) {
+          console.error('❌ Gagal register Service Worker:', error);
+        }
       } else {
         console.warn('⚠️ Service Worker tidak didukung browser');
       }
