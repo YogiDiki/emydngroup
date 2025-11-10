@@ -30,19 +30,37 @@ async function initFirebaseMessaging() {
       measurementId: "G-EQPYKJJGG7"
     };
 
-    // Inisialisasi Firebase App & Messaging
+    // Inisialisasi Firebase App
     const fbApp = initializeApp(firebaseConfig);
+    
+    // ✅ KUNCI: Cari atau register SW dulu sebelum getMessaging
+    let registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+    
+    if (!registration) {
+      console.log('📝 Registering Firebase SW...');
+      registration = await navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js', {
+        scope: '/platform/barakahku1/'
+      });
+      console.log('✅ Firebase SW registered manually');
+    }
+
+    // Pass registration ke getMessaging
     const messaging = getMessaging(fbApp);
 
     console.log('✅ Firebase App initialized');
 
-    // Ambil token FCM
+    // Ambil token FCM dengan SW registration
     try {
       const vapidKey = 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM';
 
-      const currentToken = await getToken(messaging, { vapidKey });
+      const currentToken = await getToken(messaging, { 
+        vapidKey,
+        serviceWorkerRegistration: registration 
+      });
+      
       if (currentToken) {
         console.log('🔑 FCM token diperoleh:', currentToken);
+        // TODO: Simpan token ini ke database jika perlu
       } else {
         console.warn('⚠️ Tidak mendapatkan FCM token');
       }
@@ -437,7 +455,10 @@ function createApp() {
 
     registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/platform/barakahku1/service-worker.js')
+        // Register PWA Service Worker (untuk caching)
+        navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
+          scope: '/platform/barakahku1/'
+        })
           .then(registration => {
             console.log('✅ PWA Service Worker terdaftar:', registration.scope);
           })
@@ -445,7 +466,10 @@ function createApp() {
             console.error('❌ Gagal register service-worker.js:', err);
           });
 
-        navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js')
+        // Register Firebase Messaging SW (di subdirectory yang sama)
+        navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js', {
+          scope: '/platform/barakahku1/'
+        })
           .then(registration => {
             console.log('✅ Firebase Messaging SW terdaftar:', registration.scope);
             
