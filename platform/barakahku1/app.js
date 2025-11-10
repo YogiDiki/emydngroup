@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js (Complete with Firebase v8)
+// BarakahKu - app.js (Fixed Version)
 // ==============================
 
 // ------------------------------
@@ -459,34 +459,36 @@ function createApp() {
 
     registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        // Register Firebase Messaging SW PERTAMA (penting untuk FCM)
-        navigator.serviceWorker.register('/platform/barakahku1/firebase-messaging-sw.js', {
-          scope: '/platform/barakahku1/'
-        })
-          .then(registration => {
-            console.log('✅ Firebase Messaging SW terdaftar:', registration.scope);
-            
-            if (Notification.permission === 'granted') {
-              console.log('🔔 Notifikasi sudah diizinkan, inisialisasi Firebase Messaging...');
-              // Tunggu lebih lama agar SW benar-benar ready
-              setTimeout(() => {
-                initFirebaseMessaging();
-              }, 2000);
-            }
-          })
-          .catch(err => {
-            console.error('❌ Gagal register firebase-messaging-sw.js:', err);
-          });
-
-        // Register PWA Service Worker (untuk caching)
+        // HANYA REGISTER SATU SERVICE WORKER
         navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
           scope: '/platform/barakahku1/'
         })
           .then(registration => {
-            console.log('✅ PWA Service Worker terdaftar:', registration.scope);
+            console.log('✅ Service Worker terdaftar:', registration.scope);
+            
+            // Tunggu service worker aktif
+            if (registration.active && Notification.permission === 'granted') {
+              console.log('🔔 Service Worker aktif, inisialisasi Firebase Messaging...');
+              setTimeout(() => {
+                initFirebaseMessaging();
+              }, 2000);
+            }
+
+            // Listen untuk service worker yang baru aktif
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'activated' && Notification.permission === 'granted') {
+                  console.log('🔔 Service Worker baru aktif, inisialisasi Firebase Messaging...');
+                  setTimeout(() => {
+                    initFirebaseMessaging();
+                  }, 2000);
+                }
+              });
+            });
           })
           .catch(err => {
-            console.error('❌ Gagal register service-worker.js:', err);
+            console.error('❌ Gagal register Service Worker:', err);
           });
       } else {
         console.warn('⚠️ Service Worker tidak didukung browser');
