@@ -1,0 +1,22 @@
+{
+  "name": "BarakahKu",
+  "short_name": "BarakahKu",
+  "start_url": "/platform/barakahku1/",
+  "scope": "/platform/barakahku1/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1e293b",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ]
+}

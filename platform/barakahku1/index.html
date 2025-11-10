@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id" x-data="app" x-init="init()" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BarakahKu - Emydn Group</title>
+  <link rel="manifest" href="/platform/barakahku1/manifest.json" />
+  <link rel="icon" href="/platform/barakahku1/assets/icons/icon-192.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .font-arabic { 
+      font-family: 'Amiri', serif; 
+      font-size: 1.875rem; 
+      line-height: 2.75rem; 
+      font-weight: 700;
+    }
+    
+    .gradient-maroon {
+      background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 50%, #b91c1c 100%);
+    }
+    
+    .bg-maroon {
+      background-color: #7c1d1d;
+    }
+    
+    .text-maroon {
+      color: #7c1d1d;
+    }
+    
+    .bg-cream {
+      background-color: #f5f1e8;
+    }
+    
+    .border-maroon {
+      border-color: #991b1b;
+    }
+    
+    body {
+      background: linear-gradient(180deg, #f5f1e8 0%, #ebe4d1 100%);
+    }
+    
+    .card-islamic {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(124, 29, 29, 0.1), 0 2px 4px -1px rgba(124, 29, 29, 0.06);
+      border: 1px solid rgba(153, 27, 27, 0.1);
+    }
+    
+    .btn-islamic {
+      background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 100%);
+      border-radius: 12px;
+      padding: 12px 24px;
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(124, 29, 29, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-islamic:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(124, 29, 29, 0.4);
+    }
+    
+    .islamic-pattern {
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(124, 29, 29, 0.03) 10px, rgba(124, 29, 29, 0.03) 20px),
+        repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(124, 29, 29, 0.03) 10px, rgba(124, 29, 29, 0.03) 20px);
+    }
+    
+    .time-badge {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 4px 12px;
+      color: #7c1d1d;
+      font-weight: 600;
+      font-size: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-item-active {
+      background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 100%);
+      color: white;
+    }
+    
+    .nav-item {
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body class="h-full">
+  <div class="flex flex-col h-full max-w-lg mx-auto shadow-2xl relative">
+    
+    <!-- Header -->
+    <header class="gradient-maroon text-white px-5 py-4 shadow-lg relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
+      
+      <div class="relative z-10">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <div class="bg-white rounded-full p-1.5 shadow-md">
+                <img src="assets/icons/icon-192.png?v=4" class="w-7 h-7 rounded-full">
+            </div>
+              
+            <div>
+              <h1 class="text-xl font-bold tracking-wide">BarakahKu</h1>
+              <p class="text-xs opacity-90">Teman Ibadah Harian</p>
+            </div>
+          </div>
+          <button @click="showSearch = !showSearch" class="p-2 hover:bg-white/20 rounded-full transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Date Info -->
+        <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-2 mb-3 border border-white/20">
+          <div class="flex items-center justify-between text-sm">
+            <div class="flex items-center gap-2">
+              <span>📅</span>
+              <span x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></span>
+            </div>
+          </div>
+          <div class="text-xs opacity-90 mt-1" x-text="'17 Jumada al-ula 1447 AH'"></div>
+          
+        </div>
+        
+        <!-- Prayer Times -->
+        <template x-if="jadwal.Fajr">
+          <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20">
+            <div class="flex items-center justify-between text-xs mb-3">
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="opacity-90 font-medium" x-text="cityName"></span>
+              </div>
+              <button @click="loadJadwal()" class="opacity-80 hover:opacity-100 underline transition">Perbarui</button>
+            </div>
+            <div class="grid grid-cols-5 gap-2 text-xs">
+              <div class="text-center">
+                <div class="opacity-80 mb-1">Subuh</div>
+                <div class="time-badge" x-text="jadwal.Fajr"></div>
+              </div>
+              <div class="text-center">
+                <div class="opacity-80 mb-1">Dzuhur</div>
+                <div class="time-badge" x-text="jadwal.Dhuhr"></div>
+              </div>
+              <div class="text-center">
+                <div class="opacity-80 mb-1">Ashar</div>
+                <div class="time-badge" x-text="jadwal.Asr"></div>
+              </div>
+              <div class="text-center">
+                <div class="opacity-80 mb-1">Maghrib</div>
+                <div class="time-badge" x-text="jadwal.Maghrib"></div>
+              </div>
+              <div class="text-center">
+                <div class="opacity-80 mb-1">Isya</div>
+                <div class="time-badge" x-text="jadwal.Isha"></div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto pb-24 bg-cream">
+      
+      <!-- Beranda -->
+      <template x-if="activeTab === 'beranda'">
+        <div class="p-5 space-y-5">
+          <!-- Ayat Quote -->
+          <div class="card-islamic p-5 text-center islamic-pattern">
+            <p class="text-gray-800 text-2xl font-arabic leading-relaxed mb-2">إِنَّ مَعَ الْعُسْرِ يُسْرًا</p>
+            <p class="text-sm text-gray-600 font-medium">Sesungguhnya bersama kesulitan ada kemudahan</p>
+            <p class="text-xs text-gray-500 mt-1">QS. Al-Insyirah: 6</p>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-3 gap-3">
+            <div class="card-islamic p-4 text-center">
+              <div class="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-red-900 to-red-700 rounded-full flex items-center justify-center">
+                <span class="text-2xl">📖</span>
+              </div>
+              <p class="text-2xl font-bold text-maroon" x-text="quran.length"></p>
+              <p class="text-xs text-gray-600 font-medium">Surah</p>
+            </div>
+            <div class="card-islamic p-4 text-center">
+              <div class="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-red-900 to-red-700 rounded-full flex items-center justify-center">
+                <span class="text-2xl">🙏</span>
+              </div>
+              <p class="text-2xl font-bold text-maroon" x-text="doaList.length"></p>
+              <p class="text-xs text-gray-600 font-medium">Doa</p>
+            </div>
+            <div class="card-islamic p-4 text-center">
+              <div class="w-12 h-12 mx-auto mb-2 bg-gradient-to-br from-red-900 to-red-700 rounded-full flex items-center justify-center">
+                <span class="text-2xl">🎵</span>
+              </div>
+              <p class="text-2xl font-bold text-maroon" x-text="murotalList.length"></p>
+              <p class="text-xs text-gray-600 font-medium">Murottal</p>
+            </div>
+          </div>
+
+          <!-- Quick Menu -->
+          <div class="space-y-3">
+            <button @click="activeTab = 'quran'" class="w-full card-islamic p-4 flex items-center gap-4 transition-all hover:shadow-lg">
+              <div class="w-14 h-14 bg-gradient-to-br from-red-900 to-red-700 rounded-2xl flex items-center justify-center shadow-md">
+                <span class="text-3xl">📖</span>
+              </div>
+              <div class="flex-1 text-left">
+                <p class="font-bold text-gray-800 text-base">Baca Al-Qur'an</p>
+                <p class="text-xs text-gray-500 mt-0.5">114 Surah dengan terjemahan lengkap</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+
+            <button @click="activeTab = 'doa'" class="w-full card-islamic p-4 flex items-center gap-4 transition-all hover:shadow-lg">
+              <div class="w-14 h-14 bg-gradient-to-br from-red-900 to-red-700 rounded-2xl flex items-center justify-center shadow-md">
+                <span class="text-3xl">🙏</span>
+              </div>
+              <div class="flex-1 text-left">
+                <p class="font-bold text-gray-800 text-base">Doa Harian</p>
+                <p class="text-xs text-gray-500 mt-0.5">Kumpulan doa sehari-hari lengkap</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+
+            <button @click="activeTab = 'murottal'" class="w-full card-islamic p-4 flex items-center gap-4 transition-all hover:shadow-lg">
+              <div class="w-14 h-14 bg-gradient-to-br from-red-900 to-red-700 rounded-2xl flex items-center justify-center shadow-md">
+                <span class="text-3xl">🎵</span>
+              </div>
+              <div class="flex-1 text-left">
+                <p class="font-bold text-gray-800 text-base">Murottal Al-Qur'an</p>
+                <p class="text-xs text-gray-500 mt-0.5">Dengarkan lantunan indah Al-Qur'an</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+
+            <button @click="activeTab = 'ibadah'" class="w-full card-islamic p-4 flex items-center gap-4 transition-all hover:shadow-lg">
+              <div class="w-14 h-14 bg-gradient-to-br from-red-900 to-red-700 rounded-2xl flex items-center justify-center shadow-md">
+                <span class="text-3xl">✅</span>
+              </div>
+              <div class="flex-1 text-left">
+                <p class="font-bold text-gray-800 text-base">Checklist Ibadah</p>
+                <p class="text-xs text-gray-500 mt-0.5">Pantau dan kelola amalan harian</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Install Button -->
+          <button @click="installApp()" class="w-full btn-islamic flex items-center justify-center gap-2">
+            <span>📲</span>
+            <span>Install Aplikasi di Perangkat</span>
+          </button>
+
+          <!-- Notification Permission Button -->
+          <button @click="requestNotificationPermission()" class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-amber-600 to-amber-700 rounded-xl px-6 py-3 text-white font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
+            <span>🔔</span>
+            <span>Aktifkan Notifikasi</span>
+          </button>
+        </div>
+      </template>
+
+      <!-- Qur'an -->
+      <template x-if="activeTab === 'quran'">
+        <div class="p-5">
+          <template x-if="!currentSurah">
+            <div class="space-y-3">
+              <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
+                <p class="text-sm opacity-90 font-medium">Al-Qur'an Digital</p>
+                <p class="text-2xl font-bold mt-1">114 Surah Lengkap</p>
+              </div>
+              
+              <template x-for="surah in quran" :key="surah.nomor">
+                <div @click="loadSurah(surah.nomor)" class="card-islamic p-4 hover:shadow-lg transition-all cursor-pointer">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-xl flex items-center justify-center text-base shadow-md shrink-0">
+                      <span x-text="surah.nomor"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-gray-800 text-base mb-0.5" x-text="surah.namaLatin"></h3>
+                      <p class="text-xs text-gray-500" x-text="surah.arti + ' • ' + surah.jumlahAyat + ' Ayat'"></p>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <template x-if="currentSurah">
+            <div class="space-y-4">
+              <button @click="currentSurah = null" class="flex items-center gap-2 text-red-900 hover:text-red-700 font-semibold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Kembali ke Daftar Surah
+              </button>
+
+              <div class="card-islamic p-5 bg-gradient-to-br from-red-900 to-red-700 text-white text-center">
+                <h2 class="text-2xl font-bold" x-text="currentSurah.namaLatin"></h2>
+                <p class="text-sm opacity-90 mt-1" x-text="currentSurah.ayat.length + ' Ayat'"></p>
+              </div>
+
+              <template x-for="ayat in currentSurah.ayat" :key="ayat.nomorAyat">
+                <div class="card-islamic p-5">
+                  <div class="flex items-center justify-between mb-4">
+                    <div class="w-9 h-9 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-lg flex items-center justify-center text-sm shadow">
+                      <span x-text="ayat.nomorAyat"></span>
+                    </div>
+                    <button @click="bookmarkAyat(ayat.nomorAyat)" class="text-sm text-red-900 hover:text-red-700 font-medium flex items-center gap-1.5 transition">
+                      <span>🔖</span> Simpan Ayat
+                    </button>
+                  </div>
+                  <p class="font-arabic text-right text-gray-800 leading-loose mb-4" x-text="ayat.arab"></p>
+                  <p class="text-sm text-gray-600 italic mb-3 leading-relaxed" x-text="ayat.latin"></p>
+                  <p class="text-sm text-gray-700 leading-relaxed" x-text="ayat.teks"></p>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <!-- Doa -->
+      <template x-if="activeTab === 'doa'">
+        <div class="p-5 space-y-3">
+          <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
+            <p class="text-sm opacity-90 font-medium">Doa Harian</p>
+            <p class="text-2xl font-bold mt-1">Kumpulan Doa Pilihan</p>
+          </div>
+
+          <template x-for="doa in doaList" :key="doa.id">
+            <div class="card-islamic p-5">
+              <h3 class="font-bold text-gray-800 mb-3 text-base flex items-center gap-2">
+                <span class="text-xl">🙏</span>
+                <span x-text="doa.judul"></span>
+              </h3>
+              <p class="font-arabic text-right text-gray-800 leading-loose mb-3" x-text="doa.arab"></p>
+              <div class="bg-gray-50 rounded-lg p-3 mb-2">
+                <p class="text-sm text-gray-600 italic leading-relaxed" x-text="doa.latin"></p>
+              </div>
+              <p class="text-sm text-gray-700 leading-relaxed" x-text="doa.terjemah"></p>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <!-- Murottal -->
+      <template x-if="activeTab === 'murottal'">
+        <div class="p-5 space-y-3">
+          <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
+            <p class="text-sm opacity-90 font-medium">Murottal Al-Qur'an</p>
+            <p class="text-2xl font-bold mt-1">Dengarkan Lantunan Indah</p>
+            <p class="text-xs opacity-75 mt-2">Audio loading saat diputar pertama kali</p>
+          </div>
+
+          <template x-if="murotalList.length === 0">
+            <div class="text-center py-12">
+              <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-red-900 border-t-transparent mb-3"></div>
+              <p class="text-sm text-gray-600">Memuat daftar murottal...</p>
+            </div>
+          </template>
+
+          <template x-for="murottal in murotalList" :key="'murottal-' + murottal.nomor">
+            <div class="card-islamic p-4">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-xl flex items-center justify-center text-base shadow-md shrink-0">
+                  <span x-text="murottal.nomor"></span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="font-bold text-gray-800 text-sm mb-0.5" x-text="murottal.judul"></h3>
+                  <p class="text-xs text-gray-500" x-text="murottal.qari"></p>
+                </div>
+              </div>
+              <template x-if="murottal.audio">
+                <audio controls class="w-full h-10" :src="murottal.audio" controlsList="nodownload" preload="auto" style="filter: sepia(0.5) hue-rotate(-30deg);"></audio>
+              </template>
+              <template x-if="!murottal.audio">
+                <p class="text-xs text-red-600 bg-red-50 rounded-lg p-2">Audio tidak tersedia</p>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <!-- Ibadah Checklist -->
+      <template x-if="activeTab === 'ibadah'">
+        <div class="p-5">
+          <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white mb-4">
+            <p class="text-sm opacity-90 font-medium">Checklist Ibadah Hari Ini</p>
+            <p class="text-base font-bold mt-1" x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></p>
+          </div>
+
+          <div class="space-y-3 mb-5">
+            <template x-for="item in checklist" :key="item.id">
+              <label class="card-islamic p-4 flex items-center gap-3 cursor-pointer hover:shadow-lg transition-all">
+                <input 
+                  type="checkbox" 
+                  x-model="item.done" 
+                  @change="saveChecklist()"
+                  class="w-6 h-6 text-red-900 rounded-lg focus:ring-2 focus:ring-red-700 shrink-0 cursor-pointer"
+                />
+                <div class="flex-1 min-w-0">
+                  <p class="font-bold text-gray-800 text-sm mb-0.5" :class="item.done ? 'line-through text-gray-400' : ''" x-text="item.name"></p>
+                  <p class="text-xs text-gray-500" x-text="item.description"></p>
+                </div>
+                <span class="text-2xl shrink-0" x-text="item.icon"></span>
+              </label>
+            </template>
+          </div>
+
+          <!-- Progress -->
+          <div class="card-islamic p-5">
+            <p class="text-sm text-gray-700 mb-3 font-semibold">Progress Hari Ini</p>
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-3 overflow-hidden">
+              <div 
+                class="bg-gradient-to-r from-red-900 to-red-700 h-3 rounded-full transition-all duration-500"
+                :style="`width: ${(checklist.filter(i => i.done).length / checklist.length * 100)}%`"
+              ></div>
+            </div>
+            <p class="text-sm text-gray-600 text-center">
+              <span class="font-bold text-red-900 text-lg" x-text="checklist.filter(i => i.done).length"></span> 
+              <span class="text-gray-500">dari</span>
+              <span class="font-bold text-lg" x-text="checklist.length"></span> 
+              <span class="text-gray-500">amalan selesai</span>
+            </p>
+          </div>
+        </div>
+      </template>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bg-white border-t-2 border-red-900/10 px-3 py-3 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl">
+        <div class="flex justify-around items-center">
+      
+          <!-- Beranda -->
+          <button @click="activeTab = 'beranda'"
+                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
+                  :class="activeTab === 'beranda' ? 'nav-item-active scale-105' : 'nav-item'">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+            </svg>
+            <span class="text-xs font-semibold">Beranda</span>
+          </button>
+      
+          <!-- Quran -->
+          <button @click="activeTab = 'quran'"
+                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
+                  :class="activeTab === 'quran' ? 'nav-item-active scale-105' : 'nav-item'">
+            <span class="text-2xl">📖</span>
+            <span class="text-xs font-semibold">Qur'an</span>
+          </button>
+      
+          <!-- Doa -->
+          <button @click="activeTab = 'doa'"
+                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
+                  :class="activeTab === 'doa' ? 'nav-item-active scale-105' : 'nav-item'">
+            <span class="text-2xl">🙏</span>
+            <span class="text-xs font-semibold">Doa</span>
+          </button>
+      
+          <!-- Murottal -->
+          <button @click="activeTab = 'murottal'"
+                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
+                  :class="activeTab === 'murottal' ? 'nav-item-active scale-105' : 'nav-item'">
+            <span class="text-2xl">🎵</span>
+            <span class="text-xs font-semibold">Murottal</span>
+          </button>
+      
+          <!-- Checklist -->
+          <button @click="activeTab = 'ibadah'"
+                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
+                  :class="activeTab === 'ibadah' ? 'nav-item-active scale-105' : 'nav-item'">
+            <span class="text-2xl">✅</span>
+            <span class="text-xs font-semibold">Ibadah</span>
+          </button>
+      
+        </div>
+      </nav>
+
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
