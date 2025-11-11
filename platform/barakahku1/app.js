@@ -673,12 +673,28 @@ function createApp() {
   };
 }
 
-// Export to Alpine.js
-document.addEventListener('alpine:init', () => {
-  Alpine.data('app', createApp);
-});
+// ==============================
+// EXPORT TO ALPINE.JS - CRITICAL FIX
+// ==============================
 
-// PWA install handlers
+console.log('🔧 app.js loaded, registering with Alpine...');
+
+// Cek apakah Alpine sudah tersedia
+if (typeof Alpine !== 'undefined' && Alpine.data) {
+  console.log('✅ Alpine detected, registering app...');
+  Alpine.data('app', createApp);
+} else {
+  console.log('⏳ Alpine not ready, waiting for alpine:init...');
+  document.addEventListener('alpine:init', () => {
+    console.log('✅ alpine:init fired, registering app...');
+    Alpine.data('app', createApp);
+  });
+}
+
+// ==============================
+// PWA INSTALL HANDLERS
+// ==============================
+
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   window.deferredPrompt = e;

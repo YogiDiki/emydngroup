@@ -757,7 +757,29 @@
 
   </div>
 
-<script src="/platform/barakahku1/app.js"></script>
+<script>
+  // CRITICAL FIX: Load app.js setelah Alpine.js ready
+  (function() {
+    console.log('🔧 Waiting for Alpine.js...');
+    
+    function loadAppScript() {
+      console.log('✅ Alpine.js ready, loading app.js...');
+      const script = document.createElement('script');
+      script.src = '/platform/barakahku1/app.js';
+      script.onload = () => console.log('✅ app.js loaded successfully');
+      script.onerror = () => console.error('❌ Failed to load app.js');
+      document.body.appendChild(script);
+    }
+    
+    // Cek jika Alpine sudah loaded
+    if (window.Alpine) {
+      loadAppScript();
+    } else {
+      // Tunggu Alpine init
+      document.addEventListener('alpine:init', loadAppScript);
+    }
+  })();
+</script>
 
 </body>
 </html>
