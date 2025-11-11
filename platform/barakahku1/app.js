@@ -547,63 +547,53 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-async registerServiceWorker() {
+    async registerServiceWorker() {
   if (!('serviceWorker' in navigator)) {
     console.warn('⚠️ [SW] Service Worker tidak didukung');
     return;
   }
 
   try {
-    console.log('🔄 [SW] Starting registration...');
-    
-    // Unregister lama
+    // UNREGISTER DULU YANG LAMA
     const registrations = await navigator.serviceWorker.getRegistrations();
     for (let registration of registrations) {
       await registration.unregister();
-      console.log('🗑️ [SW] Unregistered old');
+      console.log('🗑️ [SW] Unregistered old:', registration.scope);
     }
 
-    // Register baru
+    // REGISTER SERVICE WORKER YANG FIXED
     const registration = await navigator.serviceWorker.register(
       '/platform/barakahku1/service-worker.js',
       { scope: '/platform/barakahku1/' }
     );
     
-    console.log('✅ [SW] Registered:', registration.scope);
+    console.log('✅ [SW] New worker registered:', registration.scope);
     
-    // ✅ FIX: TUNGGU SERVICE WORKER BENAR-BENAR AKTIF
-    await new Promise((resolve) => {
+    // ✅ TUNGGU SERVICE WORKER BENAR-BENAR READY
+    await new Promise(resolve => {
       if (registration.installing) {
         registration.installing.addEventListener('statechange', (e) => {
           if (e.target.state === 'activated') {
-            console.log('✅ [SW] Service Worker ACTIVATED');
+            console.log('✅ [SW] Service Worker activated');
             resolve();
           }
         });
       } else if (registration.active) {
-        console.log('✅ [SW] Service Worker already ACTIVE');
+        console.log('✅ [SW] Service Worker already active');
         resolve();
-      } else {
-        // Fallback: tunggu 3 detik
-        setTimeout(resolve, 3000);
       }
     });
     
-    // ✅ TUNGGU 1 DETIK LAGI UNTUK MEMASTIKAN
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // ✅ TUNGGU 2 DETIK SEBELUM INIT FIREBASE
+    console.log('⏳ [FCM] Waiting for Service Worker to be fully ready...');
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
+    // ✅ INIT FIREBASE SETELAH SW READY
     console.log('🔔 [FCM] Initializing Firebase Messaging...');
-    
-    // ✅ INIT FIREBASE DENGAN TRY-CATCH
-    try {
-      await initFirebaseMessaging();
-      console.log('✅ [FCM] Firebase initialization SUCCESS');
-    } catch (error) {
-      console.error('❌ [FCM] Init error:', error);
-    }
+    await initFirebaseMessaging();
     
   } catch (err) {
-    console.error('❌ [SW] Registration failed:', err);
+    console.error('❌ [SW] Failed:', err);
   }
 },
 
