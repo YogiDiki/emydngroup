@@ -3,7 +3,7 @@
 // Lokasi: /platform/barakahku1/service-worker.js
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v8';
+const CACHE_NAME = 'barakahku-cache-v9';
 const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
@@ -17,7 +17,7 @@ console.log('🚀 [SW] BarakahKu Service Worker starting...');
 
 // Install SW
 self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing v8...');
+  console.log('✅ [SW] Installing v9...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('📦 [SW] Caching files...');
@@ -29,7 +29,7 @@ self.addEventListener('install', (event) => {
 
 // Activate SW
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activating v8...');
+  console.log('✅ [SW] Activating v9...');
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -50,7 +50,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
-  // PENTING: Skip caching untuk external APIs
+  // PENTING: Skip caching untuk external APIs dan Firebase
   const externalAPIs = [
     'nominatim.openstreetmap.org',
     'api.aladhan.com',
@@ -58,11 +58,19 @@ self.addEventListener('fetch', (event) => {
     'gstatic.com',
     'googleapis.com',
     'firebaseio.com',
-    'fcm.googleapis.com'
+    'fcm.googleapis.com',
+    'firebaseinstallations.googleapis.com',
+    'firebase.googleapis.com'
   ];
   
   // Jika request ke external API, langsung fetch tanpa cache
   if (externalAPIs.some(api => url.hostname.includes(api))) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  
+  // Skip Firebase Messaging SW requests
+  if (url.pathname.includes('firebase-messaging-sw.js')) {
     event.respondWith(fetch(event.request));
     return;
   }
@@ -108,4 +116,5 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('✅ [SW] BarakahKu PWA Service Worker v8 ready');
+console.log('✅ [SW] BarakahKu PWA Service Worker v9 ready');
+console.log('📍 [SW] Scope:', self.registration.scope);
