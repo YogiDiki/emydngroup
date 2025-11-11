@@ -130,7 +130,6 @@ function createApp() {
     murotalList: [],
     jadwal: {},
     cityName: 'Memuat lokasi...',
-    hijriDate: '', // TAMBAHAN: untuk tanggal Hijriyah
     checklist: [
       { id: 1, name: 'Sholat Subuh', description: 'Sholat wajib 2 rakaat', icon: '🌅', done: false },
       { id: 2, name: 'Sholat Dzuhur', description: 'Sholat wajib 4 rakaat', icon: '☀️', done: false },
@@ -148,7 +147,6 @@ function createApp() {
       console.log('🚀 BarakahKu - Memulai aplikasi...');
       await this.loadQuran();
       this.loadDoa();
-      this.loadHijriDate(); // TAMBAHAN: load tanggal Hijriyah
       this.loadJadwal();
       this.loadChecklist();
       await this.loadMurotalList();
@@ -165,28 +163,6 @@ function createApp() {
       }, true);
 
       console.log('✅ Aplikasi siap');
-    },
-
-    // TAMBAHAN: Fungsi untuk load tanggal Hijriyah yang akurat
-    async loadHijriDate() {
-      try {
-        console.log('📅 Memuat tanggal Hijriyah...');
-        const today = new Date();
-        const timestamp = Math.floor(today.getTime() / 1000);
-        
-        const res = await fetch(`https://api.aladhan.com/v1/gToH/${timestamp}`);
-        const data = await res.json();
-        
-        if (data.code === 200) {
-          const hijri = data.data.hijri;
-          // Format: "17 Jumada al-Akhirah 1447 H"
-          this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} H`;
-          console.log('✅ Tanggal Hijriyah:', this.hijriDate);
-        }
-      } catch (err) {
-        console.error('❌ Error load Hijri date:', err);
-        this.hijriDate = 'Tanggal Hijriyah tidak tersedia';
-      }
     },
 
     async loadQuran() {
