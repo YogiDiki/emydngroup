@@ -673,23 +673,14 @@ function createApp() {
   };
 }
 
-// ==============================
-// EXPORT TO ALPINE.JS - CRITICAL FIX
+/// ==============================
+// EXPORT TO ALPINE.JS
 // ==============================
 
-console.log('🔧 app.js loaded, registering with Alpine...');
-
-// Cek apakah Alpine sudah tersedia
-if (typeof Alpine !== 'undefined' && Alpine.data) {
-  console.log('✅ Alpine detected, registering app...');
+// Export to Alpine.js
+document.addEventListener('alpine:init', () => {
   Alpine.data('app', createApp);
-} else {
-  console.log('⏳ Alpine not ready, waiting for alpine:init...');
-  document.addEventListener('alpine:init', () => {
-    console.log('✅ alpine:init fired, registering app...');
-    Alpine.data('app', createApp);
-  });
-}
+});
 
 // ==============================
 // PWA INSTALL HANDLERS
