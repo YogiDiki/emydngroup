@@ -279,46 +279,44 @@
             </div>
           </template>
 
-          <!-- Mood Islami -->
-          <div class="card-islamic p-4">
-            <p class="text-sm font-bold text-gray-800 mb-3">💛 Bagaimana perasaanmu hari ini?</p>
-            
-            <template x-if="!currentMood">
-              <div class="grid grid-cols-5 gap-2">
-                <button @click="setMood('sedih')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  <span class="text-2xl">😢</span>
-                  <span class="text-xs text-gray-600">Sedih</span>
-                </button>
-                <button @click="setMood('senang')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  <span class="text-2xl">😊</span>
-                  <span class="text-xs text-gray-600">Senang</span>
-                </button>
-                <button @click="setMood('cemas')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  <span class="text-2xl">😰</span>
-                  <span class="text-xs text-gray-600">Cemas</span>
-                </button>
-                <button @click="setMood('syukur')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  <span class="text-2xl">🙏</span>
-                  <span class="text-xs text-gray-600">Syukur</span>
-                </button>
-                <button @click="setMood('lelah')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                  <span class="text-2xl">😴</span>
-                  <span class="text-xs text-gray-600">Lelah</span>
-                </button>
-              </div>
-            </template>
+  <!-- Mood Islami -->
+<div class="card-islamic p-4 bg-pink-100 dark:bg-pink-900/40">
+  <p class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-3">💛 Bagaimana perasaanmu hari ini?</p>
+  
+  <template x-if="!currentMood">
+    <div class="grid grid-cols-5 gap-2">
+      <button @click="setMood('sedih')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+        <span class="text-2xl">😢</span>
+        <span class="text-xs text-gray-800 dark:text-gray-200">Sedih</span>
+      </button>
+      <button @click="setMood('senang')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+        <span class="text-2xl">😊</span>
+        <span class="text-xs text-gray-800 dark:text-gray-200">Senang</span>
+      </button>
+      <button @click="setMood('cemas')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+        <span class="text-2xl">😰</span>
+        <span class="text-xs text-gray-800 dark:text-gray-200">Cemas</span>
+      </button>
+      <button @click="setMood('syukur')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+        <span class="text-2xl">🙏</span>
+        <span class="text-xs text-gray-800 dark:text-gray-200">Syukur</span>
+      </button>
+      <button @click="setMood('lelah')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+        <span class="text-2xl">😴</span>
+        <span class="text-xs text-gray-800 dark:text-gray-200">Lelah</span>
+      </button>
+    </div>
+  </template>
 
-           
-<template x-if="currentMood">
-  <div class="bg-pink-100 dark:bg-pink-900/30 rounded-xl p-4">
-                <p class="font-arabic text-right text-gray-800 dark:text-gray-200 text-xl leading-loose mb-2" x-text="moodSuggestions[currentMood].ayat"></p>
-                <p class="text-sm text-gray-700 dark:text-gray-300 mb-2" x-text="moodSuggestions[currentMood].arti"></p>
-                <p class="text-xs text-gray-500 mb-3" x-text="moodSuggestions[currentMood].ref"></p>
-                <button @click="clearMood()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Tutup</button>
-              </div>
-            </template>
-          </div>
-
+  <template x-if="currentMood">
+    <div class="bg-white dark:bg-pink-800 rounded-xl p-4 border-2 border-pink-300 dark:border-pink-600">
+      <p class="font-arabic text-right text-gray-800 dark:text-gray-100 text-xl leading-loose mb-2" x-text="moodSuggestions[currentMood].ayat"></p>
+      <p class="text-sm text-gray-700 dark:text-gray-200 mb-2" x-text="moodSuggestions[currentMood].arti"></p>
+      <p class="text-xs text-gray-500 dark:text-gray-300 mb-3" x-text="moodSuggestions[currentMood].ref"></p>
+      <button @click="clearMood()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Tutup</button>
+    </div>
+  </template>
+</div>
           <!-- Quick Stats -->
           <div class="grid grid-cols-3 gap-3">
             <div class="card-islamic p-4 text-center">
