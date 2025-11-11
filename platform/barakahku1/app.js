@@ -1,9 +1,9 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 PURE)
+// BarakahKu - app.js (Firebase v8 FIXED)
 // ==============================
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8 ONLY!)
+// Fungsi inisialisasi Firebase Messaging (v8 dengan useServiceWorker!)
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
@@ -15,11 +15,10 @@ async function initFirebaseMessaging() {
       return;
     }
 
-    // Load Firebase v8 SDK (BUKAN v9!)
+    // Load Firebase v8 SDK
     if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
       
-      // Hapus script lama jika ada
       const oldScripts = document.querySelectorAll('script[src*="firebasejs"]');
       oldScripts.forEach(s => s.remove());
       
@@ -59,22 +58,35 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // Get messaging instance
-    const messaging = firebase.messaging();
-    console.log('✅ [FCM] Messaging instance created');
+    // PENTING: Cari service worker yang sudah terdaftar
+    const registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
     
-    // Get token (Firebase v8 akan otomatis pakai firebase-messaging-sw.js)
+    if (!registration) {
+      console.error('❌ [FCM] Service Worker belum terdaftar!');
+      return;
+    }
+    
+    console.log('✅ [FCM] Service Worker ditemukan:', registration.scope);
+
+    // Get messaging instance dengan useServiceWorker
+    const messaging = firebase.messaging();
+    
+    // KUNCI: Gunakan service worker yang sudah ada!
+    messaging.useServiceWorker(registration);
+    console.log('✅ [FCM] Messaging menggunakan existing SW');
+    
+    // Get token
     try {
       console.log('🔑 [FCM] Requesting token...');
       const currentToken = await messaging.getToken({ 
-        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+        serviceWorkerRegistration: registration
       });
       
       if (currentToken) {
         console.log('🔑 [FCM] Token berhasil!');
         console.log('📋 Token:', currentToken);
         
-        // Simpan token
         const tokenInfo = {
           token: currentToken,
           timestamp: new Date().toLocaleString('id-ID'),
@@ -130,6 +142,7 @@ function createApp() {
     murotalList: [],
     jadwal: {},
     cityName: 'Memuat lokasi...',
+    hijriDate: 'Memuat tanggal Hijriah...',
     checklist: [
       { id: 1, name: 'Sholat Subuh', description: 'Sholat wajib 2 rakaat', icon: '🌅', done: false },
       { id: 2, name: 'Sholat Dzuhur', description: 'Sholat wajib 4 rakaat', icon: '☀️', done: false },
@@ -314,11 +327,13 @@ function createApp() {
     async loadJadwal() {
       if (!navigator.geolocation) {
         this.cityName = 'Lokasi tidak tersedia';
+        this.hijriDate = 'Tanggal tidak tersedia';
         return;
       }
 
       console.log('📍 Get lokasi...');
       this.cityName = 'Mendapatkan lokasi...';
+      this.hijriDate = 'Memuat tanggal...';
 
       navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords;
@@ -337,19 +352,28 @@ function createApp() {
 
           console.log(`📍 Kota: ${this.cityName}`);
 
-          // Fetch jadwal sholat
+          // Fetch jadwal sholat DAN tanggal Hijriah
           const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
           const data = await res.json();
           this.jadwal = data.data.timings;
+          
+          // Ambil tanggal Hijriah dari API
+          if (data.data.date && data.data.date.hijri) {
+            const hijri = data.data.date.hijri;
+            this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
+            console.log(`📅 Hijriah: ${this.hijriDate}`);
+          }
 
           console.log('✅ Jadwal sholat dimuat');
         } catch (err) {
           console.error('❌ Error jadwal:', err);
           this.cityName = 'Gagal memuat lokasi';
+          this.hijriDate = 'Gagal memuat tanggal';
         }
       }, err => {
         console.error('❌ Error lokasi:', err);
         this.cityName = 'Lokasi ditolak';
+        this.hijriDate = 'Tanggal tidak tersedia';
       });
     },
 
@@ -456,12 +480,13 @@ function createApp() {
         return;
       }
 
-      // Register PWA Service Worker
+      // Register SATU service worker yang handle semua
       navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
         scope: '/platform/barakahku1/'
       })
         .then(registration => {
-          console.log('✅ [SW] PWA SW registered');
+          console.log('✅ [SW] Service Worker registered');
+          console.log('📍 [SW] Scope:', registration.scope);
           
           // Auto init Firebase jika sudah granted
           if (Notification.permission === 'granted') {

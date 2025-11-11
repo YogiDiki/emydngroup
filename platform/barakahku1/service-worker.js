@@ -1,9 +1,9 @@
 // ====================================================
-// 🔥 BarakahKu - PWA Service Worker
+// 🔥 BarakahKu - Service Worker (PWA + FCM Combined)
 // Lokasi: /platform/barakahku1/service-worker.js
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v9';
+const CACHE_NAME = 'barakahku-cache-v10';
 const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
@@ -15,9 +15,60 @@ const urlsToCache = [
 
 console.log('🚀 [SW] BarakahKu Service Worker starting...');
 
+// ====================================================
+// BAGIAN 1: FIREBASE MESSAGING (v8)
+// ====================================================
+
+// Import Firebase SDK v8
+try {
+  importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+  importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+  console.log('✅ [FCM] Firebase scripts loaded');
+  
+  // Initialize Firebase
+  firebase.initializeApp({
+    apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
+    authDomain: "barakahku-app.firebaseapp.com",
+    projectId: "barakahku-app",
+    storageBucket: "barakahku-app.firebasestorage.app",
+    messagingSenderId: "510231053293",
+    appId: "1:510231053293:web:921b9e574fc614492b5de4"
+  });
+  console.log('✅ [FCM] Firebase initialized');
+  
+  // Get messaging instance
+  const messaging = firebase.messaging();
+  console.log('✅ [FCM] Messaging instance created');
+  
+  // Handle background messages
+  messaging.onBackgroundMessage((payload) => {
+    console.log('📩 [FCM] Background message:', payload);
+    
+    const title = payload.notification?.title || 'BarakahKu';
+    const options = {
+      body: payload.notification?.body || 'Notifikasi baru',
+      icon: '/platform/barakahku1/assets/icons/icon-192.png',
+      badge: '/platform/barakahku1/assets/icons/icon-192.png',
+      tag: 'barakahku-fcm',
+      requireInteraction: false,
+      vibrate: [200, 100, 200],
+      data: payload.data || {}
+    };
+    
+    return self.registration.showNotification(title, options);
+  });
+  
+} catch (err) {
+  console.error('❌ [FCM] Setup failed:', err);
+}
+
+// ====================================================
+// BAGIAN 2: PWA CACHING
+// ====================================================
+
 // Install SW
 self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing v9...');
+  console.log('✅ [SW] Installing v10...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('📦 [SW] Caching files...');
@@ -29,7 +80,7 @@ self.addEventListener('install', (event) => {
 
 // Activate SW
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activating v9...');
+  console.log('✅ [SW] Activating v10...');
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -50,7 +101,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
-  // PENTING: Skip caching untuk external APIs dan Firebase
+  // Skip caching untuk external APIs dan Firebase
   const externalAPIs = [
     'nominatim.openstreetmap.org',
     'api.aladhan.com',
@@ -63,19 +114,12 @@ self.addEventListener('fetch', (event) => {
     'firebase.googleapis.com'
   ];
   
-  // Jika request ke external API, langsung fetch tanpa cache
   if (externalAPIs.some(api => url.hostname.includes(api))) {
     event.respondWith(fetch(event.request));
     return;
   }
   
-  // Skip Firebase Messaging SW requests
-  if (url.pathname.includes('firebase-messaging-sw.js')) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
-  
-  // Untuk file lokal, gunakan cache-first strategy
+  // Cache-first strategy untuk file lokal
   event.respondWith(
     caches.match(event.request).then((response) => {
       if (response) {
@@ -83,12 +127,10 @@ self.addEventListener('fetch', (event) => {
       }
       
       return fetch(event.request).then((response) => {
-        // Hanya cache response yang sukses
         if (!response || response.status !== 200 || response.type === 'error') {
           return response;
         }
         
-        // Clone response karena hanya bisa digunakan sekali
         const responseToCache = response.clone();
         
         caches.open(CACHE_NAME).then((cache) => {
@@ -98,11 +140,65 @@ self.addEventListener('fetch', (event) => {
         return response;
       }).catch((err) => {
         console.error('❌ [SW] Fetch error:', err);
-        // Fallback ke halaman utama jika offline
         return caches.match('/platform/barakahku1/index.html');
       });
     })
   );
+});
+
+// ====================================================
+// BAGIAN 3: NOTIFICATION HANDLERS
+// ====================================================
+
+// Handle notification click
+self.addEventListener('notificationclick', (event) => {
+  console.log('🔔 [SW] Notification clicked');
+  event.notification.close();
+  
+  const url = event.notification.data?.url || 'https://www.emydngroup.com/platform/barakahku1/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url.includes('/platform/barakahku1/') && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(url);
+        }
+      })
+  );
+});
+
+// Handle push event
+self.addEventListener('push', (event) => {
+  console.log('📩 [SW] Push event received');
+  
+  if (event.data) {
+    try {
+      const payload = event.data.json();
+      console.log('📋 [SW] Push payload:', payload);
+      
+      const title = payload.notification?.title || 'BarakahKu';
+      const options = {
+        body: payload.notification?.body || 'Notifikasi baru',
+        icon: '/platform/barakahku1/assets/icons/icon-192.png',
+        badge: '/platform/barakahku1/assets/icons/icon-192.png',
+        tag: 'barakahku-fcm',
+        requireInteraction: false,
+        vibrate: [200, 100, 200],
+        data: payload.data || {}
+      };
+      
+      event.waitUntil(
+        self.registration.showNotification(title, options)
+      );
+    } catch (err) {
+      console.error('❌ [SW] Push parse error:', err);
+    }
+  }
 });
 
 // Message handler
@@ -116,5 +212,5 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('✅ [SW] BarakahKu PWA Service Worker v9 ready');
+console.log('✅ [SW] BarakahKu Service Worker v10 ready (PWA + FCM)');
 console.log('📍 [SW] Scope:', self.registration.scope);
