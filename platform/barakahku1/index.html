@@ -91,6 +91,11 @@
     .nav-item {
       color: #6b7280;
     }
+
+    /* Fix untuk bottom navigation agar tidak terpotong */
+    .bottom-nav-safe {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
   </style>
 </head>
 <body class="h-full">
@@ -127,8 +132,9 @@
               <span x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></span>
             </div>
           </div>
-          <div class="text-xs opacity-90 mt-1" x-text="'17 Jumada al-ula 1447 AH'"></div>
-          
+<div class="text-xs opacity-90 mt-1">
+  <span x-text="hijriDate"></span>
+</div>          
         </div>
         
         <!-- Prayer Times -->
@@ -171,7 +177,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto pb-24 bg-cream">
+    <main class="flex-1 overflow-y-auto pb-28 bg-cream">
       
       <!-- Beranda -->
       <template x-if="activeTab === 'beranda'">
@@ -449,54 +455,54 @@
 
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="bg-white border-t-2 border-red-900/10 px-3 py-3 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl">
-        <div class="flex justify-around items-center">
+    <!-- Bottom Navigation - FIXED -->
+    <nav class="bg-white border-t-2 border-red-900/10 px-2 py-2 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl bottom-nav-safe z-50">
+      <div class="grid grid-cols-5 gap-1">
       
-          <!-- Beranda -->
-          <button @click="activeTab = 'beranda'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'beranda' ? 'nav-item-active scale-105' : 'nav-item'">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-            </svg>
-            <span class="text-xs font-semibold">Beranda</span>
-          </button>
-      
-          <!-- Quran -->
-          <button @click="activeTab = 'quran'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'quran' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">📖</span>
-            <span class="text-xs font-semibold">Qur'an</span>
-          </button>
-      
-          <!-- Doa -->
-          <button @click="activeTab = 'doa'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'doa' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">🙏</span>
-            <span class="text-xs font-semibold">Doa</span>
-          </button>
-      
-          <!-- Murottal -->
-          <button @click="activeTab = 'murottal'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'murottal' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">🎵</span>
-            <span class="text-xs font-semibold">Murottal</span>
-          </button>
-      
-          <!-- Checklist -->
-          <button @click="activeTab = 'ibadah'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'ibadah' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">✅</span>
-            <span class="text-xs font-semibold">Ibadah</span>
-          </button>
-      
-        </div>
-      </nav>
+        <!-- Beranda -->
+        <button @click="activeTab = 'beranda'"
+                class="flex flex-col items-center justify-center gap-0.5 py-2 px-2 rounded-xl transition-all"
+                :class="activeTab === 'beranda' ? 'nav-item-active scale-105' : 'nav-item'">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
+          <span class="text-[10px] font-semibold leading-tight">Beranda</span>
+        </button>
+    
+        <!-- Quran -->
+        <button @click="activeTab = 'quran'"
+                class="flex flex-col items-center justify-center gap-0.5 py-2 px-2 rounded-xl transition-all"
+                :class="activeTab === 'quran' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">📖</span>
+          <span class="text-[10px] font-semibold leading-tight">Qur'an</span>
+        </button>
+    
+        <!-- Doa -->
+        <button @click="activeTab = 'doa'"
+                class="flex flex-col items-center justify-center gap-0.5 py-2 px-2 rounded-xl transition-all"
+                :class="activeTab === 'doa' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">🙏</span>
+          <span class="text-[10px] font-semibold leading-tight">Doa</span>
+        </button>
+    
+        <!-- Murottal -->
+        <button @click="activeTab = 'murottal'"
+                class="flex flex-col items-center justify-center gap-0.5 py-2 px-2 rounded-xl transition-all"
+                :class="activeTab === 'murottal' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">🎵</span>
+          <span class="text-[10px] font-semibold leading-tight">Murottal</span>
+        </button>
+    
+        <!-- Checklist -->
+        <button @click="activeTab = 'ibadah'"
+                class="flex flex-col items-center justify-center gap-0.5 py-2 px-2 rounded-xl transition-all"
+                :class="activeTab === 'ibadah' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">✅</span>
+          <span class="text-[10px] font-semibold leading-tight">Ibadah</span>
+        </button>
+    
+      </div>
+    </nav>
 
   </div>
 
