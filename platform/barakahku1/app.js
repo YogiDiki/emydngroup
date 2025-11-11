@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 FIXED!)
+// BarakahKu - app.js (Firebase v8 UNIFIED SW!)
 // ==============================
 
 // ------------------------------
@@ -59,21 +59,22 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // CRITICAL: Cek service worker SEBELUM buat messaging instance
+    // CRITICAL: Tunggu SW ready dan gunakan SW yang sudah ada
     const swRegistration = await navigator.serviceWorker.ready;
     console.log('✅ [FCM] Service Worker ready:', swRegistration.scope);
 
     // Get messaging instance
     const messaging = firebase.messaging();
-    console.log('✅ [FCM] Messaging instance created');
     
-    // PENTING: useServiceWorker HARUS dipanggil SEBELUM getToken
-    // Tapi di Firebase v8.10.1, ini sudah otomatis jika SW sudah ready
+    // CRITICAL FIX: useServiceWorker() HARUS dipanggil SEBELUM getToken()!
+    // Ini untuk Firebase v8 agar tidak cari firebase-messaging-sw.js di root
+    messaging.useServiceWorker(swRegistration);
+    console.log('✅ [FCM] Messaging menggunakan existing SW');
+    
     console.log('🔑 [FCM] Requesting token...');
     
     const currentToken = await messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-      serviceWorkerRegistration: swRegistration // Gunakan SW yang sudah ready
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
     });
     
     if (currentToken) {
@@ -148,12 +149,12 @@ function createApp() {
 
     async init() {
       console.log('🚀 BarakahKu - Memulai aplikasi...');
+      await this.registerServiceWorker(); // Register SW PERTAMA!
       await this.loadQuran();
       this.loadDoa();
       this.loadJadwal();
       this.loadChecklist();
       await this.loadMurotalList();
-      await this.registerServiceWorker(); // Tunggu SW ready dulu
 
       // Auto-stop murottal
       document.addEventListener('play', function (e) {
