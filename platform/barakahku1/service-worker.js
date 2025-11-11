@@ -1,10 +1,10 @@
 // ====================================================
 // 🔥 PWA Service Worker + Firebase Cloud Messaging
-// BarakahKu - Complete Service Worker
+// BarakahKu - Complete Service Worker (Fixed Version)
 // ====================================================
 
 // PWA Cache Configuration
-const CACHE_NAME = 'barakahku-cache-v4';
+const CACHE_NAME = 'barakahku-cache-v5';
 const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
@@ -35,6 +35,8 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
+console.log('✅ [SW] Firebase Messaging initialized in Service Worker');
+
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
   console.log('📩 [SW] Background message received:', payload);
@@ -48,7 +50,8 @@ messaging.onBackgroundMessage((payload) => {
     requireInteraction: false,
     vibrate: [200, 100, 200],
     data: {
-      url: payload.notification?.click_action || 'https://www.emydngroup.com/platform/barakahku1/'
+      url: payload.notification?.click_action || payload.data?.url || 'https://www.emydngroup.com/platform/barakahku1/',
+      ...payload.data
     }
   };
 
@@ -86,19 +89,20 @@ self.addEventListener('notificationclick', (event) => {
 
 // Install SW
 self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing Service Worker v4...');
+  console.log('✅ [SW] Installing Service Worker v5...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('📦 [SW] Caching files...');
       return cache.addAll(urlsToCache);
     })
   );
+  // Force activate immediately
   self.skipWaiting();
 });
 
 // Activate SW & bersihkan cache lama
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activated');
+  console.log('✅ [SW] Activating Service Worker v5...');
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -108,20 +112,55 @@ self.addEventListener('activate', (event) => {
              return caches.delete(key);
            })
       );
+    }).then(() => {
+      console.log('✅ [SW] Service Worker activated and ready');
+      return self.clients.claim();
     })
   );
-  return self.clients.claim();
 });
 
 // Fetch dari cache dulu, fallback ke network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
-      return response || fetch(event.request).catch((err) => {
+      if (response) {
+        return response;
+      }
+      
+      return fetch(event.request).then((response) => {
+        // Cache successful responses
+        if (!response || response.status !== 200 || response.type === 'error') {
+          return response;
+        }
+        
+        // Clone response karena response hanya bisa digunakan sekali
+        const responseToCache = response.clone();
+        
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+        
+        return response;
+      }).catch((err) => {
         console.error('❌ [SW] Fetch error:', err);
+        // Return offline fallback jika ada
+        return caches.match('/platform/barakahku1/index.html');
       });
     })
   );
 });
 
-console.log('✅ [SW] BarakahKu Service Worker ready with Firebase Messaging');
+// Message handler dari client
+self.addEventListener('message', (event) => {
+  console.log('📨 [SW] Message received:', event.data);
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'GET_VERSION') {
+    event.ports[0].postMessage({ version: CACHE_NAME });
+  }
+});
+
+console.log('✅ [SW] BarakahKu Service Worker v5 ready with Firebase Messaging');
