@@ -1,6 +1,8 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 UNIFIED SW!)
+// BarakahKu - app.js (FIXED ALPINE.JS REGISTRATION!)
 // ==============================
+
+console.log('📦 [APP] Loading app.js...');
 
 // ------------------------------
 // Fungsi inisialisasi Firebase Messaging (v8)
@@ -9,17 +11,14 @@ async function initFirebaseMessaging() {
   try {
     console.log('🔔 [FCM] Mulai inisialisasi...');
     
-    // Cek permission
     if (Notification.permission !== 'granted') {
       console.log('⚠️ [FCM] Notifikasi belum diizinkan');
       return;
     }
 
-    // Load Firebase v8 SDK - HANYA SEKALI
     if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
       
-      // Hapus script lama jika ada
       const oldScripts = document.querySelectorAll('script[src*="firebasejs"]');
       oldScripts.forEach(s => s.remove());
       
@@ -44,7 +43,6 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase v8 sudah loaded');
     }
 
-    // Initialize Firebase - HANYA SEKALI
     if (!firebase.apps || firebase.apps.length === 0) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
@@ -59,15 +57,10 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // CRITICAL: Tunggu SW ready dan gunakan SW yang sudah ada
     const swRegistration = await navigator.serviceWorker.ready;
     console.log('✅ [FCM] Service Worker ready:', swRegistration.scope);
 
-    // Get messaging instance
     const messaging = firebase.messaging();
-    
-    // CRITICAL FIX: useServiceWorker() HARUS dipanggil SEBELUM getToken()!
-    // Ini untuk Firebase v8 agar tidak cari firebase-messaging-sw.js di root
     messaging.useServiceWorker(swRegistration);
     console.log('✅ [FCM] Messaging menggunakan existing SW');
     
@@ -93,7 +86,6 @@ async function initFirebaseMessaging() {
       console.warn('⚠️ [FCM] Tidak dapat token');
     }
 
-    // Handler foreground messages
     messaging.onMessage((payload) => {
       console.log('📩 [FCM] Foreground message:', payload);
       
@@ -121,10 +113,13 @@ async function initFirebaseMessaging() {
 }
 
 // ==============================
-// APLIKASI UTAMA BARAKAHKU
+// ALPINE.JS DATA REGISTRATION
 // ==============================
-function createApp() {
-  return {
+document.addEventListener('alpine:init', () => {
+  console.log('🎨 [ALPINE] Registering app component...');
+  
+  Alpine.data('app', () => ({
+    // Data Properties
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
@@ -144,7 +139,7 @@ function createApp() {
     moodSuggestions: {
       sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
       senang: { ayat: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ', arti: 'Dan terhadap nikmat Tuhanmu, hendaklah kamu nyatakan', ref: 'QS. Ad-Duha: 11' },
-      cemas: { ayat: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', arti: 'Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram', ref: 'QS. Ar-Ra\'d: 28' },
+      cemas: { ayat: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', arti: 'Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram', ref: 'QS. Ar\'d: 28' },
       syukur: { ayat: 'لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ', arti: 'Jika kamu bersyukur, niscaya Aku akan menambah nikmat kepadamu', ref: 'QS. Ibrahim: 7' },
       lelah: { ayat: 'وَلَا تَهِنُوا وَلَا تَحْزَنُوا', arti: 'Janganlah kamu lemah dan jangan pula bersedih hati', ref: 'QS. Ali Imran: 139' }
     },
@@ -161,18 +156,34 @@ function createApp() {
       { id: 10, name: 'Doa Malam', description: 'Doa sebelum tidur', icon: '🌛', done: false }
     ],
 
+    // Init Method
     async init() {
-      console.log('🚀 BarakahKu - Memulai aplikasi...');
+      console.log('🚀 [APP] BarakahKu - Memulai aplikasi...');
+      console.log('📊 [APP] Alpine.js version:', Alpine.version);
+      
       await this.registerServiceWorker();
-      this.loadJadwal();
-      await this.loadQuran();
+      
+      console.log('📖 [APP] Loading Quran...');
+      this.loadQuran();
+      
+      console.log('🙏 [APP] Loading Doa...');
       this.loadDoa();
+      
+      console.log('✅ [APP] Loading Checklist...');
       this.loadChecklist();
-      await this.loadMurotalList();
+      
+      console.log('🎵 [APP] Loading Murottal...');
+      this.loadMurotalList();
+      
+      console.log('📍 [APP] Loading Jadwal...');
+      this.loadJadwal();
+      
+      console.log('📖 [APP] Loading Last Read...');
       this.loadLastRead();
+      
+      console.log('🌑 [APP] Init Dark Mode...');
       this.initDarkMode();
 
-      // Auto-stop murottal
       document.addEventListener('play', function (e) {
         const audios = document.getElementsByTagName('audio');
         for (let i = 0; i < audios.length; i++) {
@@ -182,31 +193,55 @@ function createApp() {
         }
       }, true);
 
-      console.log('✅ Aplikasi siap');
+      console.log('✅ [APP] Aplikasi siap');
     },
 
+    // Methods
     async loadQuran() {
       try {
-        console.log('📖 Memuat surah...');
+        console.log('📖 [API] Fetching surah...');
         const res = await fetch('https://equran.id/api/v2/surat');
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        }
+        
         const data = await res.json();
+        console.log('📦 [API] Response received:', data);
+        
+        if (!data || !data.data || !Array.isArray(data.data)) {
+          throw new Error('Invalid response structure');
+        }
+        
         this.quran = data.data.map(s => ({
           nomor: s.nomor,
           namaLatin: s.namaLatin,
           arti: s.arti,
           jumlahAyat: s.jumlahAyat
         }));
-        console.log(`✅ ${this.quran.length} surah dimuat`);
+        
+        console.log(`✅ [APP] ${this.quran.length} surah dimuat`);
       } catch (err) {
-        console.error('❌ Error load Quran:', err);
+        console.error('❌ [APP] Error load Quran:', err);
+        console.error('Stack:', err.stack);
+        this.quran = [
+          { nomor: 1, namaLatin: 'Al-Fatihah', arti: 'Pembukaan', jumlahAyat: 7 }
+        ];
       }
     },
 
     async loadSurah(nomor) {
       try {
-        console.log(`📖 Buka surah ${nomor}...`);
+        console.log(`📖 [API] Buka surah ${nomor}...`);
         const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        
         const data = await res.json();
+        console.log('📦 [API] Surah data:', data);
+        
         this.currentSurah = {
           nomor: nomor,
           namaLatin: data.data.namaLatin,
@@ -218,7 +253,6 @@ function createApp() {
           }))
         };
         
-        // Simpan progress bacaan
         this.lastRead = {
           surah: nomor,
           namaLatin: data.data.namaLatin,
@@ -227,15 +261,15 @@ function createApp() {
         };
         localStorage.setItem('lastRead', JSON.stringify(this.lastRead));
         
-        console.log(`✅ Surah ${data.data.namaLatin} dimuat`);
+        console.log(`✅ [APP] Surah ${data.data.namaLatin} dimuat`);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
       } catch (err) {
-        console.error('❌ Error load surah:', err);
+        console.error('❌ [APP] Error load surah:', err);
       }
     },
 
     loadDoa() {
-      console.log('🙏 Memuat doa...');
+      console.log('🙏 [APP] Memuat doa...');
       this.doaList = [
         {
           id: 1,
@@ -308,14 +342,20 @@ function createApp() {
           terjemah: 'Ya Allah, turunkanlah hujan yang bermanfaat'
         }
       ];
-      console.log(`✅ ${this.doaList.length} doa dimuat`);
+      console.log(`✅ [APP] ${this.doaList.length} doa dimuat`);
     },
 
     async loadMurotalList() {
       try {
-        console.log('🎵 Memuat murottal...');
+        console.log('🎵 [API] Fetching murottal...');
         const res = await fetch('https://equran.id/api/v2/surat');
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        
         const data = await res.json();
+        console.log('📦 [API] Murottal response:', data);
 
         this.murotalList = data.data.map(s => {
           let audioUrl = '';
@@ -334,9 +374,9 @@ function createApp() {
           };
         });
 
-        console.log(`✅ ${this.murotalList.length} murottal dimuat`);
+        console.log(`✅ [APP] ${this.murotalList.length} murottal dimuat`);
       } catch (err) {
-        console.error('❌ Error murottal:', err);
+        console.error('❌ [APP] Error murottal:', err);
         this.murotalList = [];
       }
     },
@@ -348,18 +388,24 @@ function createApp() {
         return;
       }
 
-      console.log('📍 Get lokasi...');
+      console.log('📍 [APP] Get lokasi...');
       this.cityName = 'Mendapatkan lokasi...';
       this.hijriDate = 'Memuat tanggal...';
 
       navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords;
         this.userCoords = { latitude, longitude };
-        console.log(`📍 Koordinat: ${latitude}, ${longitude}`);
+        console.log(`📍 [APP] Koordinat: ${latitude}, ${longitude}`);
 
         try {
           const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          
+          if (!geoRes.ok) {
+            throw new Error(`Geolocation HTTP ${geoRes.status}`);
+          }
+          
           const geoData = await geoRes.json();
+          console.log('📦 [API] Geo data:', geoData);
 
           this.cityName = geoData.address.city ||
                           geoData.address.town ||
@@ -367,28 +413,35 @@ function createApp() {
                           geoData.address.state ||
                           'Lokasi Anda';
 
-          console.log(`📍 Kota: ${this.cityName}`);
+          console.log(`📍 [APP] Kota: ${this.cityName}`);
 
           const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
+          
+          if (!res.ok) {
+            throw new Error(`Aladhan HTTP ${res.status}`);
+          }
+          
           const data = await res.json();
+          console.log('📦 [API] Jadwal data:', data);
+          
           this.jadwal = data.data.timings;
           
           if (data.data.date && data.data.date.hijri) {
             const hijri = data.data.date.hijri;
             this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
-            console.log(`📅 Hijriah: ${this.hijriDate}`);
+            console.log(`📅 [APP] Hijriah: ${this.hijriDate}`);
           }
 
           this.checkAutoDarkMode();
 
-          console.log('✅ Jadwal sholat dimuat');
+          console.log('✅ [APP] Jadwal sholat dimuat');
         } catch (err) {
-          console.error('❌ Error jadwal:', err);
+          console.error('❌ [APP] Error jadwal:', err);
           this.cityName = 'Gagal memuat lokasi';
           this.hijriDate = 'Gagal memuat tanggal';
         }
       }, err => {
-        console.error('❌ Error lokasi:', err);
+        console.error('❌ [APP] Error lokasi:', err);
         this.cityName = 'Lokasi ditolak';
         this.hijriDate = 'Tanggal tidak tersedia';
       });
@@ -399,8 +452,9 @@ function createApp() {
       if (saved) {
         try {
           this.checklist = JSON.parse(saved);
+          console.log('✅ [APP] Checklist loaded from localStorage');
         } catch (e) {
-          console.error('❌ Error checklist:', e);
+          console.error('❌ [APP] Error checklist:', e);
         }
       }
 
@@ -410,14 +464,16 @@ function createApp() {
         this.checklist.forEach(item => item.done = false);
         localStorage.setItem('checklistDate', today);
         this.saveChecklist();
+        console.log('✅ [APP] Checklist reset untuk hari baru');
       }
     },
 
     saveChecklist() {
       try {
         localStorage.setItem('checklist', JSON.stringify(this.checklist));
+        console.log('💾 [APP] Checklist saved');
       } catch (e) {
-        console.error('❌ Error save:', e);
+        console.error('❌ [APP] Error save:', e);
       }
     },
 
@@ -434,7 +490,7 @@ function createApp() {
           alert('ℹ️ Ayat sudah tersimpan');
         }
       } catch (e) {
-        console.error('❌ Error bookmark:', e);
+        console.error('❌ [APP] Error bookmark:', e);
       }
     },
 
@@ -443,7 +499,7 @@ function createApp() {
         window.deferredPrompt.prompt();
         window.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            console.log('✅ Install accepted');
+            console.log('✅ [PWA] Install accepted');
           }
           window.deferredPrompt = null;
         });
@@ -486,14 +542,14 @@ function createApp() {
           }, 2000);
         }
       } catch (err) {
-        console.error('❌ Error permission:', err);
+        console.error('❌ [FCM] Error permission:', err);
         alert('❌ Gagal: ' + err.message);
       }
     },
 
     async registerServiceWorker() {
       if (!('serviceWorker' in navigator)) {
-        console.warn('⚠️ SW tidak didukung');
+        console.warn('⚠️ [SW] Service Worker tidak didukung');
         return;
       }
 
@@ -510,7 +566,7 @@ function createApp() {
         console.log('✅ [SW] Service Worker ready');
         
         if (Notification.permission === 'granted') {
-          console.log('🔔 Permission granted, init FCM in 3s...');
+          console.log('🔔 [FCM] Permission granted, init FCM in 3s...');
           setTimeout(() => {
             initFirebaseMessaging();
           }, 3000);
@@ -520,15 +576,14 @@ function createApp() {
       }
     },
 
-    // 📖 Progress Bacaan Qur'an
     loadLastRead() {
       const saved = localStorage.getItem('lastRead');
       if (saved) {
         try {
           this.lastRead = JSON.parse(saved);
-          console.log('📖 Progress bacaan dimuat:', this.lastRead);
+          console.log('📖 [APP] Progress bacaan dimuat:', this.lastRead);
         } catch (e) {
-          console.error('❌ Error load progress:', e);
+          console.error('❌ [APP] Error load progress:', e);
         }
       }
     },
@@ -542,7 +597,6 @@ function createApp() {
       }
     },
 
-    // 🕌 Masjid Terdekat
     async findNearbyMosques() {
       if (!this.userCoords) {
         alert('📍 Aktifkan lokasi terlebih dahulu untuk menemukan masjid terdekat');
@@ -553,147 +607,145 @@ function createApp() {
       this.nearbyMosques = [];
 
       try {
+        console.log('🕌 [API] Mencari masjid terdekat...');
         const { latitude, longitude } = this.userCoords;
         
-        const query = `
-          [out:json][timeout:25];
-          (
-            node["amenity"="place_of_worship"]["religion"="muslim"](around:5000,${latitude},${longitude});
-            way["amenity"="place_of_worship"]["religion"="muslim"](around:5000,${latitude},${longitude});
-          );
-          out body;
-          >;
-          out skel qt;
-        `;
+        const radius = 2000; // 2km
+        const query = `[out:json];(node["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${latitude},${longitude});way["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${latitude},${longitude}););out body;`;
         
-        const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-        const res = await fetch(url);
-        const data = await res.json();
+        const res = await fetch('https://overpass-api.de/api/interpreter', {
+          method: 'POST',
+          body: query
+        });
 
-        if (data.elements && data.elements.length > 0) {
-          this.nearbyMosques = data.elements
-            .filter(el => el.tags && el.tags.name)
-            .map(el => ({
-              name: el.tags.name || 'Masjid',
-              address: el.tags['addr:full'] || el.tags['addr:street'] || 'Alamat tidak tersedia',
-              lat: el.lat,
-              lon: el.lon,
-              distance: this.calculateDistance(latitude, longitude, el.lat, el.lon)
-            }))
-            .sort((a, b) => a.distance - b.distance)
-            .slice(0, 10);
-
-          console.log(`🕌 ${this.nearbyMosques.length} masjid ditemukan`);
-        } else {
-          alert('🕌 Tidak ada masjid ditemukan dalam radius 5km');
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
         }
+
+        const data = await res.json();
+        console.log('📦 [API] Masjid data:', data);
+
+        const mosques = data.elements
+          .filter(el => el.tags && el.tags.name)
+          .map(el => {
+            const lat = el.lat || el.center?.lat;
+            const lon = el.lon || el.center?.lon;
+            const distance = this.calculateDistance(latitude, longitude, lat, lon);
+            
+            return {
+              name: el.tags.name,
+              address: el.tags['addr:full'] || el.tags['addr:street'] || 'Alamat tidak tersedia',
+              lat: lat,
+              lon: lon,
+              distance: distance.toFixed(2)
+            };
+          })
+          .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance))
+          .slice(0, 10);
+
+        this.nearbyMosques = mosques;
+        console.log(`✅ [APP] ${mosques.length} masjid ditemukan`);
+
+        if (mosques.length === 0) {
+          alert('ℹ️ Tidak ada masjid ditemukan dalam radius 2km.\n\nCoba perbesar radius pencarian atau cek lokasi Anda.');
+        }
+
       } catch (err) {
-        console.error('❌ Error find mosques:', err);
-        alert('❌ Gagal mencari masjid: ' + err.message);
+        console.error('❌ [APP] Error mencari masjid:', err);
+        alert('❌ Gagal mencari masjid. Coba lagi nanti.');
       } finally {
         this.loadingMosques = false;
       }
     },
 
     calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371;
+      const R = 6371; // Radius bumi dalam km
       const dLat = (lat2 - lat1) * Math.PI / 180;
       const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return (R * c).toFixed(2);
+      return R * c;
     },
 
     openGoogleMaps(lat, lon, name) {
-      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&destination_place_id=${encodeURIComponent(name)}`;
+      const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}&query_place_id=${encodeURIComponent(name)}`;
       window.open(url, '_blank');
     },
 
-    // 💛 Mood Islami
     setMood(mood) {
       this.currentMood = mood;
-      console.log('💛 Mood dipilih:', mood);
+      console.log('💛 [APP] Mood set:', mood);
     },
 
     clearMood() {
       this.currentMood = null;
+      console.log('💛 [APP] Mood cleared');
     },
 
-    // 🌑 Dark Mode Otomatis
     initDarkMode() {
       const saved = localStorage.getItem('darkMode');
-      if (saved !== null) {
-        this.darkMode = saved === 'true';
+      if (saved === 'true') {
+        this.darkMode = true;
+        document.documentElement.classList.add('dark');
+        console.log('🌑 [APP] Dark mode aktif');
       } else {
-        this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        this.darkMode = false;
+        document.documentElement.classList.remove('dark');
+        console.log('☀️ [APP] Light mode aktif');
       }
-      this.applyDarkMode();
-      console.log('🌑 Dark mode:', this.darkMode);
     },
 
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
-      localStorage.setItem('darkMode', this.darkMode);
-      this.applyDarkMode();
-    },
-
-    applyDarkMode() {
       if (this.darkMode) {
         document.documentElement.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+        console.log('🌑 [APP] Dark mode diaktifkan');
       } else {
         document.documentElement.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+        console.log('☀️ [APP] Light mode diaktifkan');
       }
     },
 
     checkAutoDarkMode() {
       if (this.jadwal.Maghrib && this.jadwal.Fajr) {
         const now = new Date();
-        const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        const currentTime = now.getHours() * 60 + now.getMinutes();
         
-        const maghribTime = this.jadwal.Maghrib;
-        const fajrTime = this.jadwal.Fajr;
-
-        if (currentTime >= maghribTime || currentTime < fajrTime) {
-          if (!this.darkMode) {
-            this.darkMode = true;
-            this.applyDarkMode();
-            console.log('🌑 Auto dark mode aktif (setelah Maghrib)');
-          }
-        } else {
-          if (this.darkMode && !localStorage.getItem('darkMode')) {
-            this.darkMode = false;
-            this.applyDarkMode();
-            console.log('☀️ Auto light mode aktif (setelah Subuh)');
-          }
+        const [maghribH, maghribM] = this.jadwal.Maghrib.split(':').map(Number);
+        const [fajrH, fajrM] = this.jadwal.Fajr.split(':').map(Number);
+        
+        const maghribTime = maghribH * 60 + maghribM;
+        const fajrTime = fajrH * 60 + fajrM;
+        
+        const isNight = currentTime >= maghribTime || currentTime < fajrTime;
+        
+        if (isNight && !this.darkMode) {
+          console.log('🌙 [APP] Auto dark mode (malam hari)');
         }
       }
     }
-  };
-}
-
-// ==============================
-// EXPORT TO ALPINE.JS
-// ==============================
-
-// Export to Alpine.js
-document.addEventListener('alpine:init', () => {
-  console.log('✅ Alpine:init event fired, registering app...');
-  Alpine.data('app', createApp);
+  }));
+  
+  console.log('✅ [ALPINE] App component registered');
 });
 
 // ==============================
-// PWA INSTALL HANDLERS
+// PWA INSTALL PROMPT HANDLER
 // ==============================
-
-window.addEventListener('beforeinstallprompt', e => {
+window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   window.deferredPrompt = e;
-  console.log('📲 Install prompt ready');
+  console.log('📲 [PWA] Install prompt tersedia');
 });
 
 window.addEventListener('appinstalled', () => {
-  console.log('✅ App installed!');
   window.deferredPrompt = null;
+  console.log('✅ [PWA] Aplikasi terinstall');
 });
+
+console.log('✅ [APP] app.js loaded successfully');
