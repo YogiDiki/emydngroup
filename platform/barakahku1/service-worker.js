@@ -100,18 +100,20 @@ self.addEventListener('fetch', (event) => {
   const requestUrl = event.request.url;
   
   // ✅ PERBAIKI: Skip SEMUA external APIs - BIARKAN LEWAT
-  const externalAPIs = [
-    'equran.id',
-    'api.aladhan.com', 
-    'nominatim.openstreetmap.org',
-    'overpass-api.de',
-    'gstatic.com',
-    'googleapis.com',
-    'firebaseio.com',
-    'fcm.googleapis.com',
-    'firebaseinstallations.googleapis.com',
-    'firebase.googleapis.com'
-  ];
+// Di bagian externalAPIs, TAMBAHKIN:
+const externalAPIs = [
+  'nominatim.openstreetmap.org',
+  'api.aladhan.com',
+  'equran.id',
+  'gstatic.com',
+  'googleapis.com',
+  'firebaseio.com',
+  'fcm.googleapis.com',
+  'firebaseinstallations.googleapis.com',
+  'firebase.googleapis.com',
+  'barakahku-app.firebaseapp.com',        // ✅ TAMBAH INI
+  'barakahku-app.firebasestorage.app'     // ✅ TAMBAH INI
+];
   
   // ✅ FIX: Biarkan semua API requests langsung ke network
   if (externalAPIs.some(api => requestUrl.includes(api))) {

@@ -547,43 +547,40 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-  async registerServiceWorker() {
-  console.log('⏸️ [APP] Service Worker DISABLED sementara untuk debugging');
-  return; // Skip service worker dulu
-  
-  // if (!('serviceWorker' in navigator)) {
-  //   console.warn('⚠️ [SW] Service Worker tidak didukung');
-  //   return;
-  // }
+    async registerServiceWorker() {
+      if (!('serviceWorker' in navigator)) {
+        console.warn('⚠️ [SW] Service Worker tidak didukung');
+        return;
+      }
 
-  // try {
-  //   // ✅ UNREGISTER DULU SEMUA SERVICE WORKER LAMA
-  //   const registrations = await navigator.serviceWorker.getRegistrations();
-  //   for (let registration of registrations) {
-  //     await registration.unregister();
-  //     console.log('🗑️ [SW] Unregistered old:', registration.scope);
-  //   }
+      try {
+        // UNREGISTER DULU YANG LAMA
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (let registration of registrations) {
+          await registration.unregister();
+          console.log('🗑️ [SW] Unregistered old:', registration.scope);
+        }
 
-  //   // ✅ REGISTER YANG BARU
-  //   const registration = await navigator.serviceWorker.register(
-  //     '/platform/barakahku1/service-worker.js',
-  //     { scope: '/platform/barakahku1/' }
-  //   );
-    
-  //   console.log('✅ [SW] New worker registered:', registration.scope);
-    
-  //   await navigator.serviceWorker.ready;
-  //   console.log('✅ [SW] Service Worker ready');
-    
-  //   if (Notification.permission === 'granted') {
-  //     setTimeout(() => {
-  //       initFirebaseMessaging();
-  //     }, 3000);
-  //   }
-  // } catch (err) {
-  //   console.error('❌ [SW] Failed:', err);
-  // }
-},
+        // REGISTER SERVICE WORKER YANG FIXED
+        const registration = await navigator.serviceWorker.register(
+          '/platform/barakahku1/service-worker.js',
+          { scope: '/platform/barakahku1/' }
+        );
+        
+        console.log('✅ [SW] New worker registered:', registration.scope);
+        
+        // TUNGGU SERVICE WORKER READY
+        await navigator.serviceWorker.ready;
+        console.log('✅ [SW] Service Worker ready');
+        
+        // INIT FIREBASE SETELAH SW READY
+        console.log('🔔 [FCM] Initializing Firebase Messaging...');
+        await initFirebaseMessaging();
+        
+      } catch (err) {
+        console.error('❌ [SW] Failed:', err);
+      }
+    },
 
     loadLastRead() {
       const saved = localStorage.getItem('lastRead');
