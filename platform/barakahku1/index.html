@@ -91,6 +91,36 @@
     .nav-item {
       color: #6b7280;
     }
+
+    /* FIX BOTTOM NAVIGATION */
+    main {
+      padding-bottom: 100px !important;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 512px;
+      margin: 0 auto;
+      z-index: 9999 !important;
+      background: white;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-bottom-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 8px;
+      gap: 4px;
+    }
+
+    .nav-bottom-container button {
+      flex: 1;
+      max-width: 80px;
+    }
   </style>
 </head>
 <body class="h-full">
@@ -104,7 +134,7 @@
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2">
             <div class="bg-white rounded-full p-1.5 shadow-md">
-                <img src="assets/icons/icon-192.png?v=4" class="w-7 h-7 rounded-full">
+          <img src="/platform/barakahku1/assets/icons/icon-192.png" class="w-7 h-7 rounded-full">
             </div>
               
             <div>
@@ -127,7 +157,7 @@
               <span x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></span>
             </div>
           </div>
-          <div class="text-xs opacity-90 mt-1" x-text="'17 Jumada al-ula 1447 AH'"></div>
+          <div class="text-xs opacity-90 mt-1" x-text="hijriDate || 'Memuat tanggal Hijriyah...'"></div>
           
         </div>
         
@@ -171,7 +201,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto pb-24 bg-cream">
+    <main class="flex-1 overflow-y-auto bg-cream">
       
       <!-- Beranda -->
       <template x-if="activeTab === 'beranda'">
@@ -449,58 +479,58 @@
 
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="bg-white border-t-2 border-red-900/10 px-3 py-3 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl">
-        <div class="flex justify-around items-center">
-      
-          <!-- Beranda -->
-          <button @click="activeTab = 'beranda'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'beranda' ? 'nav-item-active scale-105' : 'nav-item'">
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-            </svg>
-            <span class="text-xs font-semibold">Beranda</span>
-          </button>
-      
-          <!-- Quran -->
-          <button @click="activeTab = 'quran'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'quran' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">📖</span>
-            <span class="text-xs font-semibold">Qur'an</span>
-          </button>
-      
-          <!-- Doa -->
-          <button @click="activeTab = 'doa'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'doa' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">🙏</span>
-            <span class="text-xs font-semibold">Doa</span>
-          </button>
-      
-          <!-- Murottal -->
-          <button @click="activeTab = 'murottal'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'murottal' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">🎵</span>
-            <span class="text-xs font-semibold">Murottal</span>
-          </button>
-      
-          <!-- Checklist -->
-          <button @click="activeTab = 'ibadah'"
-                  class="flex flex-col items-center gap-1 py-2 px-4 rounded-xl transition-all"
-                  :class="activeTab === 'ibadah' ? 'nav-item-active scale-105' : 'nav-item'">
-            <span class="text-2xl">✅</span>
-            <span class="text-xs font-semibold">Ibadah</span>
-          </button>
-      
-        </div>
-      </nav>
+    <!-- Bottom Navigation - FIXED -->
+    <nav class="bg-white border-t-2 border-red-900/10">
+      <div class="nav-bottom-container">
+        
+        <!-- Beranda -->
+        <button @click="activeTab = 'beranda'"
+                class="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all"
+                :class="activeTab === 'beranda' ? 'nav-item-active scale-105' : 'nav-item'">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
+          <span class="text-[10px] font-semibold">Beranda</span>
+        </button>
+    
+        <!-- Quran -->
+        <button @click="activeTab = 'quran'"
+                class="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all"
+                :class="activeTab === 'quran' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">📖</span>
+          <span class="text-[10px] font-semibold">Qur'an</span>
+        </button>
+    
+        <!-- Doa -->
+        <button @click="activeTab = 'doa'"
+                class="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all"
+                :class="activeTab === 'doa' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">🙏</span>
+          <span class="text-[10px] font-semibold">Doa</span>
+        </button>
+    
+        <!-- Murottal -->
+        <button @click="activeTab = 'murottal'"
+                class="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all"
+                :class="activeTab === 'murottal' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">🎵</span>
+          <span class="text-[10px] font-semibold">Murottal</span>
+        </button>
+    
+        <!-- Checklist -->
+        <button @click="activeTab = 'ibadah'"
+                class="flex flex-col items-center gap-1 py-2 px-3 rounded-xl transition-all"
+                :class="activeTab === 'ibadah' ? 'nav-item-active scale-105' : 'nav-item'">
+          <span class="text-xl">✅</span>
+          <span class="text-[10px] font-semibold">Ibadah</span>
+        </button>
+    
+      </div>
+    </nav>
 
   </div>
 
-  <script src="app.js"></script>
+<script src="/platform/barakahku1/app.js"></script>
 
 </body>
 </html>

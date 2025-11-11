@@ -1,9 +1,9 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 - Working Version)
+// BarakahKu - app.js (Firebase v8 PURE)
 // ==============================
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8 Legacy)
+// Fungsi inisialisasi Firebase Messaging (v8 ONLY!)
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
@@ -15,25 +15,33 @@ async function initFirebaseMessaging() {
       return;
     }
 
-    // Load Firebase v8 SDK
-    if (!window.firebase) {
+    // Load Firebase v8 SDK (BUKAN v9!)
+    if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
+      
+      // Hapus script lama jika ada
+      const oldScripts = document.querySelectorAll('script[src*="firebasejs"]');
+      oldScripts.forEach(s => s.remove());
       
       await new Promise((resolve, reject) => {
         const script1 = document.createElement('script');
         script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
         script1.onload = () => {
+          console.log('✅ [FCM] Firebase App v8 loaded');
           const script2 = document.createElement('script');
           script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
-          script2.onload = resolve;
+          script2.onload = () => {
+            console.log('✅ [FCM] Firebase Messaging v8 loaded');
+            resolve();
+          };
           script2.onerror = reject;
           document.head.appendChild(script2);
         };
         script1.onerror = reject;
         document.head.appendChild(script1);
       });
-      
-      console.log('✅ [FCM] Firebase v8 loaded');
+    } else {
+      console.log('✅ [FCM] Firebase v8 sudah loaded');
     }
 
     // Initialize Firebase
@@ -47,30 +55,19 @@ async function initFirebaseMessaging() {
         appId: "1:510231053293:web:921b9e574fc614492b5de4"
       });
       console.log('✅ [FCM] Firebase initialized');
+    } else {
+      console.log('✅ [FCM] Firebase sudah initialized');
     }
 
     // Get messaging instance
     const messaging = firebase.messaging();
+    console.log('✅ [FCM] Messaging instance created');
     
-    // PENTING: Register Firebase Messaging Service Worker
-    console.log('🔧 [FCM] Registering Firebase SW...');
-    
-    const swRegistration = await navigator.serviceWorker.register(
-      '/platform/barakahku1/firebase-messaging-sw.js',
-      { scope: '/platform/barakahku1/' }
-    );
-    
-    console.log('✅ [FCM] Firebase SW registered');
-    
-    // Tunggu SW ready
-    await navigator.serviceWorker.ready;
-    console.log('✅ [FCM] Firebase SW ready');
-    
-    // Get token
+    // Get token (Firebase v8 akan otomatis pakai firebase-messaging-sw.js)
     try {
+      console.log('🔑 [FCM] Requesting token...');
       const currentToken = await messaging.getToken({ 
-        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-        serviceWorkerRegistration: swRegistration
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
       });
       
       if (currentToken) {
@@ -91,6 +88,7 @@ async function initFirebaseMessaging() {
       }
     } catch (err) {
       console.error('❌ [FCM] Error get token:', err);
+      console.error('Detail:', err.message);
     }
 
     // Handler foreground messages
@@ -115,6 +113,7 @@ async function initFirebaseMessaging() {
 
   } catch (error) {
     console.error('❌ [FCM] Init failed:', error);
+    console.error('Stack:', error.stack);
   }
 }
 
@@ -131,6 +130,7 @@ function createApp() {
     murotalList: [],
     jadwal: {},
     cityName: 'Memuat lokasi...',
+    hijriDate: '', // TAMBAHAN: untuk tanggal Hijriyah
     checklist: [
       { id: 1, name: 'Sholat Subuh', description: 'Sholat wajib 2 rakaat', icon: '🌅', done: false },
       { id: 2, name: 'Sholat Dzuhur', description: 'Sholat wajib 4 rakaat', icon: '☀️', done: false },
@@ -148,6 +148,7 @@ function createApp() {
       console.log('🚀 BarakahKu - Memulai aplikasi...');
       await this.loadQuran();
       this.loadDoa();
+      this.loadHijriDate(); // TAMBAHAN: load tanggal Hijriyah
       this.loadJadwal();
       this.loadChecklist();
       await this.loadMurotalList();
@@ -164,6 +165,28 @@ function createApp() {
       }, true);
 
       console.log('✅ Aplikasi siap');
+    },
+
+    // TAMBAHAN: Fungsi untuk load tanggal Hijriyah yang akurat
+    async loadHijriDate() {
+      try {
+        console.log('📅 Memuat tanggal Hijriyah...');
+        const today = new Date();
+        const timestamp = Math.floor(today.getTime() / 1000);
+        
+        const res = await fetch(`https://api.aladhan.com/v1/gToH/${timestamp}`);
+        const data = await res.json();
+        
+        if (data.code === 200) {
+          const hijri = data.data.hijri;
+          // Format: "17 Jumada al-Akhirah 1447 H"
+          this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} H`;
+          console.log('✅ Tanggal Hijriyah:', this.hijriDate);
+        }
+      } catch (err) {
+        console.error('❌ Error load Hijri date:', err);
+        this.hijriDate = 'Tanggal Hijriyah tidak tersedia';
+      }
     },
 
     async loadQuran() {
@@ -462,11 +485,11 @@ function createApp() {
         scope: '/platform/barakahku1/'
       })
         .then(registration => {
-          console.log('✅ [SW] PWA Service Worker registered');
+          console.log('✅ [SW] PWA SW registered');
           
           // Auto init Firebase jika sudah granted
           if (Notification.permission === 'granted') {
-            console.log('🔔 Permission granted, init FCM...');
+            console.log('🔔 Permission granted, init FCM in 3s...');
             setTimeout(() => {
               initFirebaseMessaging();
             }, 3000);
