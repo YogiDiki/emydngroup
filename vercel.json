@@ -1,6 +1,18 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/www.emydngroup.com/(.*)",
+      "destination": "/$1",
+      "permanent": true
+    },
+    {
+      "source": "/platform/barakahku1/",
+      "destination": "/platform/barakahku1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/about", "destination": "/about.html" },
     { "source": "/contact", "destination": "/contact.html" },
@@ -21,20 +33,46 @@
     { "source": "/articles/toko-online", "destination": "/articles/toko-online.html" },
     { "source": "/articles/:slug", "destination": "/articles/:slug.html" },
     { "source": "/demo", "destination": "/demo/index.html" },
-    { 
-      "source": "/platform/barakahku1", 
-      "destination": "/platform/barakahku1/index.html" 
-    },
-    { 
-      "source": "/platform/barakahku1/(.*)", 
-      "destination": "/platform/barakahku1/index.html" 
-    }
+    { "source": "/platform/barakahku1", "destination": "/platform/barakahku1/index.html" }
   ],
   "headers": [
     {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain" }
+      ]
+    },
+    {
+      "source": "/platform/barakahku1/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/platform/barakahku1/service-worker.js",
       "headers": [
-        { "key": "Service-Worker-Allowed", "value": "/platform/barakahku1/" }
+        { "key": "Service-Worker-Allowed", "value": "/platform/barakahku1" },
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/platform/barakahku1/app.js",
+      "headers": [
+        { "key": "Content-Type", "value": "application/javascript; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/platform/barakahku1/manifest.json",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" }
       ]
     }
   ]
