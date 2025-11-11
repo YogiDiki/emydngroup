@@ -3,31 +3,30 @@
 // Lokasi: /platform/barakahku1/service-worker.js
 // ====================================================
 
-// Force rebuild at 2025-11-11T13:52
-const CACHE_NAME = 'barakahku-cache-v15';
+// ✅ BUMP VERSION: Ubah ini setiap kali ada perubahan URL!
+const CACHE_NAME = 'barakahku-cache-v16-no-html';
+
+// ✅ UPDATE: URL tanpa .html
 const urlsToCache = [
-  '/platform/barakahku1/',
+  '/platform/barakahku1',           // ✅ Tanpa trailing slash & .html
   '/platform/barakahku1/app.js',
   '/platform/barakahku1/manifest.json',
   '/platform/barakahku1/assets/icons/icon-192.png',
   '/platform/barakahku1/assets/icons/icon-512.png'
 ];
 
-
-console.log('🚀 [SW] BarakahKu Unified Service Worker starting...');
+console.log('🚀 [SW] BarakahKu v16 starting (Clean URLs)...');
 
 // ====================================================
 // FIREBASE CLOUD MESSAGING INTEGRATION
 // ====================================================
 
 try {
-  // Import Firebase SDK v8
   importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
   importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
 
   console.log('✅ [SW] Firebase scripts loaded');
 
-  // Initialize Firebase
   firebase.initializeApp({
     apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
     authDomain: "barakahku-app.firebaseapp.com",
@@ -39,13 +38,11 @@ try {
 
   console.log('✅ [SW] Firebase initialized');
 
-  // Get messaging instance
   const messaging = firebase.messaging();
   console.log('✅ [SW] Firebase Messaging ready');
 
-  // Handle background messages
   messaging.onBackgroundMessage((payload) => {
-    console.log('📩 [SW] Background message received:', payload);
+    console.log('📩 [SW] Background message:', payload);
     
     const title = payload.notification?.title || 'BarakahKu';
     const options = {
@@ -61,50 +58,45 @@ try {
     return self.registration.showNotification(title, options);
   });
 } catch (err) {
-  console.warn('⚠️ [SW] Firebase init failed (mungkin incognito mode):', err);
-  // SW tetap berjalan untuk PWA caching meskipun FCM gagal
+  console.warn('⚠️ [SW] Firebase init failed:', err);
 }
 
 // ====================================================
 // PWA CACHING STRATEGY
 // ====================================================
 
-// Install SW
 self.addEventListener('install', (event) => {
-console.log('✅ [SW] Installing v15...');
+  console.log('✅ [SW] Installing v16 (Clean URLs)...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('📦 [SW] Caching files...');
       return cache.addAll(urlsToCache);
     })
   );
-  self.skipWaiting();
+  self.skipWaiting(); // Force immediate activation
 });
 
-// Activate SW
 self.addEventListener('activate', (event) => {
-console.log('✅ [SW] Activating v15...');
+  console.log('✅ [SW] Activating v16...');
   event.waitUntil(
+    // ✅ DELETE ALL OLD CACHES
     caches.keys().then((keys) => {
+      console.log('🗑️ [SW] Deleting old caches:', keys.filter(k => k !== CACHE_NAME));
       return Promise.all(
         keys.filter((key) => key !== CACHE_NAME)
-           .map((key) => {
-             console.log('🗑️ [SW] Delete old cache:', key);
-             return caches.delete(key);
-           })
+           .map((key) => caches.delete(key))
       );
     }).then(() => {
-      console.log('✅ [SW] Activated');
+      console.log('✅ [SW] All old caches deleted');
       return self.clients.claim();
     })
   );
 });
 
-// Fetch Strategy
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
-  // Skip caching untuk external APIs
+  // Skip external APIs
   const externalAPIs = [
     'nominatim.openstreetmap.org',
     'api.aladhan.com',
@@ -118,52 +110,51 @@ self.addEventListener('fetch', (event) => {
   ];
   
   if (externalAPIs.some(api => url.hostname.includes(api))) {
-    event.respondWith(fetch(event.request));
+    return event.respondWith(fetch(event.request));
+  }
+  
+  // ✅ Network-first untuk /platform/barakahku1 (supaya selalu fresh)
+  if (url.pathname.startsWith('/platform/barakahku1')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Fallback ke cache jika offline
+          return caches.match(event.request).then(cached => {
+            return cached || caches.match('/platform/barakahku1');
+          });
+        })
+    );
     return;
   }
   
-  // Cache-first strategy untuk file lokal
+  // Cache-first untuk file lainnya
   event.respondWith(
     caches.match(event.request).then((response) => {
-      if (response) {
-        return response;
-      }
-      
-      return fetch(event.request).then((response) => {
-        if (!response || response.status !== 200 || response.type === 'error') {
-          return response;
-        }
-        
-        const responseToCache = response.clone();
-        
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
-        });
-        
-        return response;
-      }).catch((err) => {
-        console.error('❌ [SW] Fetch error:', err);
-      return caches.match('/platform/barakahku1/');
-      });
+      return response || fetch(event.request);
     })
   );
 });
-
-// ====================================================
-// NOTIFICATION CLICK HANDLER
-// ====================================================
 
 self.addEventListener('notificationclick', (event) => {
   console.log('🔔 [SW] Notification clicked');
   event.notification.close();
   
-  const url = event.notification.data?.url || 'https://www.emydngroup.com/platform/barakahku1/';
+  const url = event.notification.data?.url || '/platform/barakahku1';
   
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
         for (const client of clientList) {
-          if (client.url.includes('/platform/barakahku1/') && 'focus' in client) {
+          if (client.url.includes('/platform/barakahku1') && 'focus' in client) {
             return client.focus();
           }
         }
@@ -173,10 +164,6 @@ self.addEventListener('notificationclick', (event) => {
       })
   );
 });
-
-// ====================================================
-// MESSAGE HANDLER
-// ====================================================
 
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
@@ -188,5 +175,5 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('✅ [SW] BarakahKu Unified Service Worker v15 ready');
+console.log('✅ [SW] BarakahKu v16 ready (Clean URLs)');
 console.log('📍 [SW] Scope:', self.registration.scope);
