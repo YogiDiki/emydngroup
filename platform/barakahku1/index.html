@@ -309,7 +309,8 @@
             </template>
 
             <template x-if="currentMood">
-              <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4">
+<template x-if="currentMood">
+                <div class="bg-pink-100 dark:bg-pink-900/30 rounded-xl p-4">
                 <p class="font-arabic text-right text-gray-800 dark:text-gray-200 text-xl leading-loose mb-2" x-text="moodSuggestions[currentMood].ayat"></p>
                 <p class="text-sm text-gray-700 dark:text-gray-300 mb-2" x-text="moodSuggestions[currentMood].arti"></p>
                 <p class="text-xs text-gray-500 mb-3" x-text="moodSuggestions[currentMood].ref"></p>
