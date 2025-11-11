@@ -3,15 +3,16 @@
 // Lokasi: /platform/barakahku1/service-worker.js
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v13';
+// Force rebuild at 2025-11-11T13:52
+const CACHE_NAME = 'barakahku-cache-v15';
 const urlsToCache = [
   '/platform/barakahku1/',
-  '/platform/barakahku1/index.html',
   '/platform/barakahku1/app.js',
   '/platform/barakahku1/manifest.json',
   '/platform/barakahku1/assets/icons/icon-192.png',
   '/platform/barakahku1/assets/icons/icon-512.png'
 ];
+
 
 console.log('🚀 [SW] BarakahKu Unified Service Worker starting...');
 
@@ -142,7 +143,7 @@ self.addEventListener('fetch', (event) => {
         return response;
       }).catch((err) => {
         console.error('❌ [SW] Fetch error:', err);
-        return caches.match('/platform/barakahku1/index.html');
+      return caches.match('/platform/barakahku1/');
       });
     })
   );
