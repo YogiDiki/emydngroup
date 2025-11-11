@@ -6,6 +6,11 @@
       "source": "/www.emydngroup.com/(.*)",
       "destination": "/$1",
       "permanent": true
+    },
+    {
+      "source": "/platform/barakahku1/",
+      "destination": "/platform/barakahku1",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -44,9 +49,15 @@
       ]
     },
     {
+      "source": "/platform/barakahku1/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/platform/barakahku1/service-worker.js",
       "headers": [
-        { "key": "Service-Worker-Allowed", "value": "/platform/barakahku1/" },
+        { "key": "Service-Worker-Allowed", "value": "/platform/barakahku1" },
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" },
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
@@ -55,7 +66,7 @@
       "source": "/platform/barakahku1/app.js",
       "headers": [
         { "key": "Content-Type", "value": "application/javascript; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600" }
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
     },
     {
