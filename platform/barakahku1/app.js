@@ -135,6 +135,19 @@ function createApp() {
     jadwal: {},
     cityName: 'Memuat lokasi...',
     hijriDate: 'Memuat tanggal Hijriah...',
+    darkMode: false,
+    lastRead: null,
+    nearbyMosques: [],
+    loadingMosques: false,
+    userCoords: null,
+    currentMood: null,
+    moodSuggestions: {
+      sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
+      senang: { ayat: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ', arti: 'Dan terhadap nikmat Tuhanmu, hendaklah kamu nyatakan', ref: 'QS. Ad-Duha: 11' },
+      cemas: { ayat: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', arti: 'Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram', ref: 'QS. Ar-Ra\'d: 28' },
+      syukur: { ayat: 'لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ', arti: 'Jika kamu bersyukur, niscaya Aku akan menambah nikmat kepadamu', ref: 'QS. Ibrahim: 7' },
+      lelah: { ayat: 'وَلَا تَهِنُوا وَلَا تَحْزَنُوا', arti: 'Janganlah kamu lemah dan jangan pula bersedih hati', ref: 'QS. Ali Imran: 139' }
+    },
     checklist: [
       { id: 1, name: 'Sholat Subuh', description: 'Sholat wajib 2 rakaat', icon: '🌅', done: false },
       { id: 2, name: 'Sholat Dzuhur', description: 'Sholat wajib 4 rakaat', icon: '☀️', done: false },
@@ -150,12 +163,14 @@ function createApp() {
 
     async init() {
       console.log('🚀 BarakahKu - Memulai aplikasi...');
-      await this.registerServiceWorker(); // Register SW PERTAMA!
-      this.loadJadwal(); // Load jadwal dulu untuk update hijriDate
+      await this.registerServiceWorker();
+      this.loadJadwal();
       await this.loadQuran();
       this.loadDoa();
       this.loadChecklist();
       await this.loadMurotalList();
+      this.loadLastRead();
+      this.initDarkMode();
 
       // Auto-stop murottal
       document.addEventListener('play', function (e) {
@@ -193,6 +208,7 @@ function createApp() {
         const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
         const data = await res.json();
         this.currentSurah = {
+          nomor: nomor,
           namaLatin: data.data.namaLatin,
           ayat: data.data.ayat.map(a => ({
             nomorAyat: a.nomorAyat,
@@ -201,7 +217,16 @@ function createApp() {
             teks: a.teksIndonesia
           }))
         };
-        localStorage.setItem('lastRead', nomor);
+        
+        // Simpan progress bacaan
+        this.lastRead = {
+          surah: nomor,
+          namaLatin: data.data.namaLatin,
+          ayat: 1,
+          timestamp: new Date().toLocaleString('id-ID')
+        };
+        localStorage.setItem('lastRead', JSON.stringify(this.lastRead));
+        
         console.log(`✅ Surah ${data.data.namaLatin} dimuat`);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
       } catch (err) {
@@ -329,10 +354,10 @@ function createApp() {
 
       navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords;
+        this.userCoords = { latitude, longitude };
         console.log(`📍 Koordinat: ${latitude}, ${longitude}`);
 
         try {
-          // Fetch nama kota
           const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
           const geoData = await geoRes.json();
 
@@ -344,17 +369,17 @@ function createApp() {
 
           console.log(`📍 Kota: ${this.cityName}`);
 
-          // Fetch jadwal sholat DAN tanggal Hijriah
           const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
           const data = await res.json();
           this.jadwal = data.data.timings;
           
-          // Ambil tanggal Hijriah dari API
           if (data.data.date && data.data.date.hijri) {
             const hijri = data.data.date.hijri;
             this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
             console.log(`📅 Hijriah: ${this.hijriDate}`);
           }
+
+          this.checkAutoDarkMode();
 
           console.log('✅ Jadwal sholat dimuat');
         } catch (err) {
@@ -473,7 +498,6 @@ function createApp() {
       }
 
       try {
-        // Register service worker di SCOPE yang tepat
         const registration = await navigator.serviceWorker.register(
           '/platform/barakahku1/service-worker.js',
           { scope: '/platform/barakahku1/' }
@@ -482,11 +506,9 @@ function createApp() {
         console.log('✅ [SW] Service Worker registered');
         console.log('📍 [SW] Scope:', registration.scope);
         
-        // Tunggu sampai SW benar-benar aktif
         await navigator.serviceWorker.ready;
         console.log('✅ [SW] Service Worker ready');
         
-        // Auto init Firebase jika sudah granted
         if (Notification.permission === 'granted') {
           console.log('🔔 Permission granted, init FCM in 3s...');
           setTimeout(() => {
@@ -495,6 +517,157 @@ function createApp() {
         }
       } catch (err) {
         console.error('❌ [SW] Failed:', err);
+      }
+    },
+
+    // 📖 Progress Bacaan Qur'an
+    loadLastRead() {
+      const saved = localStorage.getItem('lastRead');
+      if (saved) {
+        try {
+          this.lastRead = JSON.parse(saved);
+          console.log('📖 Progress bacaan dimuat:', this.lastRead);
+        } catch (e) {
+          console.error('❌ Error load progress:', e);
+        }
+      }
+    },
+
+    continueReading() {
+      if (this.lastRead && this.lastRead.surah) {
+        this.activeTab = 'quran';
+        setTimeout(() => {
+          this.loadSurah(this.lastRead.surah);
+        }, 100);
+      }
+    },
+
+    // 🕌 Masjid Terdekat
+    async findNearbyMosques() {
+      if (!this.userCoords) {
+        alert('📍 Aktifkan lokasi terlebih dahulu untuk menemukan masjid terdekat');
+        return;
+      }
+
+      this.loadingMosques = true;
+      this.nearbyMosques = [];
+
+      try {
+        const { latitude, longitude } = this.userCoords;
+        
+        const query = `
+          [out:json][timeout:25];
+          (
+            node["amenity"="place_of_worship"]["religion"="muslim"](around:5000,${latitude},${longitude});
+            way["amenity"="place_of_worship"]["religion"="muslim"](around:5000,${latitude},${longitude});
+          );
+          out body;
+          >;
+          out skel qt;
+        `;
+        
+        const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.elements && data.elements.length > 0) {
+          this.nearbyMosques = data.elements
+            .filter(el => el.tags && el.tags.name)
+            .map(el => ({
+              name: el.tags.name || 'Masjid',
+              address: el.tags['addr:full'] || el.tags['addr:street'] || 'Alamat tidak tersedia',
+              lat: el.lat,
+              lon: el.lon,
+              distance: this.calculateDistance(latitude, longitude, el.lat, el.lon)
+            }))
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, 10);
+
+          console.log(`🕌 ${this.nearbyMosques.length} masjid ditemukan`);
+        } else {
+          alert('🕌 Tidak ada masjid ditemukan dalam radius 5km');
+        }
+      } catch (err) {
+        console.error('❌ Error find mosques:', err);
+        alert('❌ Gagal mencari masjid: ' + err.message);
+      } finally {
+        this.loadingMosques = false;
+      }
+    },
+
+    calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return (R * c).toFixed(2);
+    },
+
+    openGoogleMaps(lat, lon, name) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}&destination_place_id=${encodeURIComponent(name)}`;
+      window.open(url, '_blank');
+    },
+
+    // 💛 Mood Islami
+    setMood(mood) {
+      this.currentMood = mood;
+      console.log('💛 Mood dipilih:', mood);
+    },
+
+    clearMood() {
+      this.currentMood = null;
+    },
+
+    // 🌑 Dark Mode Otomatis
+    initDarkMode() {
+      const saved = localStorage.getItem('darkMode');
+      if (saved !== null) {
+        this.darkMode = saved === 'true';
+      } else {
+        this.darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+      this.applyDarkMode();
+      console.log('🌑 Dark mode:', this.darkMode);
+    },
+
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      localStorage.setItem('darkMode', this.darkMode);
+      this.applyDarkMode();
+    },
+
+    applyDarkMode() {
+      if (this.darkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    },
+
+    checkAutoDarkMode() {
+      if (this.jadwal.Maghrib && this.jadwal.Fajr) {
+        const now = new Date();
+        const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        
+        const maghribTime = this.jadwal.Maghrib;
+        const fajrTime = this.jadwal.Fajr;
+
+        if (currentTime >= maghribTime || currentTime < fajrTime) {
+          if (!this.darkMode) {
+            this.darkMode = true;
+            this.applyDarkMode();
+            console.log('🌑 Auto dark mode aktif (setelah Maghrib)');
+          }
+        } else {
+          if (this.darkMode && !localStorage.getItem('darkMode')) {
+            this.darkMode = false;
+            this.applyDarkMode();
+            console.log('☀️ Auto light mode aktif (setelah Subuh)');
+          }
+        }
       }
     }
   };

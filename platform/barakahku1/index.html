@@ -92,9 +92,68 @@
       color: #6b7280;
     }
 
-    /* Fix untuk bottom navigation agar tidak terpotong */
     .bottom-nav-safe {
       padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Dark Mode Styles */
+    .dark {
+      color-scheme: dark;
+    }
+    
+    .dark body {
+      background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+    }
+    
+    .dark .bg-cream {
+      background-color: #1a1a1a;
+    }
+    
+    .dark .card-islamic {
+      background: #2a2a2a;
+      border-color: rgba(185, 28, 28, 0.3);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dark .text-gray-800 {
+      color: #e5e5e5 !important;
+    }
+    
+    .dark .text-gray-700 {
+      color: #d4d4d4 !important;
+    }
+    
+    .dark .text-gray-600 {
+      color: #a3a3a3 !important;
+    }
+    
+    .dark .text-gray-500 {
+      color: #737373 !important;
+    }
+    
+    .dark .bg-gray-50 {
+      background-color: #3a3a3a !important;
+    }
+    
+    .dark .bg-gray-200 {
+      background-color: #404040 !important;
+    }
+    
+    .dark .bg-green-50 {
+      background-color: #1a3a2a !important;
+    }
+    
+    .dark .border-green-600 {
+      border-color: #16a34a !important;
+    }
+    
+    .dark .text-green-900 {
+      color: #86efac !important;
+    }
+    
+    .dark nav {
+      background-color: #2a2a2a !important;
+      border-color: rgba(185, 28, 28, 0.2) !important;
     }
   </style>
 </head>
@@ -109,7 +168,7 @@
         <div class="flex items-center justify-between mb-3">
           <div class="flex items-center gap-2">
             <div class="bg-white rounded-full p-1.5 shadow-md">
-          <img src="/platform/barakahku1/assets/icons/icon-192.png" class="w-7 h-7 rounded-full">
+              <img src="/platform/barakahku1/assets/icons/icon-192.png" class="w-7 h-7 rounded-full">
             </div>
               
             <div>
@@ -117,11 +176,21 @@
               <p class="text-xs opacity-90">Teman Ibadah Harian</p>
             </div>
           </div>
-          <button @click="showSearch = !showSearch" class="p-2 hover:bg-white/20 rounded-full transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-          </button>
+          <div class="flex items-center gap-2">
+            <button @click="toggleDarkMode()" class="p-2 hover:bg-white/20 rounded-full transition-all" title="Toggle Dark Mode">
+              <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+              </svg>
+              <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </button>
+            <button @click="showSearch = !showSearch" class="p-2 hover:bg-white/20 rounded-full transition-all">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </button>
+          </div>
         </div>
         
         <!-- Date Info -->
@@ -132,9 +201,9 @@
               <span x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></span>
             </div>
           </div>
-<div class="text-xs opacity-90 mt-1">
-  <span x-text="hijriDate"></span>
-</div>          
+          <div class="text-xs opacity-90 mt-1">
+            <span x-text="hijriDate"></span>
+          </div>          
         </div>
         
         <!-- Prayer Times -->
@@ -176,6 +245,8 @@
       </div>
     </header>
 
+    <!-- LANJUT KE BAGIAN 2 -->
+
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto pb-28 bg-cream">
       
@@ -187,6 +258,64 @@
             <p class="text-gray-800 text-2xl font-arabic leading-relaxed mb-2">إِنَّ مَعَ الْعُسْرِ يُسْرًا</p>
             <p class="text-sm text-gray-600 font-medium">Sesungguhnya bersama kesulitan ada kemudahan</p>
             <p class="text-xs text-gray-500 mt-1">QS. Al-Insyirah: 6</p>
+          </div>
+
+          <!-- Progress Bacaan Qur'an -->
+          <template x-if="lastRead">
+            <div class="card-islamic p-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">📖</span>
+                  <div>
+                    <p class="text-xs opacity-90 font-medium">Terakhir Dibaca</p>
+                    <p class="text-lg font-bold" x-text="lastRead.namaLatin"></p>
+                  </div>
+                </div>
+                <button @click="continueReading()" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition">
+                  Lanjutkan
+                </button>
+              </div>
+              <p class="text-xs opacity-75" x-text="'Ayat ' + lastRead.ayat + ' • ' + lastRead.timestamp"></p>
+            </div>
+          </template>
+
+          <!-- Mood Islami -->
+          <div class="card-islamic p-4">
+            <p class="text-sm font-bold text-gray-800 mb-3">💛 Bagaimana perasaanmu hari ini?</p>
+            
+            <template x-if="!currentMood">
+              <div class="grid grid-cols-5 gap-2">
+                <button @click="setMood('sedih')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <span class="text-2xl">😢</span>
+                  <span class="text-xs text-gray-600">Sedih</span>
+                </button>
+                <button @click="setMood('senang')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <span class="text-2xl">😊</span>
+                  <span class="text-xs text-gray-600">Senang</span>
+                </button>
+                <button @click="setMood('cemas')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <span class="text-2xl">😰</span>
+                  <span class="text-xs text-gray-600">Cemas</span>
+                </button>
+                <button @click="setMood('syukur')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <span class="text-2xl">🙏</span>
+                  <span class="text-xs text-gray-600">Syukur</span>
+                </button>
+                <button @click="setMood('lelah')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                  <span class="text-2xl">😴</span>
+                  <span class="text-xs text-gray-600">Lelah</span>
+                </button>
+              </div>
+            </template>
+
+            <template x-if="currentMood">
+              <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4">
+                <p class="font-arabic text-right text-gray-800 dark:text-gray-200 text-xl leading-loose mb-2" x-text="moodSuggestions[currentMood].ayat"></p>
+                <p class="text-sm text-gray-700 dark:text-gray-300 mb-2" x-text="moodSuggestions[currentMood].arti"></p>
+                <p class="text-xs text-gray-500 mb-3" x-text="moodSuggestions[currentMood].ref"></p>
+                <button @click="clearMood()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Tutup</button>
+              </div>
+            </template>
           </div>
 
           <!-- Quick Stats -->
@@ -267,6 +396,19 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
             </button>
+
+            <button @click="activeTab = 'masjid'" class="w-full card-islamic p-4 flex items-center gap-4 transition-all hover:shadow-lg">
+              <div class="w-14 h-14 bg-gradient-to-br from-red-900 to-red-700 rounded-2xl flex items-center justify-center shadow-md">
+                <span class="text-3xl">🕌</span>
+              </div>
+              <div class="flex-1 text-left">
+                <p class="font-bold text-gray-800 text-base">Masjid Terdekat</p>
+                <p class="text-xs text-gray-500 mt-0.5">Temukan masjid di sekitarmu</p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
           </div>
 
           <!-- Install Button -->
@@ -282,6 +424,9 @@
           </button>
         </div>
       </template>
+
+      <!-- UNTUK BAGIAN QUR'AN, DOA, MUROTTAL, IBADAH, DAN MASJID -->
+      <!-- Lanjut ke BAGIAN 3 -->
 
       <!-- Qur'an -->
       <template x-if="activeTab === 'quran'">
@@ -346,7 +491,7 @@
         </div>
       </template>
 
- <!-- Doa -->
+      <!-- Doa -->
       <template x-if="activeTab === 'doa'">
         <div class="p-5">
           <template x-if="!currentDoa">
@@ -359,8 +504,8 @@
               <template x-for="doa in doaList" :key="doa.id">
                 <div @click="currentDoa = doa" class="card-islamic p-4 hover:shadow-lg transition-all cursor-pointer">
                   <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white rounded-xl flex items-center justify-center text-2xl shadow-md shrink-0">
-                      <span>🙏</span>
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-xl flex items-center justify-center text-base shadow-md shrink-0">
+                      <span x-text="doa.id"></span>
                     </div>
                     <div class="flex-1 min-w-0">
                       <h3 class="font-bold text-gray-800 text-base" x-text="doa.judul"></h3>
@@ -485,9 +630,83 @@
         </div>
       </template>
 
+      <!-- Masjid Terdekat -->
+      <template x-if="activeTab === 'masjid'">
+        <div class="p-5">
+          <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white mb-4">
+            <p class="text-sm opacity-90 font-medium">Masjid Terdekat</p>
+            <p class="text-2xl font-bold mt-1">Temukan Masjid di Sekitarmu</p>
+          </div>
+
+          <template x-if="!userCoords">
+            <div class="card-islamic p-6 text-center">
+              <span class="text-4xl mb-3 block">📍</span>
+              <p class="text-sm text-gray-600 mb-4">Lokasi belum tersedia. Aktifkan izin lokasi dari beranda.</p>
+              <button @click="loadJadwal()" class="btn-islamic inline-flex items-center gap-2">
+                <span>Aktifkan Lokasi</span>
+              </button>
+            </div>
+          </template>
+
+          <template x-if="userCoords && nearbyMosques.length === 0 && !loadingMosques">
+            <div class="card-islamic p-6 text-center">
+              <span class="text-4xl mb-3 block">🕌</span>
+              <p class="text-sm text-gray-600 mb-4">Cari masjid terdekat dari lokasimu</p>
+              <button @click="findNearbyMosques()" class="btn-islamic inline-flex items-center gap-2">
+                <span>Cari Masjid</span>
+              </button>
+            </div>
+          </template>
+
+          <template x-if="loadingMosques">
+            <div class="text-center py-12">
+              <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-red-900 border-t-transparent mb-3"></div>
+              <p class="text-sm text-gray-600">Mencari masjid terdekat...</p>
+            </div>
+          </template>
+
+          <template x-if="nearbyMosques.length > 0">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between mb-3">
+                <p class="text-sm text-gray-600 font-medium">
+                  <span class="font-bold text-red-900" x-text="nearbyMosques.length"></span> masjid ditemukan
+                </p>
+                <button @click="findNearbyMosques()" class="text-xs text-red-900 hover:text-red-700 font-semibold underline">
+                  Refresh
+                </button>
+              </div>
+
+              <template x-for="(masjid, index) in nearbyMosques" :key="'masjid-' + index">
+                <div class="card-islamic p-4">
+                  <div class="flex items-start gap-3 mb-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-red-900 to-red-700 text-white rounded-lg flex items-center justify-center shrink-0">
+                      <span class="text-xl">🕌</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-gray-800 text-base mb-1" x-text="masjid.name"></h3>
+                      <p class="text-xs text-gray-500 mb-2" x-text="masjid.address"></p>
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-400 px-2 py-1 rounded-full font-semibold">
+                          📍 <span x-text="masjid.distance + ' km'"></span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <button @click="openGoogleMaps(masjid.lat, masjid.lon, masjid.name)" class="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 rounded-lg transition">
+                    🗺️ Buka di Google Maps
+                  </button>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </template>
+
     </main>
 
-    <!-- Bottom Navigation - FIXED -->
+    <!-- LANJUT KE BAGIAN 4 - BOTTOM NAVIGATION -->
+
+    <!-- Bottom Navigation -->
     <nav class="bg-white border-t-2 border-red-900/10 px-2 py-2 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl bottom-nav-safe z-50">
       <div class="grid grid-cols-5 gap-1">
       
