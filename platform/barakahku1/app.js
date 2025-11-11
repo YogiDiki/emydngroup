@@ -1,66 +1,42 @@
 // ==============================
-// BarakahKu - app.js (Complete Fixed Version)
+// BarakahKu - app.js (Firebase v8 + Custom SW Path)
 // ==============================
 
 // ------------------------------
-// Helper function to load external scripts
-// ------------------------------
-function loadScript(src) {
-  return new Promise((resolve, reject) => {
-    // Cek apakah script sudah ada
-    const existingScript = document.querySelector(`script[src="${src}"]`);
-    if (existingScript) {
-      console.log('⚠️ Script sudah ada, skip:', src);
-      resolve();
-      return;
-    }
-    
-    const script = document.createElement('script');
-    script.src = src;
-    script.onload = () => {
-      console.log('✅ Script loaded:', src);
-      resolve();
-    };
-    script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
-    document.head.appendChild(script);
-  });
-}
-
-// ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v9 Compat)
+// Fungsi inisialisasi Firebase Messaging (v8 Legacy)
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
-    console.log('🔔 [FCM] Memulai inisialisasi Firebase Messaging...');
+    console.log('🔔 [FCM] Mulai inisialisasi...');
     
-    // Cek apakah notifikasi diizinkan
+    // Cek permission
     if (Notification.permission !== 'granted') {
       console.log('⚠️ [FCM] Notifikasi belum diizinkan');
       return;
     }
 
-    // Cek apakah service worker sudah ready
-    if (!('serviceWorker' in navigator)) {
-      console.error('❌ [FCM] Service Worker tidak didukung browser');
-      return;
-    }
-
-    // Tunggu service worker ready
-    console.log('⏳ [FCM] Menunggu Service Worker ready...');
-    const registration = await navigator.serviceWorker.ready;
-    console.log('✅ [FCM] Service Worker ready:', registration.scope);
-
-    // Load Firebase scripts jika belum ada
+    // Load Firebase v8 SDK
     if (!window.firebase) {
-      console.log('📦 [FCM] Loading Firebase Compat SDK...');
-      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
-      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
-      console.log('✅ [FCM] Firebase Compat scripts loaded');
-    } else {
-      console.log('✅ [FCM] Firebase sudah tersedia');
+      console.log('📦 [FCM] Loading Firebase v8 SDK...');
+      
+      await new Promise((resolve, reject) => {
+        const script1 = document.createElement('script');
+        script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
+        script1.onload = () => {
+          const script2 = document.createElement('script');
+          script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
+          script2.onload = resolve;
+          script2.onerror = reject;
+          document.head.appendChild(script2);
+        };
+        script1.onerror = reject;
+        document.head.appendChild(script1);
+      });
+      
+      console.log('✅ [FCM] Firebase v8 loaded');
     }
 
-    // Initialize Firebase (cek apakah sudah diinit)
+    // Initialize Firebase
     if (!firebase.apps || firebase.apps.length === 0) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
@@ -68,91 +44,78 @@ async function initFirebaseMessaging() {
         projectId: "barakahku-app",
         storageBucket: "barakahku-app.firebasestorage.app",
         messagingSenderId: "510231053293",
-        appId: "1:510231053293:web:921b9e574fc614492b5de4",
-        measurementId: "G-EQPYKJJGG7"
+        appId: "1:510231053293:web:921b9e574fc614492b5de4"
       });
-      console.log('✅ [FCM] Firebase App initialized');
-    } else {
-      console.log('✅ [FCM] Firebase App sudah initialized');
+      console.log('✅ [FCM] Firebase initialized');
     }
 
     // Get messaging instance
     const messaging = firebase.messaging();
-    console.log('✅ [FCM] Messaging instance created');
     
-    // PENTING: Gunakan service worker yang sudah terdaftar
-    // Ini mencegah Firebase membuat service worker baru
+    // PENTING: Gunakan custom service worker path
+    console.log('🔧 [FCM] Using custom SW path...');
+    
+    // Register Firebase Messaging Service Worker di folder barakahku1
+    const swRegistration = await navigator.serviceWorker.register(
+      '/platform/barakahku1/firebase-messaging-sw.js',
+      { scope: '/platform/barakahku1/' }
+    );
+    
+    console.log('✅ [FCM] Firebase SW registered:', swRegistration.scope);
+    
+    // Tunggu SW active
+    await navigator.serviceWorker.ready;
+    console.log('✅ [FCM] Firebase SW ready');
+    
+    // Get token dengan SW yang sudah terdaftar
     try {
-      console.log('🔑 [FCM] Requesting FCM token...');
       const currentToken = await messaging.getToken({ 
         vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-        serviceWorkerRegistration: registration // Gunakan SW yang sudah ada
+        serviceWorkerRegistration: swRegistration
       });
       
       if (currentToken) {
-        console.log('🔑 [FCM] Token berhasil diperoleh!');
-        console.log('📋 [FCM] Token:', currentToken);
+        console.log('🔑 [FCM] Token berhasil!');
+        console.log('📋 Token:', currentToken);
         
-        // Simpan token ke localStorage dengan info tambahan
+        // Simpan token
         const tokenInfo = {
           token: currentToken,
           timestamp: new Date().toLocaleString('id-ID'),
           platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
         };
         localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
-        console.log('💾 [FCM] Token tersimpan:', tokenInfo);
-        
-        // TODO: Kirim token ke backend server
-        // await fetch('/api/save-token', {
-        //   method: 'POST',
-        //   headers: {'Content-Type': 'application/json'},
-        //   body: JSON.stringify({ token: currentToken })
-        // });
+        console.log('💾 [FCM] Token tersimpan');
         
       } else {
-        console.warn('⚠️ [FCM] Tidak mendapatkan FCM token');
+        console.warn('⚠️ [FCM] Tidak dapat token');
       }
     } catch (err) {
-      console.error('❌ [FCM] Gagal mengambil token:', err);
-      console.error('Error details:', err.code, err.message);
+      console.error('❌ [FCM] Error get token:', err);
     }
 
-    // Handler untuk foreground messages
+    // Handler foreground messages
     messaging.onMessage((payload) => {
-      console.log('📩 [FCM] Pesan diterima (foreground):', payload);
+      console.log('📩 [FCM] Foreground message:', payload);
       
-      try {
-        const title = payload?.notification?.title || 'BarakahKu';
-        const body = payload?.notification?.body || 'Notifikasi baru';
-        
-        // Tampilkan notifikasi manual
-        if (Notification.permission === 'granted') {
-          const notification = new Notification(title, {
-            body,
-            icon: '/platform/barakahku1/assets/icons/icon-192.png',
-            badge: '/platform/barakahku1/assets/icons/icon-192.png',
-            tag: 'barakahku-notification',
-            requireInteraction: false,
-            vibrate: [200, 100, 200],
-            data: payload.data || {}
-          });
-
-          notification.onclick = function(event) {
-            event.preventDefault();
-            window.focus();
-            notification.close();
-          };
-        }
-      } catch (err) {
-        console.error('❌ [FCM] Error menampilkan notifikasi:', err);
+      const title = payload?.notification?.title || 'BarakahKu';
+      const body = payload?.notification?.body || 'Notifikasi baru';
+      
+      if (Notification.permission === 'granted') {
+        new Notification(title, {
+          body,
+          icon: '/platform/barakahku1/assets/icons/icon-192.png',
+          badge: '/platform/barakahku1/assets/icons/icon-192.png',
+          tag: 'barakahku-fcm',
+          vibrate: [200, 100, 200]
+        });
       }
     });
 
-    console.log('✅ [FCM] Firebase Messaging berhasil diinisialisasi');
+    console.log('✅ [FCM] Setup complete!');
 
   } catch (error) {
-    console.error('❌ [FCM] Initialization failed:', error);
-    console.error('Error stack:', error.stack);
+    console.error('❌ [FCM] Init failed:', error);
   }
 }
 
@@ -191,7 +154,7 @@ function createApp() {
       await this.loadMurotalList();
       this.registerServiceWorker();
 
-      // Auto-stop murottal feature
+      // Auto-stop murottal
       document.addEventListener('play', function (e) {
         const audios = document.getElementsByTagName('audio');
         for (let i = 0; i < audios.length; i++) {
@@ -201,12 +164,12 @@ function createApp() {
         }
       }, true);
 
-      console.log('✅ Aplikasi siap digunakan');
+      console.log('✅ Aplikasi siap');
     },
 
     async loadQuran() {
       try {
-        console.log('📖 Memuat daftar surah...');
+        console.log('📖 Memuat surah...');
         const res = await fetch('https://equran.id/api/v2/surat');
         const data = await res.json();
         this.quran = data.data.map(s => ({
@@ -215,15 +178,15 @@ function createApp() {
           arti: s.arti,
           jumlahAyat: s.jumlahAyat
         }));
-        console.log(`✅ ${this.quran.length} surah berhasil dimuat`);
+        console.log(`✅ ${this.quran.length} surah dimuat`);
       } catch (err) {
-        console.error('❌ Gagal memuat Quran:', err);
+        console.error('❌ Error load Quran:', err);
       }
     },
 
     async loadSurah(nomor) {
       try {
-        console.log(`📖 Membuka surah nomor ${nomor}...`);
+        console.log(`📖 Buka surah ${nomor}...`);
         const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
         const data = await res.json();
         this.currentSurah = {
@@ -236,15 +199,15 @@ function createApp() {
           }))
         };
         localStorage.setItem('lastRead', nomor);
-        console.log(`✅ Surah ${data.data.namaLatin} berhasil dimuat`);
+        console.log(`✅ Surah ${data.data.namaLatin} dimuat`);
         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
       } catch (err) {
-        console.error('❌ Gagal memuat surah:', err);
+        console.error('❌ Error load surah:', err);
       }
     },
 
     loadDoa() {
-      console.log('🙏 Memuat doa-doa harian...');
+      console.log('🙏 Memuat doa...');
       this.doaList = [
         {
           id: 1,
@@ -317,12 +280,12 @@ function createApp() {
           terjemah: 'Ya Allah, turunkanlah hujan yang bermanfaat'
         }
       ];
-      console.log(`✅ ${this.doaList.length} doa berhasil dimuat`);
+      console.log(`✅ ${this.doaList.length} doa dimuat`);
     },
 
     async loadMurotalList() {
       try {
-        console.log('🎵 Memuat daftar murottal...');
+        console.log('🎵 Memuat murottal...');
         const res = await fetch('https://equran.id/api/v2/surat');
         const data = await res.json();
 
@@ -343,9 +306,9 @@ function createApp() {
           };
         });
 
-        console.log(`✅ ${this.murotalList.length} murottal berhasil dimuat`);
+        console.log(`✅ ${this.murotalList.length} murottal dimuat`);
       } catch (err) {
-        console.error('❌ Gagal memuat murottal:', err);
+        console.error('❌ Error murottal:', err);
         this.murotalList = [];
       }
     },
@@ -353,16 +316,14 @@ function createApp() {
     async loadJadwal() {
       if (!navigator.geolocation) {
         this.cityName = 'Lokasi tidak tersedia';
-        console.warn('⚠️ Geolocation tidak didukung browser');
         return;
       }
 
-      console.log('📍 Mendapatkan lokasi...');
+      console.log('📍 Get lokasi...');
       this.cityName = 'Mendapatkan lokasi...';
 
       navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords;
-        console.log(`📍 Lokasi: ${latitude}, ${longitude}`);
 
         try {
           const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
@@ -374,54 +335,45 @@ function createApp() {
                           geoData.address.state ||
                           'Lokasi Anda';
 
-          console.log(`📍 Kota: ${this.cityName}`);
-
           const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
           const data = await res.json();
           this.jadwal = data.data.timings;
 
-          console.log('✅ Jadwal sholat berhasil dimuat');
+          console.log('✅ Jadwal sholat dimuat');
         } catch (err) {
-          console.error('❌ Gagal memuat jadwal sholat:', err);
-          this.cityName = 'Gagal memuat lokasi';
+          console.error('❌ Error jadwal:', err);
+          this.cityName = 'Gagal memuat';
         }
       }, err => {
-        console.error('❌ Gagal mendapatkan lokasi:', err);
+        console.error('❌ Error lokasi:', err);
         this.cityName = 'Lokasi ditolak';
       });
     },
 
     loadChecklist() {
-      console.log('✅ Memuat checklist ibadah...');
       const saved = localStorage.getItem('checklist');
       if (saved) {
         try {
           this.checklist = JSON.parse(saved);
         } catch (e) {
-          console.error('❌ Error parsing checklist:', e);
+          console.error('❌ Error checklist:', e);
         }
       }
 
       const lastDate = localStorage.getItem('checklistDate');
       const today = new Date().toDateString();
       if (lastDate !== today) {
-        console.log('🔄 Hari baru, reset checklist');
         this.checklist.forEach(item => item.done = false);
         localStorage.setItem('checklistDate', today);
         this.saveChecklist();
       }
-
-      const doneCount = this.checklist.filter(i => i.done).length;
-      console.log(`✅ Checklist dimuat: ${doneCount}/${this.checklist.length} selesai`);
     },
 
     saveChecklist() {
       try {
         localStorage.setItem('checklist', JSON.stringify(this.checklist));
-        const doneCount = this.checklist.filter(i => i.done).length;
-        console.log(`💾 Checklist disimpan: ${doneCount}/${this.checklist.length} selesai`);
       } catch (e) {
-        console.error('❌ Error saving checklist:', e);
+        console.error('❌ Error save:', e);
       }
     },
 
@@ -433,14 +385,12 @@ function createApp() {
         if (!bookmarks.includes(key)) {
           bookmarks.push(key);
           localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-          alert(`✅ Ayat ${nomorAyat} dari Surah ${this.currentSurah.namaLatin} berhasil disimpan! 🔖`);
-          console.log('🔖 Bookmark disimpan:', key);
+          alert(`✅ Ayat ${nomorAyat} tersimpan! 🔖`);
         } else {
-          alert('ℹ️ Ayat sudah tersimpan sebelumnya');
+          alert('ℹ️ Ayat sudah tersimpan');
         }
       } catch (e) {
-        console.error('❌ Error bookmarking ayat:', e);
-        alert('❌ Gagal menyimpan ayat');
+        console.error('❌ Error bookmark:', e);
       }
     },
 
@@ -449,130 +399,95 @@ function createApp() {
         window.deferredPrompt.prompt();
         window.deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            console.log('✅ User menerima install prompt');
-          } else {
-            console.log('❌ User menolak install prompt');
+            console.log('✅ Install accepted');
           }
           window.deferredPrompt = null;
         });
       } else {
-        alert('ℹ️ Aplikasi sudah terinstall atau browser tidak mendukung instalasi PWA.\n\nUntuk menginstall:\n• Chrome Android: Buka menu → Install app\n• Safari iOS: Tap Share → Add to Home Screen');
+        alert('ℹ️ Aplikasi sudah terinstall atau browser tidak mendukung PWA.\n\nCara install:\n• Chrome Android: Menu → Install app\n• Safari iOS: Share → Add to Home Screen');
       }
     },
 
     async requestNotificationPermission() {
       if (Notification.permission === 'granted') {
-        console.log('🔔 Permission sudah granted, cek Firebase...');
-        
-        // Cek apakah sudah ada token
-        const savedToken = localStorage.getItem('fcm_token');
-        if (savedToken) {
-          alert('✅ Notifikasi sudah aktif!\n\nToken FCM tersimpan dan siap digunakan.');
-          console.log('📋 Saved token:', JSON.parse(savedToken));
+        const saved = localStorage.getItem('fcm_token');
+        if (saved) {
+          alert('✅ Notifikasi sudah aktif!\n\nToken tersimpan dan siap digunakan.');
+          console.log('Token:', JSON.parse(saved));
         } else {
-          alert('✅ Izin sudah diberikan!\n\nSedang menginisialisasi sistem notifikasi...');
+          alert('⏳ Menginisialisasi notifikasi...');
           await initFirebaseMessaging();
         }
         return;
       }
       
       if (Notification.permission === 'denied') {
-        alert('❌ Izin notifikasi ditolak.\n\nUntuk mengaktifkan:\n1. Klik ikon gembok/info di address bar\n2. Cari "Notifications"\n3. Ubah ke "Allow"\n4. Refresh halaman');
+        alert('❌ Izin ditolak.\n\nAktifkan dari:\n1. Klik gembok di address bar\n2. Izinkan Notifications\n3. Refresh halaman');
         return;
       }
 
       try {
-        console.log('📱 Meminta izin notifikasi...');
         const permission = await Notification.requestPermission();
         
         if (permission === 'granted') {
-          console.log('✅ Permission granted!');
-          alert('✅ Notifikasi berhasil diaktifkan!\n\nMohon tunggu sebentar untuk inisialisasi...');
+          alert('✅ Izin diberikan!\n\nSedang setup sistem notifikasi...');
           
-          // Tunggu service worker ready
-          await navigator.serviceWorker.ready;
-          console.log('✅ Service Worker ready, init Firebase...');
-          
-          // Init Firebase dengan delay
           setTimeout(async () => {
             await initFirebaseMessaging();
             
-            // Cek apakah berhasil dapat token
-            const savedToken = localStorage.getItem('fcm_token');
-            if (savedToken) {
-              alert('🎉 Sistem notifikasi siap!\n\nAnda akan menerima:\n• Pengingat waktu sholat\n• Notifikasi ibadah harian\n• Pesan motivasi');
-            } else {
-              alert('⚠️ Notifikasi diaktifkan tapi belum dapat token.\n\nSilakan coba:\n1. Refresh halaman\n2. Klik "Aktifkan Notifikasi" lagi');
+            const saved = localStorage.getItem('fcm_token');
+            if (saved) {
+              alert('🎉 Notifikasi aktif!\n\nAnda akan menerima:\n• Pengingat sholat\n• Notifikasi ibadah\n• Pesan motivasi');
             }
           }, 2000);
-          
-        } else if (permission === 'denied') {
-          alert('❌ Izin notifikasi ditolak.\n\nUntuk mengaktifkan nanti, buka pengaturan browser.');
-        } else {
-          console.log('⚠️ Permission default/dismissed');
         }
       } catch (err) {
-        console.error('❌ Error meminta izin:', err);
-        alert('❌ Gagal meminta izin notifikasi: ' + err.message);
+        console.error('❌ Error permission:', err);
+        alert('❌ Gagal: ' + err.message);
       }
     },
 
     registerServiceWorker() {
       if (!('serviceWorker' in navigator)) {
-        console.warn('⚠️ Service Worker tidak didukung browser');
+        console.warn('⚠️ SW tidak didukung');
         return;
       }
 
+      // Register PWA Service Worker untuk caching
       navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
         scope: '/platform/barakahku1/'
       })
         .then(registration => {
-          console.log('✅ [SW] Service Worker terdaftar:', registration.scope);
+          console.log('✅ [SW] PWA Service Worker registered');
           
-          // Jika sudah granted dan SW aktif, init Firebase
-          if (registration.active && Notification.permission === 'granted') {
-            console.log('🔔 [SW] SW aktif & permission granted, init Firebase...');
+          // Auto init Firebase jika sudah granted
+          if (Notification.permission === 'granted') {
+            console.log('🔔 Permission granted, init FCM in 3s...');
             setTimeout(() => {
               initFirebaseMessaging();
             }, 3000);
           }
-
-          // Listen untuk service worker yang baru aktif
-          registration.addEventListener('updatefound', () => {
-            console.log('🔄 [SW] Update found...');
-            const newWorker = registration.installing;
-            
-            newWorker.addEventListener('statechange', () => {
-              console.log('🔄 [SW] State:', newWorker.state);
-              if (newWorker.state === 'activated' && Notification.permission === 'granted') {
-                console.log('🔔 [SW] SW baru aktif, init Firebase...');
-                setTimeout(() => {
-                  initFirebaseMessaging();
-                }, 3000);
-              }
-            });
-          });
         })
         .catch(err => {
-          console.error('❌ [SW] Gagal register Service Worker:', err);
+          console.error('❌ [SW] Failed:', err);
         });
     }
   };
 }
 
-// ✅ EKSPOS ke Alpine.js
+// Export to Alpine.js
 document.addEventListener('alpine:init', () => {
   Alpine.data('app', createApp);
 });
 
-// PWA install prompt handlers
+// PWA install handlers
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   window.deferredPrompt = e;
-  console.log('📲 Install prompt tersedia');
+  console.log('📲 Install prompt ready');
 });
 
 window.addEventListener('appinstalled', () => {
-  console.log('✅ BarakahKu berhasil diinstall!');
+  console.log('✅ App installed!');
   window.deferredPrompt = null;
 });
