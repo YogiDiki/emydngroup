@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 BENAR!)
+// BarakahKu - app.js (Firebase v8 FIXED!)
 // ==============================
 
 // ------------------------------
@@ -15,10 +15,11 @@ async function initFirebaseMessaging() {
       return;
     }
 
-    // Load Firebase v8 SDK
+    // Load Firebase v8 SDK - HANYA SEKALI
     if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
       
+      // Hapus script lama jika ada
       const oldScripts = document.querySelectorAll('script[src*="firebasejs"]');
       oldScripts.forEach(s => s.remove());
       
@@ -43,7 +44,7 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase v8 sudah loaded');
     }
 
-    // Initialize Firebase
+    // Initialize Firebase - HANYA SEKALI
     if (!firebase.apps || firebase.apps.length === 0) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
@@ -58,35 +59,37 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
+    // CRITICAL: Cek service worker SEBELUM buat messaging instance
+    const swRegistration = await navigator.serviceWorker.ready;
+    console.log('✅ [FCM] Service Worker ready:', swRegistration.scope);
+
     // Get messaging instance
     const messaging = firebase.messaging();
     console.log('✅ [FCM] Messaging instance created');
     
-    // Get token - Firebase akan otomatis cari firebase-messaging-sw.js di scope yang sama
-    try {
-      console.log('🔑 [FCM] Requesting token...');
-      const currentToken = await messaging.getToken({ 
-        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
-      });
+    // PENTING: useServiceWorker HARUS dipanggil SEBELUM getToken
+    // Tapi di Firebase v8.10.1, ini sudah otomatis jika SW sudah ready
+    console.log('🔑 [FCM] Requesting token...');
+    
+    const currentToken = await messaging.getToken({ 
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+      serviceWorkerRegistration: swRegistration // Gunakan SW yang sudah ready
+    });
+    
+    if (currentToken) {
+      console.log('🔑 [FCM] Token berhasil!');
+      console.log('📋 Token:', currentToken);
       
-      if (currentToken) {
-        console.log('🔑 [FCM] Token berhasil!');
-        console.log('📋 Token:', currentToken);
-        
-        const tokenInfo = {
-          token: currentToken,
-          timestamp: new Date().toLocaleString('id-ID'),
-          platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
-        };
-        localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
-        console.log('💾 [FCM] Token tersimpan');
-        
-      } else {
-        console.warn('⚠️ [FCM] Tidak dapat token');
-      }
-    } catch (err) {
-      console.error('❌ [FCM] Error get token:', err);
-      console.error('Detail:', err.message);
+      const tokenInfo = {
+        token: currentToken,
+        timestamp: new Date().toLocaleString('id-ID'),
+        platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+      };
+      localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
+      console.log('💾 [FCM] Token tersimpan');
+      
+    } else {
+      console.warn('⚠️ [FCM] Tidak dapat token');
     }
 
     // Handler foreground messages
@@ -111,6 +114,7 @@ async function initFirebaseMessaging() {
 
   } catch (error) {
     console.error('❌ [FCM] Init failed:', error);
+    console.error('Detail:', error.message);
     console.error('Stack:', error.stack);
   }
 }
@@ -149,7 +153,7 @@ function createApp() {
       this.loadJadwal();
       this.loadChecklist();
       await this.loadMurotalList();
-      this.registerServiceWorker();
+      await this.registerServiceWorker(); // Tunggu SW ready dulu
 
       // Auto-stop murottal
       document.addEventListener('play', function (e) {
@@ -460,31 +464,36 @@ function createApp() {
       }
     },
 
-    registerServiceWorker() {
+    async registerServiceWorker() {
       if (!('serviceWorker' in navigator)) {
         console.warn('⚠️ SW tidak didukung');
         return;
       }
 
-      // Register service worker di SCOPE yang tepat
-      navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
-        scope: '/platform/barakahku1/'
-      })
-        .then(registration => {
-          console.log('✅ [SW] Service Worker registered');
-          console.log('📍 [SW] Scope:', registration.scope);
-          
-          // Auto init Firebase jika sudah granted
-          if (Notification.permission === 'granted') {
-            console.log('🔔 Permission granted, init FCM in 3s...');
-            setTimeout(() => {
-              initFirebaseMessaging();
-            }, 3000);
-          }
-        })
-        .catch(err => {
-          console.error('❌ [SW] Failed:', err);
-        });
+      try {
+        // Register service worker di SCOPE yang tepat
+        const registration = await navigator.serviceWorker.register(
+          '/platform/barakahku1/service-worker.js',
+          { scope: '/platform/barakahku1/' }
+        );
+        
+        console.log('✅ [SW] Service Worker registered');
+        console.log('📍 [SW] Scope:', registration.scope);
+        
+        // Tunggu sampai SW benar-benar aktif
+        await navigator.serviceWorker.ready;
+        console.log('✅ [SW] Service Worker ready');
+        
+        // Auto init Firebase jika sudah granted
+        if (Notification.permission === 'granted') {
+          console.log('🔔 Permission granted, init FCM in 3s...');
+          setTimeout(() => {
+            initFirebaseMessaging();
+          }, 3000);
+        }
+      } catch (err) {
+        console.error('❌ [SW] Failed:', err);
+      }
     }
   };
 }
