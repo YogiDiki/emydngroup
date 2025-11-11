@@ -71,7 +71,7 @@ try {
 
 // Install SW
 self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing v13...');
+console.log('✅ [SW] Installing v15...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('📦 [SW] Caching files...');
@@ -83,7 +83,7 @@ self.addEventListener('install', (event) => {
 
 // Activate SW
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activating v13...');
+console.log('✅ [SW] Activating v15...');
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -188,5 +188,5 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('✅ [SW] BarakahKu Unified Service Worker v13 ready');
+console.log('✅ [SW] BarakahKu Unified Service Worker v15 ready');
 console.log('📍 [SW] Scope:', self.registration.scope);
