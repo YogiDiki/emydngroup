@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 + Custom SW Path)
+// BarakahKu - app.js (Firebase v8 - Working Version)
 // ==============================
 
 // ------------------------------
@@ -52,22 +52,21 @@ async function initFirebaseMessaging() {
     // Get messaging instance
     const messaging = firebase.messaging();
     
-    // PENTING: Gunakan custom service worker path
-    console.log('🔧 [FCM] Using custom SW path...');
+    // PENTING: Register Firebase Messaging Service Worker
+    console.log('🔧 [FCM] Registering Firebase SW...');
     
-    // Register Firebase Messaging Service Worker di folder barakahku1
     const swRegistration = await navigator.serviceWorker.register(
       '/platform/barakahku1/firebase-messaging-sw.js',
       { scope: '/platform/barakahku1/' }
     );
     
-    console.log('✅ [FCM] Firebase SW registered:', swRegistration.scope);
+    console.log('✅ [FCM] Firebase SW registered');
     
-    // Tunggu SW active
+    // Tunggu SW ready
     await navigator.serviceWorker.ready;
     console.log('✅ [FCM] Firebase SW ready');
     
-    // Get token dengan SW yang sudah terdaftar
+    // Get token
     try {
       const currentToken = await messaging.getToken({ 
         vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
@@ -324,8 +323,10 @@ function createApp() {
 
       navigator.geolocation.getCurrentPosition(async pos => {
         const { latitude, longitude } = pos.coords;
+        console.log(`📍 Koordinat: ${latitude}, ${longitude}`);
 
         try {
+          // Fetch nama kota
           const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
           const geoData = await geoRes.json();
 
@@ -335,6 +336,9 @@ function createApp() {
                           geoData.address.state ||
                           'Lokasi Anda';
 
+          console.log(`📍 Kota: ${this.cityName}`);
+
+          // Fetch jadwal sholat
           const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
           const data = await res.json();
           this.jadwal = data.data.timings;
@@ -342,7 +346,7 @@ function createApp() {
           console.log('✅ Jadwal sholat dimuat');
         } catch (err) {
           console.error('❌ Error jadwal:', err);
-          this.cityName = 'Gagal memuat';
+          this.cityName = 'Gagal memuat lokasi';
         }
       }, err => {
         console.error('❌ Error lokasi:', err);
@@ -453,7 +457,7 @@ function createApp() {
         return;
       }
 
-      // Register PWA Service Worker untuk caching
+      // Register PWA Service Worker
       navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
         scope: '/platform/barakahku1/'
       })
@@ -462,7 +466,7 @@ function createApp() {
           
           // Auto init Firebase jika sudah granted
           if (Notification.permission === 'granted') {
-            console.log('🔔 Permission granted, init FCM in 3s...');
+            console.log('🔔 Permission granted, init FCM...');
             setTimeout(() => {
               initFirebaseMessaging();
             }, 3000);
