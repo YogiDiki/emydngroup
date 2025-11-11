@@ -7,6 +7,13 @@
 // ------------------------------
 function loadScript(src) {
   return new Promise((resolve, reject) => {
+    // Cek apakah script sudah ada
+    const existingScript = document.querySelector(`script[src="${src}"]`);
+    if (existingScript) {
+      resolve();
+      return;
+    }
+    
     const script = document.createElement('script');
     script.src = src;
     script.onload = () => resolve();
@@ -16,28 +23,34 @@ function loadScript(src) {
 }
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8 Compat)
+// Fungsi inisialisasi Firebase Messaging (v9 Compat)
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
+    console.log('🔔 Memulai inisialisasi Firebase Messaging...');
+    
+    // Cek apakah notifikasi diizinkan
     if (Notification.permission !== 'granted') {
       console.log('⚠️ Notifikasi belum diizinkan, skip Firebase Messaging init');
       return;
     }
 
-    console.log('📦 Loading Firebase Compat SDK...');
-    
-    // Load Firebase App Compat
-    if (!window.firebase) {
-      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
-    }
-    
-    // Load Firebase Messaging Compat
-    if (!window.firebase.messaging) {
-      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
+    // Cek apakah service worker sudah ready
+    if (!('serviceWorker' in navigator)) {
+      console.error('❌ Service Worker tidak didukung browser');
+      return;
     }
 
-    console.log('✅ Firebase Compat scripts loaded');
+    const registration = await navigator.serviceWorker.ready;
+    console.log('✅ Service Worker ready');
+
+    // Load Firebase scripts jika belum ada
+    if (!window.firebase) {
+      console.log('📦 Loading Firebase Compat SDK...');
+      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
+      await loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-messaging-compat.js');
+      console.log('✅ Firebase Compat scripts loaded');
+    }
 
     // Initialize Firebase (cek apakah sudah diinit)
     if (!firebase.apps.length) {
@@ -56,15 +69,34 @@ async function initFirebaseMessaging() {
     // Get messaging instance
     const messaging = firebase.messaging();
 
+    // PENTING: Tidak perlu useServiceWorker() di v9+
+    // Service Worker sudah otomatis digunakan dari registration
+    
     // Get token dengan VAPID key
     try {
       const currentToken = await messaging.getToken({ 
-        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+        serviceWorkerRegistration: registration
       });
       
       if (currentToken) {
         console.log('🔑 FCM token diperoleh:', currentToken);
-        console.log('💾 Simpan token ini untuk backend:', currentToken);
+        
+        // Simpan token ke localStorage dengan info tambahan
+        const tokenInfo = {
+          token: currentToken,
+          timestamp: new Date().toLocaleString('id-ID'),
+          platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+        };
+        localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
+        console.log('💾 Token tersimpan:', tokenInfo);
+        
+        // TODO: Kirim token ke backend server
+        // await fetch('/api/save-token', {
+        //   method: 'POST',
+        //   body: JSON.stringify({ token: currentToken })
+        // });
+        
       } else {
         console.warn('⚠️ Tidak mendapatkan FCM token');
       }
@@ -75,10 +107,12 @@ async function initFirebaseMessaging() {
     // Handler untuk foreground messages
     messaging.onMessage((payload) => {
       console.log('📩 Pesan FCM diterima (foreground):', payload);
+      
       try {
-        const title = payload?.notification?.title || 'BarakahKu - Notifikasi';
-        const body = payload?.notification?.body || '';
+        const title = payload?.notification?.title || 'BarakahKu';
+        const body = payload?.notification?.body || 'Notifikasi baru';
         
+        // Tampilkan notifikasi manual
         if (Notification.permission === 'granted') {
           const notification = new Notification(title, {
             body,
@@ -87,9 +121,7 @@ async function initFirebaseMessaging() {
             tag: 'barakahku-notification',
             requireInteraction: false,
             vibrate: [200, 100, 200],
-            data: {
-              url: payload.notification?.click_action || 'https://www.emydngroup.com/platform/barakahku1/'
-            }
+            data: payload.data || {}
           });
 
           notification.onclick = function(event) {
@@ -102,6 +134,8 @@ async function initFirebaseMessaging() {
         console.error('❌ Error menampilkan notifikasi foreground:', err);
       }
     });
+
+    console.log('✅ Firebase Messaging berhasil diinisialisasi');
 
   } catch (error) {
     console.error('❌ Firebase Messaging initialization failed:', error);
@@ -257,7 +291,7 @@ function createApp() {
         {
           id: 9,
           judul: 'Doa Memakai Pakaian',
-          arab: 'اَلْحَمْدُ لِلَّهِ الَّذِيْ كَسَانِيْ هَذَا وَرَزَقَنِيْهِ...',
+          arab: 'اَلْحَمْدُ لِلَّهِ الَّذِيْ كَسَانِيْ هَذَا وَرَزَقَنِيْهِ مِنْ غَيْرِ حَوْلٍ مِنِّيْ وَلاَ قُوَّةٍ',
           latin: 'Alhamdu lillahil ladzi kasani hadza wa razaqanihi min ghairi haulin minni wa laa quwwata',
           terjemah: 'Segala puji bagi Allah yang memberi aku pakaian ini dan memberi rizki kepadaku tanpa daya dan kekuatan dariku'
         },
@@ -299,24 +333,6 @@ function createApp() {
       } catch (err) {
         console.error('❌ Gagal memuat murottal:', err);
         this.murotalList = [];
-      }
-    },
-
-    playMurotal(audioUrl) {
-      try {
-        const player = document.getElementById('murotalPlayer');
-        if (!player) {
-          console.warn('⚠️ Audio element tidak ditemukan di halaman.');
-          return;
-        }
-
-        player.src = audioUrl;
-        player.load();
-        player.play()
-          .then(() => console.log('🎶 Murottal diputar:', audioUrl))
-          .catch(err => console.warn('⚠️ Autoplay diblokir, butuh interaksi user:', err));
-      } catch (err) {
-        console.error('❌ Gagal memutar murottal:', err);
       }
     },
 
@@ -434,6 +450,8 @@ function createApp() {
       if (Notification.permission === 'granted') {
         alert('✅ Izin notifikasi sudah diberikan!');
         console.log('🔔 Permission sudah granted');
+        // Init Firebase jika belum
+        await initFirebaseMessaging();
         return;
       }
       
@@ -445,9 +463,14 @@ function createApp() {
       try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-          await initFirebaseMessaging();
-          alert('✅ Notifikasi berhasil diaktifkan!\n\nAnda akan menerima pengingat sholat dan notifikasi ibadah.');
-          console.log('🔔 Permission granted, Firebase Messaging initialized');
+          alert('✅ Notifikasi berhasil diaktifkan!\n\nMohon tunggu beberapa saat untuk inisialisasi...');
+          console.log('🔔 Permission granted, akan inisialisasi Firebase Messaging...');
+          
+          // Tunggu service worker ready dulu
+          setTimeout(async () => {
+            await initFirebaseMessaging();
+            alert('✅ Sistem notifikasi siap!\n\nAnda akan menerima pengingat sholat dan notifikasi ibadah.');
+          }, 2000);
         } else {
           alert('❌ Izin notifikasi ditolak');
         }
@@ -459,19 +482,18 @@ function createApp() {
 
     registerServiceWorker() {
       if ('serviceWorker' in navigator) {
-        // HANYA REGISTER SATU SERVICE WORKER (service-worker.js yang sudah include Firebase)
         navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
           scope: '/platform/barakahku1/'
         })
           .then(registration => {
             console.log('✅ Service Worker terdaftar:', registration.scope);
             
-            // Tunggu service worker aktif, baru init Firebase
+            // Jika sudah granted dan SW aktif, init Firebase
             if (registration.active && Notification.permission === 'granted') {
-              console.log('🔔 Service Worker aktif, inisialisasi Firebase Messaging...');
+              console.log('🔔 Service Worker aktif & permission granted, inisialisasi Firebase...');
               setTimeout(() => {
                 initFirebaseMessaging();
-              }, 2000);
+              }, 3000);
             }
 
             // Listen untuk service worker yang baru aktif
@@ -479,10 +501,10 @@ function createApp() {
               const newWorker = registration.installing;
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'activated' && Notification.permission === 'granted') {
-                  console.log('🔔 Service Worker baru aktif, inisialisasi Firebase Messaging...');
+                  console.log('🔔 Service Worker baru aktif, inisialisasi Firebase...');
                   setTimeout(() => {
                     initFirebaseMessaging();
-                  }, 2000);
+                  }, 3000);
                 }
               });
             });
