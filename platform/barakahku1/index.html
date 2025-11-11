@@ -346,25 +346,57 @@
         </div>
       </template>
 
-      <!-- Doa -->
+ <!-- Doa -->
       <template x-if="activeTab === 'doa'">
-        <div class="p-5 space-y-3">
-          <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
-            <p class="text-sm opacity-90 font-medium">Doa Harian</p>
-            <p class="text-2xl font-bold mt-1">Kumpulan Doa Pilihan</p>
-          </div>
-
-          <template x-for="doa in doaList" :key="doa.id">
-            <div class="card-islamic p-5">
-              <h3 class="font-bold text-gray-800 mb-3 text-base flex items-center gap-2">
-                <span class="text-xl">🙏</span>
-                <span x-text="doa.judul"></span>
-              </h3>
-              <p class="font-arabic text-right text-gray-800 leading-loose mb-3" x-text="doa.arab"></p>
-              <div class="bg-gray-50 rounded-lg p-3 mb-2">
-                <p class="text-sm text-gray-600 italic leading-relaxed" x-text="doa.latin"></p>
+        <div class="p-5">
+          <template x-if="!currentDoa">
+            <div class="space-y-3">
+              <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
+                <p class="text-sm opacity-90 font-medium">Doa Harian</p>
+                <p class="text-2xl font-bold mt-1">Kumpulan Doa Pilihan</p>
               </div>
-              <p class="text-sm text-gray-700 leading-relaxed" x-text="doa.terjemah"></p>
+
+              <template x-for="doa in doaList" :key="doa.id">
+                <div @click="currentDoa = doa" class="card-islamic p-4 hover:shadow-lg transition-all cursor-pointer">
+                  <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white rounded-xl flex items-center justify-center text-2xl shadow-md shrink-0">
+                      <span>🙏</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-gray-800 text-base" x-text="doa.judul"></h3>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <template x-if="currentDoa">
+            <div class="space-y-4">
+              <button @click="currentDoa = null" class="flex items-center gap-2 text-red-900 hover:text-red-700 font-semibold">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Kembali ke Daftar Doa
+              </button>
+
+              <div class="card-islamic p-5 bg-gradient-to-br from-red-900 to-red-700 text-white text-center">
+                <h2 class="text-xl font-bold" x-text="currentDoa.judul"></h2>
+              </div>
+
+              <div class="card-islamic p-5">
+                <p class="font-arabic text-right text-gray-800 leading-loose mb-4 text-3xl" x-text="currentDoa.arab"></p>
+                <div class="bg-gray-50 rounded-lg p-4 mb-3">
+                  <p class="text-sm text-gray-600 italic leading-relaxed" x-text="currentDoa.latin"></p>
+                </div>
+                <div class="bg-green-50 border-l-4 border-green-600 rounded-lg p-4">
+                  <p class="text-sm font-semibold text-green-900 mb-1">Artinya:</p>
+                  <p class="text-sm text-gray-700 leading-relaxed" x-text="currentDoa.terjemah"></p>
+                </div>
+              </div>
             </div>
           </template>
         </div>

@@ -130,6 +130,7 @@ function createApp() {
     quran: [],
     currentSurah: null,
     doaList: [],
+    currentDoa: null,
     murotalList: [],
     jadwal: {},
     cityName: 'Memuat lokasi...',
@@ -150,9 +151,9 @@ function createApp() {
     async init() {
       console.log('🚀 BarakahKu - Memulai aplikasi...');
       await this.registerServiceWorker(); // Register SW PERTAMA!
+      this.loadJadwal(); // Load jadwal dulu untuk update hijriDate
       await this.loadQuran();
       this.loadDoa();
-      this.loadJadwal();
       this.loadChecklist();
       await this.loadMurotalList();
 
