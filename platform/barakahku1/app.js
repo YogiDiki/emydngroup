@@ -1,9 +1,9 @@
 // ==============================
-// BarakahKu - app.js (Firebase v8 FIXED)
+// BarakahKu - app.js (Firebase v8 BENAR!)
 // ==============================
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8 dengan useServiceWorker!)
+// Fungsi inisialisasi Firebase Messaging (v8)
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
@@ -58,29 +58,15 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // PENTING: Cari service worker yang sudah terdaftar
-    const registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
-    
-    if (!registration) {
-      console.error('❌ [FCM] Service Worker belum terdaftar!');
-      return;
-    }
-    
-    console.log('✅ [FCM] Service Worker ditemukan:', registration.scope);
-
-    // Get messaging instance dengan useServiceWorker
+    // Get messaging instance
     const messaging = firebase.messaging();
+    console.log('✅ [FCM] Messaging instance created');
     
-    // KUNCI: Gunakan service worker yang sudah ada!
-    messaging.useServiceWorker(registration);
-    console.log('✅ [FCM] Messaging menggunakan existing SW');
-    
-    // Get token
+    // Get token - Firebase akan otomatis cari firebase-messaging-sw.js di scope yang sama
     try {
       console.log('🔑 [FCM] Requesting token...');
       const currentToken = await messaging.getToken({ 
-        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-        serviceWorkerRegistration: registration
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
       });
       
       if (currentToken) {
@@ -480,7 +466,7 @@ function createApp() {
         return;
       }
 
-      // Register SATU service worker yang handle semua
+      // Register service worker di SCOPE yang tepat
       navigator.serviceWorker.register('/platform/barakahku1/service-worker.js', {
         scope: '/platform/barakahku1/'
       })
