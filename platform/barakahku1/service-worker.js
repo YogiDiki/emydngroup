@@ -3,8 +3,7 @@
 // Lokasi: /platform/barakahku1/service-worker.js
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v12';
-const urlsToCache = [
+const CACHE_NAME = 'barakahku-cache-v13'; // Ganti dari v12 ke v13const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
   '/platform/barakahku1/app.js',
