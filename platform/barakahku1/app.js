@@ -673,12 +673,13 @@ function createApp() {
   };
 }
 
-/// ==============================
+// ==============================
 // EXPORT TO ALPINE.JS
 // ==============================
 
 // Export to Alpine.js
 document.addEventListener('alpine:init', () => {
+  console.log('✅ Alpine:init event fired, registering app...');
   Alpine.data('app', createApp);
 });
 

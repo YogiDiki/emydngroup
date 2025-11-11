@@ -7,7 +7,6 @@
   <link rel="manifest" href="/platform/barakahku1/manifest.json" />
   <link rel="icon" href="/platform/barakahku1/assets/icons/icon-192.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -245,8 +244,6 @@
       </div>
     </header>
 
-    <!-- LANJUT KE BAGIAN 2 -->
-
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto pb-28 bg-cream">
       
@@ -279,44 +276,44 @@
             </div>
           </template>
 
-<!-- Mood Islami -->
-<div class="card-islamic p-4 bg-pink-100 dark:bg-pink-900/40">
-  <p class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-3">💛 Bagaimana perasaanmu hari ini?</p>
-  
-  <template x-if="!currentMood">
-    <div class="grid grid-cols-5 gap-2">
-      <button @click="setMood('sedih')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
-        <span class="text-2xl">😢</span>
-        <span class="text-xs text-gray-800 dark:text-gray-200">Sedih</span>
-      </button>
-      <button @click="setMood('senang')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
-        <span class="text-2xl">😊</span>
-        <span class="text-xs text-gray-800 dark:text-gray-200">Senang</span>
-      </button>
-      <button @click="setMood('cemas')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
-        <span class="text-2xl">😰</span>
-        <span class="text-xs text-gray-800 dark:text-gray-200">Cemas</span>
-      </button>
-      <button @click="setMood('syukur')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
-        <span class="text-2xl">🙏</span>
-        <span class="text-xs text-gray-800 dark:text-gray-200">Syukur</span>
-      </button>
-      <button @click="setMood('lelah')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
-        <span class="text-2xl">😴</span>
-        <span class="text-xs text-gray-800 dark:text-gray-200">Lelah</span>
-      </button>
-    </div>
-  </template>
+          <!-- Mood Islami -->
+          <div class="card-islamic p-4 bg-pink-100 dark:bg-pink-900/40">
+            <p class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-3">💛 Bagaimana perasaanmu hari ini?</p>
+            
+            <template x-if="!currentMood">
+              <div class="grid grid-cols-5 gap-2">
+                <button @click="setMood('sedih')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+                  <span class="text-2xl">😢</span>
+                  <span class="text-xs text-gray-800 dark:text-gray-200">Sedih</span>
+                </button>
+                <button @click="setMood('senang')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+                  <span class="text-2xl">😊</span>
+                  <span class="text-xs text-gray-800 dark:text-gray-200">Senang</span>
+                </button>
+                <button @click="setMood('cemas')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+                  <span class="text-2xl">😰</span>
+                  <span class="text-xs text-gray-800 dark:text-gray-200">Cemas</span>
+                </button>
+                <button @click="setMood('syukur')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+                  <span class="text-2xl">🙏</span>
+                  <span class="text-xs text-gray-800 dark:text-gray-200">Syukur</span>
+                </button>
+                <button @click="setMood('lelah')" class="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-pink-200 dark:hover:bg-pink-800 transition">
+                  <span class="text-2xl">😴</span>
+                  <span class="text-xs text-gray-800 dark:text-gray-200">Lelah</span>
+                </button>
+              </div>
+            </template>
 
-  <template x-if="currentMood">
-    <div class="bg-white dark:bg-pink-300 rounded-xl p-4 border-2 border-pink-300 dark:border-pink-400">
-      <p class="font-arabic text-right text-gray-800 dark:text-gray-900 text-xl leading-loose mb-2" x-text="moodSuggestions[currentMood].ayat"></p>
-      <p class="text-sm text-gray-700 dark:text-gray-900 mb-2" x-text="moodSuggestions[currentMood].arti"></p>
-      <p class="text-xs text-gray-500 dark:text-gray-800 mb-3" x-text="moodSuggestions[currentMood].ref"></p>
-      <button @click="clearMood()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Tutup</button>
-    </div>
-  </template>
-</div>
+            <template x-if="currentMood">
+              <div class="bg-white dark:bg-pink-300 rounded-xl p-4 border-2 border-pink-300 dark:border-pink-400">
+                <p class="font-arabic text-right text-gray-800 dark:text-gray-900 text-xl leading-loose mb-2" x-text="moodSuggestions[currentMood].ayat"></p>
+                <p class="text-sm text-gray-700 dark:text-gray-900 mb-2" x-text="moodSuggestions[currentMood].arti"></p>
+                <p class="text-xs text-gray-500 dark:text-gray-800 mb-3" x-text="moodSuggestions[currentMood].ref"></p>
+                <button @click="clearMood()" class="text-xs text-red-600 hover:text-red-700 font-semibold">Tutup</button>
+              </div>
+            </template>
+          </div>
 
           <!-- Quick Stats -->
           <div class="grid grid-cols-3 gap-3">
@@ -424,9 +421,6 @@
           </button>
         </div>
       </template>
-
-      <!-- UNTUK BAGIAN QUR'AN, DOA, MUROTTAL, IBADAH, DAN MASJID -->
-      <!-- Lanjut ke BAGIAN 3 -->
 
       <!-- Qur'an -->
       <template x-if="activeTab === 'quran'">
@@ -704,8 +698,6 @@
 
     </main>
 
-    <!-- LANJUT KE BAGIAN 4 - BOTTOM NAVIGATION -->
-
     <!-- Bottom Navigation -->
     <nav class="bg-white border-t-2 border-red-900/10 px-2 py-2 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl bottom-nav-safe z-50">
       <div class="grid grid-cols-5 gap-1">
@@ -757,29 +749,8 @@
 
   </div>
 
-<script>
-  // CRITICAL FIX: Load app.js setelah Alpine.js ready
-  (function() {
-    console.log('🔧 Waiting for Alpine.js...');
-    
-    function loadAppScript() {
-      console.log('✅ Alpine.js ready, loading app.js...');
-      const script = document.createElement('script');
-      script.src = '/platform/barakahku1/app.js';
-      script.onload = () => console.log('✅ app.js loaded successfully');
-      script.onerror = () => console.error('❌ Failed to load app.js');
-      document.body.appendChild(script);
-    }
-    
-    // Cek jika Alpine sudah loaded
-    if (window.Alpine) {
-      loadAppScript();
-    } else {
-      // Tunggu Alpine init
-      document.addEventListener('alpine:init', loadAppScript);
-    }
-  })();
-</script>
+<script src="/platform/barakahku1/app.js"></script>
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
 </body>
 </html>
