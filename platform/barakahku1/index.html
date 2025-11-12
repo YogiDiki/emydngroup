@@ -2,13 +2,53 @@
 <html lang="id" x-data="app" class="h-full">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BarakahKu - Emydn Group</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#7c1d1d" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="BarakahKu">
+  
+  <title> BarakahKu - Emydn Group</title>
   <link rel="manifest" href="/platform/barakahku1/manifest.json" />
   <link rel="icon" href="/platform/barakahku1/assets/icons/icon-192.png" />
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="/platform/barakahku1/assets/icons/icon-192.png">
+  <link rel="apple-touch-startup-image" href="/platform/barakahku1/assets/icons/icon-192.png">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
   <style>
+    /* Tambahkan ini di CSS */
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    body {
+      height: 100vh;
+      height: -webkit-fill-available;
+      overflow: hidden;
+    }
+    
+    /* Safe area support untuk notch devices */
+    .safe-top {
+      padding-top: env(safe-area-inset-top);
+    }
+    
+    .safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Pastikan konten tidak terpotong */
+    .pwa-container {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+    
+    /* Existing styles tetap dipertahankan */
     * {
       font-family: 'Poppins', sans-serif;
     }
@@ -19,6 +59,7 @@
       line-height: 2.75rem; 
       font-weight: 700;
     }
+    
     
     .gradient-maroon {
       background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 50%, #b91c1c 100%);
@@ -181,11 +222,13 @@
 
 </head>
 <body class="h-full">
-  <div class="flex flex-col h-full max-w-lg mx-auto shadow-2xl relative">
+  <div class="flex flex-col h-full max-w-lg mx-auto shadow-2xl relative pwa-container">
+    <!-- Safe area untuk notch devices -->
+    <div class="safe-top"></div>
     
     <!-- Header -->
     <header class="gradient-maroon text-white px-5 py-4 shadow-lg relative overflow-hidden">
-      <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
+       <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
       
       <div class="relative z-10">
         <div class="flex items-center justify-between mb-3">
@@ -269,8 +312,8 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto pb-28 bg-cream">
-      
+    <main class="flex-1 overflow-y-auto pb-28 bg-cream safe-bottom">
+
       <!-- Beranda -->
       <div x-show="activeTab === 'beranda'">
         <div class="p-5 space-y-5">
@@ -760,7 +803,7 @@
     </main>
 
     <!-- Bottom Navigation -->
-    <nav class="bg-white border-t-2 border-red-900/10 px-2 py-2 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl bottom-nav-safe z-50">
+    <nav class="bg-white border-t-2 border-red-900/10 px-2 py-2 fixed bottom-0 left-0 right-0 max-w-lg mx-auto shadow-2xl bottom-nav-safe z-50 safe-bottom">
       <div class="grid grid-cols-5 gap-1">
       
         <!-- Beranda -->
