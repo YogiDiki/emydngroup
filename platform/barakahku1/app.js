@@ -16,7 +16,7 @@ async function initFirebaseMessaging() {
       return;
     }
 
-    // ✅ Load Firebase SDK (hanya sekali)
+    // ✅ Load Firebase SDK
     if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
       
@@ -41,7 +41,7 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase v8 sudah loaded');
     }
 
-    // ✅ Initialize Firebase (hanya sekali)
+    // ✅ Initialize Firebase
     if (!firebase.apps || firebase.apps.length === 0) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
@@ -56,30 +56,13 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ CRITICAL: Tunggu SW ready dengan timeout
-    console.log('⏳ [FCM] Waiting for Service Worker...');
-    const swRegistration = await Promise.race([
-      navigator.serviceWorker.ready,
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('SW timeout after 5s')), 5000)
-      )
-    ]);
-    console.log('✅ [FCM] Service Worker ready:', swRegistration.scope);
-
-    // ✅ Get messaging instance
-    console.log('📱 [FCM] Creating messaging instance...');
+    // ✅ CRITICAL FIX: Langsung request token tanpa tunggu SW
+    console.log('🔑 [FCM] Requesting token (no SW wait)...');
+    
     const messaging = firebase.messaging();
     
-    console.log('🔗 [FCM] Linking SW to messaging...');
-    messaging.useServiceWorker(swRegistration);
-    console.log('✅ [FCM] Messaging menggunakan existing SW');
-    
-    // ✅ CRITICAL: Request token dengan error handling
-    console.log('🔑 [FCM] Requesting token...');
-    
     const currentToken = await messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-      serviceWorkerRegistration: swRegistration
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
     });
     
     if (currentToken) {
@@ -94,8 +77,12 @@ async function initFirebaseMessaging() {
       localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
       console.log('💾 [FCM] Token tersimpan');
       
+      // Show alert
+      alert('🎉 FCM Token berhasil!\n\nToken: ' + currentToken.substring(0, 50) + '...');
+      
     } else {
-      console.warn('⚠️ [FCM] Tidak dapat token (no error thrown)');
+      console.warn('⚠️ [FCM] Tidak dapat token');
+      alert('⚠️ Token tidak ditemukan. Coba refresh page.');
     }
 
     // ✅ Handler foreground messages
@@ -122,7 +109,7 @@ async function initFirebaseMessaging() {
     console.error('❌ [FCM] Init failed:', error);
     console.error('❌ [FCM] Error name:', error.name);
     console.error('❌ [FCM] Error message:', error.message);
-    console.error('❌ [FCM] Error stack:', error.stack);
+    alert('❌ FCM Error: ' + error.message);
   }
 }
 
