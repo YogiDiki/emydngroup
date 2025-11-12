@@ -2,7 +2,7 @@
 // 🔥 BarakahKu - Service Worker (PWA + FCM) - v20
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v21';
+const CACHE_NAME = 'barakahku-cache-v22';
 
 const urlsToCache = [
   '/platform/barakahku1/',
@@ -30,7 +30,7 @@ try {
     apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
     authDomain: "barakahku-app.firebaseapp.com",
     projectId: "barakahku-app",
-    storageBucket: "barakahku-app.firebasestorage.app",
+    storageBucket: "barakahku-app.appspot.com",
     messagingSenderId: "510231053293",
     appId: "1:510231053293:web:921b9e574fc614492b5de4"
   });
