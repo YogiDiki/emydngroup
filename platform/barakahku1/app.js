@@ -29,72 +29,75 @@ async function initFirebaseMessaging() {
 
     // ✅ STEP 1: Wait for Service Worker to be FULLY ready
     console.log('⏳ [FCM] Waiting for Service Worker...');
-    const swRegistration = await navigator.serviceWorker.ready;
+    const swRegistration = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SW ready timeout')), 5000)
+      )
+    ]);
     console.log('✅ [FCM] SW Ready! Scope:', swRegistration.scope);
+    console.log('✅ [FCM] SW Active state:', swRegistration.active?.state);
     
     // Give SW extra time to initialize Firebase
+    console.log('⏳ [FCM] Waiting 1s for SW Firebase init...');
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Check if SW has Firebase ready
-    console.log('🔍 [FCM] Checking SW Firebase status...');
-    try {
-      const messageChannel = new MessageChannel();
-      const checkPromise = new Promise((resolve) => {
-        messageChannel.port1.onmessage = (event) => {
-          console.log('📨 [FCM] SW status:', event.data);
-          resolve(event.data);
-        };
-      });
-      
-      swRegistration.active.postMessage(
-        { type: 'CHECK_FIREBASE' },
-        [messageChannel.port2]
-      );
-      
-      const status = await Promise.race([
-        checkPromise,
-        new Promise(resolve => setTimeout(() => resolve({ ready: false }), 2000))
-      ]);
-      
-      if (!status.ready) {
-        console.warn('⚠️ [FCM] SW Firebase not ready yet, continuing anyway...');
-      }
-    } catch (err) {
-      console.warn('⚠️ [FCM] Could not check SW status:', err);
-    }
+    console.log('✅ [FCM] Wait complete, proceeding...')
 
     // ✅ STEP 2: Load Firebase SDK
+    console.log('📦 [FCM] Starting Firebase SDK load...');
     if (!window.firebase || !window.firebase.messaging) {
-      console.log('📦 [FCM] Loading Firebase v8 SDK...');
+      console.log('📦 [FCM] Firebase not loaded, loading now...');
       
-      await Promise.race([
-        new Promise((resolve, reject) => {
-          const script1 = document.createElement('script');
-          script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
-          script1.onload = () => {
-            console.log('✅ [FCM] Firebase App v8 loaded');
-            const script2 = document.createElement('script');
-            script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
-            script2.onload = () => {
-              console.log('✅ [FCM] Firebase Messaging v8 loaded');
-              resolve();
+      try {
+        await Promise.race([
+          new Promise((resolve, reject) => {
+            console.log('📥 [FCM] Loading firebase-app.js...');
+            const script1 = document.createElement('script');
+            script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
+            script1.onload = () => {
+              console.log('✅ [FCM] firebase-app.js loaded');
+              
+              console.log('📥 [FCM] Loading firebase-messaging.js...');
+              const script2 = document.createElement('script');
+              script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
+              script2.onload = () => {
+                console.log('✅ [FCM] firebase-messaging.js loaded');
+                console.log('✅ [FCM] Firebase SDK complete');
+                resolve();
+              };
+              script2.onerror = (e) => {
+                console.error('❌ [FCM] firebase-messaging.js failed:', e);
+                reject(new Error('Failed to load firebase-messaging.js'));
+              };
+              document.head.appendChild(script2);
             };
-            script2.onerror = () => reject(new Error('Failed to load Firebase Messaging'));
-            document.head.appendChild(script2);
-          };
-          script1.onerror = () => reject(new Error('Failed to load Firebase App'));
-          document.head.appendChild(script1);
-        }),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Firebase SDK load timeout')), 15000)
-        )
-      ]);
+            script1.onerror = (e) => {
+              console.error('❌ [FCM] firebase-app.js failed:', e);
+              reject(new Error('Failed to load firebase-app.js'));
+            };
+            document.head.appendChild(script1);
+          }),
+          new Promise((_, reject) => {
+            setTimeout(() => {
+              console.error('⏱️ [FCM] SDK load timeout!');
+              reject(new Error('Firebase SDK load timeout after 15s'));
+            }, 15000);
+          })
+        ]);
+        
+        console.log('✅ [FCM] Firebase SDK loaded successfully');
+      } catch (err) {
+        console.error('❌ [FCM] Firebase SDK load error:', err);
+        throw err;
+      }
     } else {
-      console.log('✅ [FCM] Firebase v8 sudah loaded');
+      console.log('✅ [FCM] Firebase SDK already loaded');
     }
 
     // ✅ STEP 3: Initialize Firebase App
+    console.log('🔧 [FCM] Checking Firebase app...');
     if (!firebase.apps || firebase.apps.length === 0) {
+      console.log('🔧 [FCM] Initializing Firebase app...');
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
         authDomain: "barakahku-app.firebaseapp.com",
@@ -103,10 +106,12 @@ async function initFirebaseMessaging() {
         messagingSenderId: "510231053293",
         appId: "1:510231053293:web:921b9e574fc614492b5de4"
       });
-      console.log('✅ [FCM] Firebase initialized');
+      console.log('✅ [FCM] Firebase app initialized');
     } else {
-      console.log('✅ [FCM] Firebase sudah initialized');
+      console.log('✅ [FCM] Firebase app already initialized');
     }
+    
+    console.log('📊 [FCM] Firebase apps count:', firebase.apps.length);
 
     // ✅ STEP 4: Get Messaging instance
     console.log('📱 [FCM] Getting messaging instance...');

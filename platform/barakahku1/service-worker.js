@@ -33,28 +33,33 @@ async function initFirebase() {
 
   try {
     console.log('📦 [SW] Loading Firebase SDK...');
+    console.log('⏱️ [SW] Timeout set to 10 seconds');
     
     // Load Firebase scripts with timeout
     await Promise.race([
-      Promise.all([
-        new Promise((resolve, reject) => {
-          importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
-          resolve();
-        }),
-        new Promise((resolve, reject) => {
-          importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
-          resolve();
-        })
-      ]),
+      (async () => {
+        console.log('📥 [SW] Importing firebase-app.js...');
+        importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+        console.log('✅ [SW] firebase-app.js loaded');
+        
+        console.log('📥 [SW] Importing firebase-messaging.js...');
+        importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+        console.log('✅ [SW] firebase-messaging.js loaded');
+      })(),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Firebase SDK timeout')), 10000)
+        setTimeout(() => {
+          console.error('⏱️ [SW] Firebase SDK timeout!');
+          reject(new Error('Firebase SDK timeout'));
+        }, 10000)
       )
     ]);
 
-    console.log('✅ [SW] Firebase SDK loaded');
+    console.log('✅ [SW] Firebase SDK imported');
+    console.log('📊 [SW] Firebase available:', typeof firebase !== 'undefined');
 
     // Initialize Firebase
     if (!firebase.apps || firebase.apps.length === 0) {
+      console.log('🔧 [SW] Initializing Firebase app...');
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
         authDomain: "barakahku-app.firebaseapp.com",
@@ -64,14 +69,18 @@ async function initFirebase() {
         appId: "1:510231053293:web:921b9e574fc614492b5de4"
       });
       console.log('✅ [SW] Firebase app initialized');
+      console.log('📊 [SW] Firebase apps:', firebase.apps.length);
     }
 
     // Get messaging instance
+    console.log('📱 [SW] Creating messaging instance...');
     messagingInstance = firebase.messaging();
+    console.log('✅ [SW] Messaging instance created');
     
     // Setup background message handler
+    console.log('🔔 [SW] Setting up background message handler...');
     messagingInstance.onBackgroundMessage((payload) => {
-      console.log('📩 [SW] Background message:', payload);
+      console.log('📩 [SW] Background message received:', payload);
       const title = payload.notification?.title || 'BarakahKu';
       const options = {
         body: payload.notification?.body || 'Notifikasi baru',
@@ -83,13 +92,17 @@ async function initFirebase() {
       };
       return self.registration.showNotification(title, options);
     });
+    console.log('✅ [SW] Background message handler ready');
 
     firebaseReady = true;
-    console.log('✅ [SW] Firebase Messaging ready');
+    console.log('🎉 [SW] Firebase Messaging fully ready');
     return true;
 
   } catch (err) {
     console.error('❌ [SW] Firebase init failed:', err);
+    console.error('❌ [SW] Error name:', err.name);
+    console.error('❌ [SW] Error message:', err.message);
+    console.error('❌ [SW] Error stack:', err.stack);
     firebaseReady = false;
     return false;
   }
