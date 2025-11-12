@@ -1,8 +1,8 @@
 // ====================================================
-// 🔥 BarakahKu - Service Worker (PWA + FCM) - FIXED
+// 🔥 BarakahKu - Service Worker (PWA + FCM) - v19 FINAL
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v18-api-fixed';
+const CACHE_NAME = 'barakahku-cache-v19-final';
 
 const urlsToCache = [
   '/platform/barakahku1/',
@@ -13,7 +13,7 @@ const urlsToCache = [
   '/platform/barakahku1/assets/icons/icon-512.png'
 ];
 
-console.log('🚀 [SW] BarakahKu v18 starting (API Fixed)...');
+console.log('🚀 [SW] BarakahKu v19 starting (FINAL FIX)...');
 
 // ====================================================
 // FIREBASE MESSAGING
@@ -57,7 +57,7 @@ try {
 // ====================================================
 
 self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing v18...');
+  console.log('✅ [SW] Installing v19...');
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(urlsToCache);
@@ -67,7 +67,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activating v18...');
+  console.log('✅ [SW] Activating v19...');
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
@@ -85,32 +85,34 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   
-  // ✅ CRITICAL: Skip ALL external domains - langsung fetch
+  // ✅ 1. BYPASS SEMUA EXTERNAL API (equran.id, aladhan.com, dll)
   if (url.origin !== location.origin) {
-    console.log('🌐 [SW] External request (bypassed):', url.href);
-    event.respondWith(fetch(event.request));
+    console.log('🌐 [SW] External API (bypass):', url.hostname);
+    event.respondWith(
+      fetch(event.request, {
+        cache: 'no-store',  // ← PENTING: Jangan cache API!
+        mode: 'cors'
+      })
+    );
     return;
   }
   
-  // ✅ Skip API endpoints (even if same origin)
-  const apiPaths = ['/api/', '/v1/', '/v2/'];
-  if (apiPaths.some(path => url.pathname.includes(path))) {
-    event.respondWith(fetch(event.request));
+  // ✅ 2. SERVICE WORKER FILE - NEVER CACHE
+  if (url.pathname.endsWith('/service-worker.js')) {
+    event.respondWith(fetch(event.request, { cache: 'no-store' }));
     return;
   }
   
-  // ✅ App assets (js, css, icons, images) - Cache First
-  if (url.pathname.includes('/platform/barakahku1/assets/') ||
-      url.pathname.endsWith('/app.js') ||
-      url.pathname.endsWith('/manifest.json') ||
+  // ✅ 3. STATIC ASSETS (icons, images) - Cache First
+  if (url.pathname.includes('/assets/icons/') ||
       url.pathname.endsWith('.png') ||
       url.pathname.endsWith('.jpg') ||
-      url.pathname.endsWith('.css')) {
+      url.pathname.endsWith('.svg')) {
     
     event.respondWith(
       caches.match(event.request).then(cached => {
         if (cached) {
-          console.log('💾 [SW] Cache:', url.pathname);
+          console.log('💾 [SW] Cache hit:', url.pathname);
           return cached;
         }
         return fetch(event.request).then(response => {
@@ -125,14 +127,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   
-  // ✅ Service Worker file itself - NEVER cache
-  if (url.pathname.endsWith('/service-worker.js')) {
-    event.respondWith(fetch(event.request, { cache: 'no-store' }));
-    return;
-  }
-  
-  // ✅ HTML pages under /platform/barakahku1/
-  if (url.pathname.startsWith('/platform/barakahku1')) {
+  // ✅ 4. APP FILES (app.js, manifest.json) - Network First
+  if (url.pathname.endsWith('/app.js') || 
+      url.pathname.endsWith('/manifest.json')) {
+    
     event.respondWith(
       fetch(event.request)
         .then(response => {
@@ -142,15 +140,28 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+  
+  // ✅ 5. HTML PAGES - Network First (always fresh)
+  if (url.pathname.startsWith('/platform/barakahku1')) {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' })
+        .then(response => {
+          // Jangan cache HTML - selalu fetch fresh
+          return response;
+        })
         .catch(() => {
-          // Fallback to cache if offline
+          // Fallback to cache only if offline
           return caches.match('/platform/barakahku1/index.html');
         })
     );
     return;
   }
   
-  // ✅ Everything else - Network First
+  // ✅ 6. EVERYTHING ELSE - Network First
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );
@@ -182,4 +193,4 @@ self.addEventListener('message', (event) => {
   }
 });
 
-console.log('✅ [SW] v18 ready - API calls bypassed');
+console.log('✅ [SW] v19 ready - ALL EXTERNAL APIs BYPASSED');
