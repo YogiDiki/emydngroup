@@ -548,54 +548,33 @@ document.addEventListener('alpine:init', () => {
     },
 
     async registerServiceWorker() {
-  if (!('serviceWorker' in navigator)) {
-    console.warn('⚠️ [SW] Service Worker tidak didukung');
-    return;
-  }
-
-  try {
-    // UNREGISTER DULU YANG LAMA
-    const registrations = await navigator.serviceWorker.getRegistrations();
-    for (let registration of registrations) {
-      await registration.unregister();
-      console.log('🗑️ [SW] Unregistered old:', registration.scope);
-    }
-
-    // REGISTER SERVICE WORKER YANG FIXED
-    const registration = await navigator.serviceWorker.register(
-      '/platform/barakahku1/service-worker.js',
-      { scope: '/platform/barakahku1/' }
-    );
-    
-    console.log('✅ [SW] New worker registered:', registration.scope);
-    
-    // ✅ TUNGGU SERVICE WORKER BENAR-BENAR READY
-    await new Promise(resolve => {
-      if (registration.installing) {
-        registration.installing.addEventListener('statechange', (e) => {
-          if (e.target.state === 'activated') {
-            console.log('✅ [SW] Service Worker activated');
-            resolve();
-          }
-        });
-      } else if (registration.active) {
-        console.log('✅ [SW] Service Worker already active');
-        resolve();
+      if (!('serviceWorker' in navigator)) {
+        console.warn('⚠️ [SW] Service Worker tidak didukung');
+        return;
       }
-    });
-    
-    // ✅ TUNGGU 2 DETIK SEBELUM INIT FIREBASE
-    console.log('⏳ [FCM] Waiting for Service Worker to be fully ready...');
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // ✅ INIT FIREBASE SETELAH SW READY
-    console.log('🔔 [FCM] Initializing Firebase Messaging...');
-    await initFirebaseMessaging();
-    
-  } catch (err) {
-    console.error('❌ [SW] Failed:', err);
-  }
-},
+
+      try {
+        const registration = await navigator.serviceWorker.register(
+          '/platform/barakahku1/service-worker.js',
+          { scope: '/platform/barakahku1/' }
+        );
+        
+        console.log('✅ [SW] Service Worker registered');
+        console.log('📍 [SW] Scope:', registration.scope);
+        
+        await navigator.serviceWorker.ready;
+        console.log('✅ [SW] Service Worker ready');
+        
+        if (Notification.permission === 'granted') {
+          console.log('🔔 [FCM] Permission granted, init FCM in 3s...');
+          setTimeout(() => {
+            initFirebaseMessaging();
+          }, 3000);
+        }
+      } catch (err) {
+        console.error('❌ [SW] Failed:', err);
+      }
+    },
 
     loadLastRead() {
       const saved = localStorage.getItem('lastRead');
