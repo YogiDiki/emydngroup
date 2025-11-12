@@ -1,11 +1,11 @@
 // ==============================
-// BarakahKu - app.js (FIXED ALPINE.JS REGISTRATION!)
+// BarakahKu - app.js (FIXED FCM!)
 // ==============================
 
 console.log('📦 [APP] Loading app.js...');
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8)
+// Fungsi inisialisasi Firebase Messaging (v8) - FIXED!
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
@@ -56,13 +56,40 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ CRITICAL FIX: Langsung request token tanpa tunggu SW
-    console.log('🔑 [FCM] Requesting token (no SW wait)...');
+    // ✅ CRITICAL FIX: Tunggu SW dengan cara yang benar
+    console.log('⏳ [FCM] Waiting for Service Worker...');
+    
+    let swRegistration;
+    
+    // Cek apakah SW sudah ready
+    if (navigator.serviceWorker.controller) {
+      console.log('✅ [FCM] SW controller sudah ada');
+      swRegistration = await navigator.serviceWorker.ready;
+    } else {
+      // Tunggu SW dengan timeout yang lebih panjang
+      console.log('⏳ [FCM] Waiting for SW ready...');
+      swRegistration = await Promise.race([
+        navigator.serviceWorker.ready,
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('SW timeout after 10s')), 10000)
+        )
+      ]);
+    }
+    
+    console.log('✅ [FCM] Service Worker ready!');
+    console.log('📍 [FCM] SW scope:', swRegistration.scope);
+
+    // ✅ Request token dengan SW registration
+    console.log('🔑 [FCM] Requesting token...');
     
     const messaging = firebase.messaging();
     
+    // Use SW registration explicitly
+    messaging.useServiceWorker(swRegistration);
+    
     const currentToken = await messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+      serviceWorkerRegistration: swRegistration
     });
     
     if (currentToken) {
@@ -109,7 +136,14 @@ async function initFirebaseMessaging() {
     console.error('❌ [FCM] Init failed:', error);
     console.error('❌ [FCM] Error name:', error.name);
     console.error('❌ [FCM] Error message:', error.message);
-    alert('❌ FCM Error: ' + error.message);
+    console.error('❌ [FCM] Error stack:', error.stack);
+    
+    // User-friendly error message
+    let errorMsg = 'Gagal menginisialisasi notifikasi.';
+    if (error.message.includes('timeout')) {
+      errorMsg += '\n\nService Worker belum siap. Coba:\n1. Refresh halaman\n2. Tunggu beberapa detik\n3. Coba lagi';
+    }
+    alert('❌ FCM Error: ' + errorMsg);
   }
 }
 
@@ -121,7 +155,7 @@ document.addEventListener('alpine:init', () => {
   
   Alpine.data('app', () => ({
     // Data Properties
-    _initialized: false,  // ← ADD THIS
+    _initialized: false,
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
@@ -170,7 +204,7 @@ document.addEventListener('alpine:init', () => {
       console.log('🚀 [APP] BarakahKu - Memulai aplikasi...');
       console.log('📊 [APP] Alpine.js version:', Alpine.version);
       
-      // ✅ CRITICAL FIX: Call methods synchronously
+      // ✅ Register SW first
       this.registerServiceWorker();
       
       console.log('📖 [APP] Loading Quran...');
@@ -542,6 +576,7 @@ document.addEventListener('alpine:init', () => {
         if (permission === 'granted') {
           alert('✅ Izin diberikan!\n\nSedang setup sistem notifikasi...');
           
+          // Tunggu sebentar untuk memastikan SW ready
           setTimeout(async () => {
             await initFirebaseMessaging();
             
@@ -572,15 +607,14 @@ document.addEventListener('alpine:init', () => {
         console.log('✅ [SW] Service Worker registered');
         console.log('📍 [SW] Scope:', registration.scope);
         
+        // ✅ CRITICAL: Tunggu SW benar-benar ready
         await navigator.serviceWorker.ready;
         console.log('✅ [SW] Service Worker ready');
         
-        if (Notification.permission === 'granted') {
-          console.log('🔔 [FCM] Permission granted, init FCM in 3s...');
-          setTimeout(() => {
-            initFirebaseMessaging();
-          }, 3000);
-        }
+        // ✅ CRITICAL: Jangan langsung init FCM, tunggu user klik tombol
+        // Hapus auto-init FCM dari sini
+        console.log('💡 [SW] SW ready, FCM akan diinit saat user request');
+        
       } catch (err) {
         console.error('❌ [SW] Failed:', err);
       }
