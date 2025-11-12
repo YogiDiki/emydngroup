@@ -88,19 +88,14 @@ async function initFCM() {
 }
 
 // ====================================================
-// ALPINE.JS - WAIT FOR IT TO LOAD
+// ALPINE.JS - DEFINE DATA BEFORE ALPINE STARTS
 // ====================================================
 
-function initAlpine() {
-  if (!window.Alpine) {
-    console.log('⏳ [ALPINE] Waiting...');
-    setTimeout(initAlpine, 50);
-    return;
-  }
+// Define Alpine data immediately - before Alpine.start()
+document.addEventListener('alpine:init', () => {
+  console.log('🎨 [ALPINE] Initializing data...');
   
-  console.log('🎨 [ALPINE] Initializing...');
-  
-  window.Alpine.data('app', () => ({
+  Alpine.data('app', () => ({
     // State variables
     activeTab: 'beranda',
     showSearch: false,
@@ -429,17 +424,11 @@ function initAlpine() {
         if (isNight && !this.darkMode) console.log('🌙 Malam hari');
       }
     }
-  }));
+    
+   }));
   
-  console.log('✅ [ALPINE] Ready');
-}
-
-// Jalankan saat DOM ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initAlpine);
-} else {
-  initAlpine();
-}
+  console.log('✅ [ALPINE] Data registered');
+});
 
 // ====================================================
 // PWA
