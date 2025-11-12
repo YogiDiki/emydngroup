@@ -96,7 +96,7 @@ document.addEventListener('alpine:init', () => {
   console.log('🎨 [ALPINE] Initializing data...');
   
   Alpine.data('app', () => ({
-    // State variables
+   // State variables
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
@@ -114,6 +114,8 @@ document.addEventListener('alpine:init', () => {
     userCoords: null,
     currentMood: null,
     notificationStatus: 'inactive',
+    loadingQuran: true,
+    loadingMurottal: true,
     moodSuggestions: {
       sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
       senang: { ayat: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ', arti: 'Dan terhadap nikmat Tuhanmu, hendaklah kamu nyatakan', ref: 'QS. Ad-Duha: 11' },
@@ -153,6 +155,7 @@ document.addEventListener('alpine:init', () => {
     },
 
     async loadQuran() {
+      this.loadingQuran = true;
       try {
         const res = await fetch('https://equran.id/api/v2/surat');
         const data = await res.json();
@@ -162,9 +165,12 @@ document.addEventListener('alpine:init', () => {
           arti: s.arti,
           jumlahAyat: s.jumlahAyat
         }));
+        console.log('✅ Loaded', this.quran.length, 'surahs');
       } catch (err) {
         console.error('❌ Quran:', err);
         this.quran = [{ nomor: 1, namaLatin: 'Al-Fatihah', arti: 'Pembukaan', jumlahAyat: 7 }];
+      } finally {
+        this.loadingQuran = false;
       }
     },
 
@@ -206,6 +212,7 @@ document.addEventListener('alpine:init', () => {
     },
 
     async loadMurotalList() {
+      this.loadingMurottal = true;
       try {
         const res = await fetch('https://equran.id/api/v2/surat');
         const data = await res.json();
@@ -216,8 +223,11 @@ document.addEventListener('alpine:init', () => {
           qari: 'Mishari Rashid Al-Afasy',
           audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
         }));
+        console.log('✅ Loaded', this.murotalList.length, 'murottal');
       } catch (err) {
         console.error('❌ Murottal:', err);
+      } finally {
+        this.loadingMurottal = false;
       }
     },
 
@@ -424,7 +434,7 @@ document.addEventListener('alpine:init', () => {
         if (isNight && !this.darkMode) console.log('🌙 Malam hari');
       }
     }
-    
+
    }));
   
   console.log('✅ [ALPINE] Data registered');
