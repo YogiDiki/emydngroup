@@ -720,15 +720,7 @@ document.addEventListener('alpine:init', () => {
       try {
         console.log('📝 [SW] Registering Service Worker...');
         
-        // Unregister any existing SW first to ensure clean start
-        const existingRegs = await navigator.serviceWorker.getRegistrations();
-        for (let reg of existingRegs) {
-          if (reg.scope.includes('/platform/barakahku1')) {
-            console.log('🗑️ [SW] Unregistering old SW:', reg.scope);
-            await reg.unregister();
-          }
-        }
-        
+        // Don't unregister - just register directly
         const registration = await navigator.serviceWorker.register(
           '/platform/barakahku1/service-worker.js',
           { 
@@ -739,13 +731,9 @@ document.addEventListener('alpine:init', () => {
         
         console.log('✅ [SW] Service Worker registered');
         console.log('📍 [SW] Scope:', registration.scope);
-        
-        // Wait for SW to be fully ready
-        console.log('⏳ [SW] Waiting for SW to be ready...');
-        const readyRegistration = await navigator.serviceWorker.ready;
-        console.log('✅ [SW] Service Worker ready');
-        console.log('💡 [SW] Active:', readyRegistration.active ? 'Yes' : 'No');
-        console.log('💡 [SW] FCM akan diinit saat user klik tombol notifikasi');
+        console.log('📊 [SW] Installing:', registration.installing ? 'Yes' : 'No');
+        console.log('📊 [SW] Waiting:', registration.waiting ? 'Yes' : 'No');
+        console.log('📊 [SW] Active:', registration.active ? 'Yes' : 'No');
         
         // Listen for messages from SW
         navigator.serviceWorker.addEventListener('message', (event) => {
@@ -755,6 +743,26 @@ document.addEventListener('alpine:init', () => {
             console.log('✅ [APP] SW is ready and Firebase initialized');
           }
         });
+        
+        // Wait for SW to become active
+        if (registration.installing) {
+          console.log('⏳ [SW] SW is installing, waiting...');
+          registration.installing.addEventListener('statechange', function() {
+            if (this.state === 'activated') {
+              console.log('✅ [SW] SW activated');
+            }
+          });
+        }
+        
+        if (registration.waiting) {
+          console.log('⏳ [SW] SW is waiting, activating...');
+        }
+        
+        // Wait for ready state
+        console.log('⏳ [SW] Waiting for SW ready state...');
+        await navigator.serviceWorker.ready;
+        console.log('✅ [SW] Service Worker ready');
+        console.log('💡 [SW] FCM akan diinit saat user klik tombol notifikasi');
         
         // Handle SW updates
         registration.addEventListener('updatefound', () => {
@@ -773,7 +781,8 @@ document.addEventListener('alpine:init', () => {
         
       } catch (err) {
         console.error('❌ [SW] Registration failed:', err);
-        alert('❌ Service Worker gagal register.\n\nError: ' + err.message + '\n\nPastikan:\n1. HTTPS aktif\n2. Browser mendukung SW\n3. Path file benar');
+        console.error('❌ [SW] Error details:', err.message);
+        alert('❌ Service Worker gagal register.\n\nError: ' + err.message + '\n\nPastikan:\n1. HTTPS aktif\n2. Browser mendukung SW\n3. Path file benar\n4. Cek Console untuk detail');
       }
     },
 

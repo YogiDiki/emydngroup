@@ -1,8 +1,8 @@
 // ====================================================
-// 🔥 BarakahKu - Service Worker (PWA + FCM) - v23
+// 🔥 BarakahKu - Service Worker (PWA + FCM) - v24
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v25';
+const CACHE_NAME = 'barakahku-cache-v26';
 
 const urlsToCache = [
   '/platform/barakahku1/',
@@ -13,118 +13,82 @@ const urlsToCache = [
   '/platform/barakahku1/assets/icons/icon-512.png'
 ];
 
-console.log('🚀 [SW] BarakahKu v23 starting...');
+console.log('🚀 [SW] BarakahKu v24 starting...');
 
 // ✅ FORCE SKIP WAITING
-self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing v23...');
-  self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('💾 [SW] Caching files...');
-        return cache.addAll(urlsToCache);
-      })
-      .then(() => {
-        console.log('✅ [SW] Cache populated successfully');
-      })
-      .catch(err => {
-        console.error('❌ [SW] Cache error:', err);
-        // Don't throw - allow SW to install even if cache fails
-      })
-  );
-});
+self.skipWaiting();
 
 // ====================================================
-// FIREBASE MESSAGING - SAFE INITIALIZATION
+// FIREBASE MESSAGING - IMPROVED WITH BETTER TIMING
 // ====================================================
 
 let firebaseReady = false;
 let messagingInstance = null;
-let initAttempts = 0;
-const MAX_INIT_ATTEMPTS = 3;
+let initPromise = null; // Track initialization promise
 
 async function initFirebase() {
+  // Return existing promise if already initializing
+  if (initPromise) {
+    console.log('⏳ [SW] Firebase init already in progress, waiting...');
+    return initPromise;
+  }
+
   if (firebaseReady) {
     console.log('✅ [SW] Firebase already initialized');
     return true;
   }
 
-  if (initAttempts >= MAX_INIT_ATTEMPTS) {
-    console.warn('⚠️ [SW] Max Firebase init attempts reached');
-    return false;
-  }
-
-  initAttempts++;
-  console.log(`📦 [SW] Firebase init attempt ${initAttempts}/${MAX_INIT_ATTEMPTS}`);
-
-  try {
-    // Load Firebase scripts with timeout and error handling
-    console.log('📥 [SW] Loading Firebase SDK v8...');
-    
-    await Promise.race([
-      (async () => {
-        try {
+  // Create and store the initialization promise
+  initPromise = (async () => {
+    try {
+      console.log('📦 [SW] Loading Firebase SDK v8...');
+      
+      // Load Firebase scripts with extended timeout
+      await Promise.race([
+        (async () => {
+          console.log('📥 [SW] Importing firebase-app.js v8...');
           importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
           console.log('✅ [SW] firebase-app.js loaded');
-        } catch (e) {
-          console.error('❌ [SW] Failed to load firebase-app.js:', e);
-          throw new Error('Firebase app script load failed');
-        }
-        
-        try {
+          
+          console.log('📥 [SW] Importing firebase-messaging.js v8...');
           importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
           console.log('✅ [SW] firebase-messaging.js loaded');
-        } catch (e) {
-          console.error('❌ [SW] Failed to load firebase-messaging.js:', e);
-          throw new Error('Firebase messaging script load failed');
-        }
-      })(),
-      new Promise((_, reject) => 
-        setTimeout(() => {
-          console.error('⏱️ [SW] Firebase SDK load timeout (10s)');
-          reject(new Error('Firebase SDK timeout'));
-        }, 10000)
-      )
-    ]);
+        })(),
+        new Promise((_, reject) => 
+          setTimeout(() => {
+            console.error('⏱️ [SW] Firebase SDK timeout!');
+            reject(new Error('Firebase SDK timeout'));
+          }, 15000) // Extended to 15s
+        )
+      ]);
 
-    // Check if Firebase is available
-    if (typeof firebase === 'undefined') {
-      throw new Error('Firebase not defined after script load');
-    }
-    console.log('✅ [SW] Firebase SDK available');
+      console.log('✅ [SW] Firebase SDK imported');
+      console.log('📊 [SW] Firebase available:', typeof firebase !== 'undefined');
 
-    // Initialize Firebase app
-    if (!firebase.apps || firebase.apps.length === 0) {
-      console.log('🔧 [SW] Initializing Firebase app...');
-      firebase.initializeApp({
-        apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
-        authDomain: "barakahku-app.firebaseapp.com",
-        projectId: "barakahku-app",
-        storageBucket: "barakahku-app.firebasestorage.app",
-        messagingSenderId: "510231053293",
-        appId: "1:510231053293:web:921b9e574fc614492b5de4"
-      });
-      console.log('✅ [SW] Firebase app initialized');
-    } else {
-      console.log('✅ [SW] Firebase app already exists');
-    }
+      // Initialize Firebase with CORRECT config
+      if (!firebase.apps || firebase.apps.length === 0) {
+        console.log('🔧 [SW] Initializing Firebase app...');
+        firebase.initializeApp({
+          apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
+          authDomain: "barakahku-app.firebaseapp.com",
+          projectId: "barakahku-app",
+          storageBucket: "barakahku-app.firebasestorage.app",
+          messagingSenderId: "510231053293",
+          appId: "1:510231053293:web:921b9e574fc614492b5de4"
+        });
+        console.log('✅ [SW] Firebase app initialized');
+        console.log('📊 [SW] Firebase apps:', firebase.apps.length);
+      }
 
-    // Get messaging instance
-    console.log('📱 [SW] Creating messaging instance...');
-    messagingInstance = firebase.messaging();
-    
-    if (!messagingInstance) {
-      throw new Error('Failed to create messaging instance');
-    }
-    console.log('✅ [SW] Messaging instance created');
-    
-    // Setup background message handler
-    console.log('🔔 [SW] Setting up background message handler...');
-    messagingInstance.onBackgroundMessage((payload) => {
-      console.log('📩 [SW] Background message received:', payload);
+      // Get messaging instance
+      console.log('📱 [SW] Creating messaging instance...');
+      messagingInstance = firebase.messaging();
+      console.log('✅ [SW] Messaging instance created');
       
-      try {
+      // Setup background message handler
+      console.log('🔔 [SW] Setting up background message handler...');
+      messagingInstance.onBackgroundMessage((payload) => {
+        console.log('📩 [SW] Background message received:', payload);
         const title = payload.notification?.title || 'BarakahKu';
         const options = {
           body: payload.notification?.body || 'Notifikasi baru',
@@ -134,32 +98,62 @@ async function initFirebase() {
           vibrate: [200, 100, 200],
           data: payload.data || {}
         };
-        
         return self.registration.showNotification(title, options);
-      } catch (e) {
-        console.error('❌ [SW] Error showing notification:', e);
-      }
-    });
-    
-    console.log('✅ [SW] Background message handler ready');
+      });
+      console.log('✅ [SW] Background message handler ready');
 
-    firebaseReady = true;
-    console.log('🎉 [SW] Firebase Messaging fully initialized');
-    return true;
+      firebaseReady = true;
+      console.log('🎉 [SW] Firebase Messaging fully ready');
+      return true;
 
-  } catch (err) {
-    console.error('❌ [SW] Firebase init failed:', err.message || err);
-    firebaseReady = false;
-    return false;
-  }
+    } catch (err) {
+      console.error('❌ [SW] Firebase init failed:', err);
+      console.error('❌ [SW] Error name:', err.name);
+      console.error('❌ [SW] Error message:', err.message);
+      console.error('❌ [SW] Error stack:', err.stack);
+      firebaseReady = false;
+      return false;
+    } finally {
+      initPromise = null; // Clear the promise when done
+    }
+  })();
+
+  return initPromise;
 }
+
+// DON'T initialize Firebase immediately - wait for activation
+console.log('💡 [SW] Firebase will be initialized after activation');
+
+// ====================================================
+// INSTALL
+// ====================================================
+
+self.addEventListener('install', (event) => {
+  console.log('✅ [SW] Installing v24...');
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('📦 [SW] Caching resources...');
+        return cache.addAll(urlsToCache);
+      })
+      .then(() => {
+        console.log('✅ [SW] Cache populated');
+        return self.skipWaiting();
+      })
+      .catch(err => {
+        console.error('❌ [SW] Install error:', err);
+        // Don't fail installation, just log error
+        return self.skipWaiting();
+      })
+  );
+});
 
 // ====================================================
 // ACTIVATE
 // ====================================================
 
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activating v23...');
+  console.log('✅ [SW] Activating v24...');
   event.waitUntil(
     Promise.all([
       // Clean old caches
@@ -172,23 +166,44 @@ self.addEventListener('activate', (event) => {
              })
         );
       }),
-      // Claim clients immediately
+      // Claim clients FIRST
       self.clients.claim()
     ])
     .then(() => {
       console.log('✅ [SW] Activated and claiming clients');
-      // Try to initialize Firebase after activation
-      return initFirebase();
-    })
-    .then((success) => {
-      if (success) {
-        console.log('✅ [SW] Firebase ready after activation');
-      } else {
-        console.warn('⚠️ [SW] Firebase init failed, will retry on message');
-      }
+      // Initialize Firebase AFTER claiming clients with small delay
+      console.log('🔥 [SW] Scheduling Firebase initialization...');
+      return new Promise(resolve => {
+        setTimeout(() => {
+          console.log('🔥 [SW] Starting Firebase initialization...');
+          initFirebase().then(success => {
+            if (success) {
+              console.log('✅ [SW] Firebase initialized successfully');
+              // Notify all clients that SW is ready
+              return self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                  client.postMessage({ 
+                    type: 'SW_READY',
+                    firebaseReady: true,
+                    timestamp: Date.now()
+                  });
+                });
+                resolve();
+              });
+            } else {
+              console.warn('⚠️ [SW] Firebase initialization failed');
+              resolve();
+            }
+          }).catch(err => {
+            console.error('❌ [SW] Firebase init error:', err);
+            resolve();
+          });
+        }, 500); // 500ms delay to ensure SW is fully activated
+      });
     })
     .catch(err => {
       console.error('❌ [SW] Activate error:', err);
+      // Don't fail activation
     })
   );
 });
@@ -204,7 +219,6 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== location.origin) {
     event.respondWith(
       fetch(event.request, { cache: 'no-store', mode: 'cors' })
-        .catch(() => new Response('Network error', { status: 408 }))
     );
     return;
   }
@@ -220,12 +234,12 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.match(event.request).then(cached => {
         return cached || fetch(event.request).then(response => {
-          if (response.ok) {
+          if (response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
           }
           return response;
-        }).catch(() => cached || new Response('', { status: 404 }));
+        });
       })
     );
     return;
@@ -236,7 +250,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then(response => {
-          if (response.ok) {
+          if (response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
           }
@@ -258,9 +272,7 @@ self.addEventListener('fetch', (event) => {
   
   // ✅ DEFAULT: NETWORK FIRST
   event.respondWith(
-    fetch(event.request)
-      .catch(() => caches.match(event.request))
-      .catch(() => new Response('Offline', { status: 503 }))
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });
 
@@ -269,26 +281,19 @@ self.addEventListener('fetch', (event) => {
 // ====================================================
 
 self.addEventListener('notificationclick', (event) => {
-  console.log('🔔 [SW] Notification clicked');
   event.notification.close();
-  
   const url = event.notification.data?.url || '/platform/barakahku1';
   
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // Try to focus existing window
         for (const client of clientList) {
           if (client.url.includes('/platform/barakahku1') && 'focus' in client) {
             return client.focus();
           }
         }
-        // Open new window if none found
-        if (clients.openWindow) {
-          return clients.openWindow(url);
-        }
+        return clients.openWindow(url);
       })
-      .catch(err => console.error('❌ [SW] Error handling notification click:', err))
   );
 });
 
@@ -300,43 +305,41 @@ self.addEventListener('message', (event) => {
   console.log('📨 [SW] Message received:', event.data);
   
   if (event.data?.type === 'SKIP_WAITING') {
-    console.log('⏭️ [SW] Skip waiting requested');
     self.skipWaiting();
   }
   
   if (event.data?.type === 'CHECK_FIREBASE') {
-    console.log('🔍 [SW] Firebase status check requested');
-    const status = {
-      ready: firebaseReady,
-      hasMessaging: !!messagingInstance,
-      attempts: initAttempts
-    };
-    
-    if (event.ports && event.ports[0]) {
-      event.ports[0].postMessage(status);
+    // If Firebase isn't ready yet, try to initialize it
+    if (!firebaseReady) {
+      console.log('🔥 [SW] Firebase check triggered, initializing...');
+      initFirebase().then(success => {
+        event.ports[0].postMessage({ 
+          ready: success,
+          hasMessaging: !!messagingInstance,
+          timestamp: Date.now()
+        });
+      });
+    } else {
+      event.ports[0].postMessage({ 
+        ready: firebaseReady,
+        hasMessaging: !!messagingInstance,
+        timestamp: Date.now()
+      });
     }
   }
   
   if (event.data?.type === 'INIT_FIREBASE') {
-    console.log('🔄 [SW] Manual Firebase init requested');
+    console.log('🔥 [SW] Manual Firebase init requested');
     initFirebase().then(success => {
       if (event.ports && event.ports[0]) {
-        event.ports[0].postMessage({ success });
+        event.ports[0].postMessage({ 
+          success,
+          ready: firebaseReady,
+          hasMessaging: !!messagingInstance
+        });
       }
     });
   }
 });
 
-// ====================================================
-// ERROR HANDLER
-// ====================================================
-
-self.addEventListener('error', (event) => {
-  console.error('❌ [SW] Global error:', event.error || event.message);
-});
-
-self.addEventListener('unhandledrejection', (event) => {
-  console.error('❌ [SW] Unhandled promise rejection:', event.reason);
-});
-
-console.log('✅ [SW] v23 loaded and ready for installation');
+console.log('✅ [SW] v24 ready');
