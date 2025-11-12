@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js v26 (Fixed)
+// BarakahKu - app.js v27 (FINAL)
 // ==============================
 
 console.log('📦 [APP] Loading...');
@@ -20,7 +20,6 @@ async function initFCM() {
     const swReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/') 
       || await navigator.serviceWorker.ready;
     
-    // Wait for Firebase ready in SW
     await new Promise((resolve) => {
       const timeout = setTimeout(resolve, 3000);
       const mc = new MessageChannel();
@@ -28,7 +27,6 @@ async function initFCM() {
       swReg.active?.postMessage({ type: 'CHECK_FIREBASE' }, [mc.port2]);
     });
     
-    // Load Firebase SDK
     if (!window.firebase?.messaging) {
       await new Promise((resolve, reject) => {
         const s1 = document.createElement('script');
@@ -84,17 +82,19 @@ async function initFCM() {
     
   } catch (err) {
     console.error('❌ [FCM] Error:', err.message);
-    alert('❌ FCM gagal: ' + err.message);
   } finally {
     fcmInit = false;
   }
 }
 
 // ====================================================
-// ALPINE.JS
+// ALPINE.JS - WAIT FOR IT TO LOAD
 // ====================================================
 
+// Tunggu Alpine.js ready
 document.addEventListener('alpine:init', () => {
+  console.log('🎨 [ALPINE] Initializing...');
+  
   Alpine.data('app', () => ({
     // State variables
     activeTab: 'beranda',
@@ -425,6 +425,8 @@ document.addEventListener('alpine:init', () => {
       }
     }
   }));
+  
+  console.log('✅ [ALPINE] Ready');
 });
 
 // ====================================================
