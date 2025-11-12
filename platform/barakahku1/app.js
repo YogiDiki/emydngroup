@@ -120,7 +120,6 @@ document.addEventListener('alpine:init', () => {
   
   Alpine.data('app', () => ({
     // Data Properties
-    _initialized: false,  // ← ADD THIS
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
@@ -159,13 +158,6 @@ document.addEventListener('alpine:init', () => {
 
     // Init Method
     async init() {
-      // ✅ GUARD: Prevent double initialization
-      if (this._initialized) {
-        console.log('⚠️ [APP] Already initialized, skipping...');
-        return;
-      }
-      this._initialized = true;
-      
       console.log('🚀 [APP] BarakahKu - Memulai aplikasi...');
       console.log('📊 [APP] Alpine.js version:', Alpine.version);
       
