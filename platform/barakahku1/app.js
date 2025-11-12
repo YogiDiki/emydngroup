@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js v27 (FINAL)
+// BarakahKu - app.js v28 (FIXED)
 // ==============================
 
 console.log('📦 [APP] Loading...');
@@ -91,11 +91,16 @@ async function initFCM() {
 // ALPINE.JS - WAIT FOR IT TO LOAD
 // ====================================================
 
-// Tunggu Alpine.js ready
-document.addEventListener('alpine:init', () => {
+function initAlpine() {
+  if (!window.Alpine) {
+    console.log('⏳ [ALPINE] Waiting...');
+    setTimeout(initAlpine, 50);
+    return;
+  }
+  
   console.log('🎨 [ALPINE] Initializing...');
   
-  Alpine.data('app', () => ({
+  window.Alpine.data('app', () => ({
     // State variables
     activeTab: 'beranda',
     showSearch: false,
@@ -427,7 +432,14 @@ document.addEventListener('alpine:init', () => {
   }));
   
   console.log('✅ [ALPINE] Ready');
-});
+}
+
+// Jalankan saat DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAlpine);
+} else {
+  initAlpine();
+}
 
 // ====================================================
 // PWA
