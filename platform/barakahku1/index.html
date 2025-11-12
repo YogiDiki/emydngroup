@@ -42,6 +42,30 @@
       padding-bottom: env(safe-area-inset-bottom);
     }
     
+/* PWA Fullscreen Fix */
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  height: 100vh;
+  height: -webkit-fill-available;
+  overflow: hidden;
+  /* Prevent bounce scroll */
+  overscroll-behavior: none;
+}
+
+/* Handle notch devices */
+@supports(padding: max(0px)) {
+  .safe-area-padding {
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+}
+
     /* Pastikan konten tidak terpotong */
     .pwa-container {
       min-height: 100vh;
