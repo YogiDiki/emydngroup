@@ -16,11 +16,9 @@ async function initFirebaseMessaging() {
       return;
     }
 
+    // ✅ Load Firebase SDK (hanya sekali)
     if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
-      
-      const oldScripts = document.querySelectorAll('script[src*="firebasejs"]');
-      oldScripts.forEach(s => s.remove());
       
       await new Promise((resolve, reject) => {
         const script1 = document.createElement('script');
@@ -43,6 +41,7 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase v8 sudah loaded');
     }
 
+    // ✅ Initialize Firebase (hanya sekali)
     if (!firebase.apps || firebase.apps.length === 0) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
@@ -57,13 +56,16 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
+    // ✅ CRITICAL: Tunggu SW ready
     const swRegistration = await navigator.serviceWorker.ready;
     console.log('✅ [FCM] Service Worker ready:', swRegistration.scope);
 
+    // ✅ Get messaging instance
     const messaging = firebase.messaging();
     messaging.useServiceWorker(swRegistration);
     console.log('✅ [FCM] Messaging menggunakan existing SW');
     
+    // ✅ CRITICAL: Request token!
     console.log('🔑 [FCM] Requesting token...');
     
     const currentToken = await messaging.getToken({ 
@@ -86,6 +88,7 @@ async function initFirebaseMessaging() {
       console.warn('⚠️ [FCM] Tidak dapat token');
     }
 
+    // ✅ Handler foreground messages
     messaging.onMessage((payload) => {
       console.log('📩 [FCM] Foreground message:', payload);
       
