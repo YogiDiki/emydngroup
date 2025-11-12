@@ -1,13 +1,11 @@
 // ==============================
-// BarakahKu - app.js v28 (FIXED)
+// BarakahKu - app.js v29 (FIXED PERMISSION)
 // ==============================
-
 console.log('📦 [APP] Loading...');
 
 // ====================================================
 // FIREBASE MESSAGING
 // ====================================================
-
 let fcmInit = false;
 
 async function initFCM() {
@@ -17,8 +15,8 @@ async function initFCM() {
   fcmInit = true;
   
   try {
-    const swReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/') 
-      || await navigator.serviceWorker.ready;
+    const swReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/')
+       || await navigator.serviceWorker.ready;
     
     await new Promise((resolve) => {
       const timeout = setTimeout(resolve, 3000);
@@ -79,7 +77,7 @@ async function initFCM() {
         });
       }
     });
-    
+  
   } catch (err) {
     console.error('❌ [FCM] Error:', err.message);
   } finally {
@@ -91,12 +89,11 @@ async function initFCM() {
 // ALPINE.JS - DEFINE DATA BEFORE ALPINE STARTS
 // ====================================================
 
-// Define Alpine data immediately - before Alpine.start()
 document.addEventListener('alpine:init', () => {
   console.log('🎨 [ALPINE] Initializing data...');
   
   Alpine.data('app', () => ({
-   // State variables
+    // State variables
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
@@ -116,6 +113,7 @@ document.addEventListener('alpine:init', () => {
     notificationStatus: 'inactive',
     loadingQuran: true,
     loadingMurottal: true,
+
     moodSuggestions: {
       sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
       senang: { ayat: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ', arti: 'Dan terhadap nikmat Tuhanmu, hendaklah kamu nyatakan', ref: 'QS. Ad-Duha: 11' },
@@ -123,6 +121,7 @@ document.addEventListener('alpine:init', () => {
       syukur: { ayat: 'لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ', arti: 'Jika kamu bersyukur, niscaya Aku akan menambah nikmat kepadamu', ref: 'QS. Ibrahim: 7' },
       lelah: { ayat: 'وَلَا تَهِنُوا وَلَا تَحْزَنُوا', arti: 'Janganlah kamu lemah dan jangan pula bersedih hati', ref: 'QS. Ali Imran: 139' }
     },
+
     checklist: [
       { id: 1, name: 'Sholat Subuh', description: 'Sholat wajib 2 rakaat', icon: '🌅', done: false },
       { id: 2, name: 'Sholat Dzuhur', description: 'Sholat wajib 4 rakaat', icon: '☀️', done: false },
@@ -138,6 +137,10 @@ document.addEventListener('alpine:init', () => {
 
     init() {
       console.log('🚀 [APP] Starting...');
+      
+      // Check notification status on load
+      this.checkNotificationStatus();
+      
       this.registerSW();
       this.loadQuran();
       this.loadDoa();
@@ -152,6 +155,22 @@ document.addEventListener('alpine:init', () => {
       }, true);
       
       console.log('✅ [APP] Ready');
+    },
+
+    // ✅ FIXED: Check notification status on init
+    checkNotificationStatus() {
+      if (!('Notification' in window)) {
+        this.notificationStatus = 'unsupported';
+        return;
+      }
+      
+      if (Notification.permission === 'granted') {
+        this.notificationStatus = 'active';
+      } else if (Notification.permission === 'denied') {
+        this.notificationStatus = 'denied';
+      } else {
+        this.notificationStatus = 'inactive';
+      }
     },
 
     async loadQuran() {
@@ -301,35 +320,92 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
+    // ✅ FIXED: Notification permission dengan delay & proper handling
     async requestNotificationPermission() {
+      // Check browser support
+      if (!('Notification' in window)) {
+        alert('❌ Browser Anda tidak mendukung notifikasi');
+        this.notificationStatus = 'unsupported';
+        return;
+      }
+
+      // Already granted
       if (Notification.permission === 'granted') {
         this.notificationStatus = 'active';
         const saved = localStorage.getItem('fcm_token');
+        
         if (saved) {
-          console.log('💾 [FCM] Token tersimpan:', JSON.parse(saved));
-          alert('✅ Notifikasi sudah aktif!\n\n🔔 Anda akan menerima notifikasi dari BarakahKu');
+          const tokenData = JSON.parse(saved);
+          console.log('💾 [FCM] Token tersimpan:', tokenData);
+          
+          // Show notification as confirmation
+          new Notification('BarakahKu', {
+            body: '✅ Notifikasi sudah aktif!\n🔔 Anda akan menerima pengingat sholat',
+            icon: '/platform/barakahku1/assets/icons/icon-192.png',
+            badge: '/platform/barakahku1/assets/icons/icon-192.png',
+            tag: 'barakahku-active'
+          });
         } else {
           await initFCM();
-          alert('✅ Notifikasi berhasil diaktifkan!\n\n🔔 Anda akan menerima notifikasi pengingat sholat dan bacaan harian');
         }
         return;
       }
-      
+
+      // Already denied
       if (Notification.permission === 'denied') {
         this.notificationStatus = 'denied';
-        return alert('❌ Izin notifikasi ditolak.\n\nSilakan aktifkan di Settings browser:\n1. Tap ikon kunci/info\n2. Pilih Permissions\n3. Aktifkan Notifications');
+        
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        
+        let instructions = '❌ Notifikasi diblokir.\n\nAktifkan di Settings:\n\n';
+        
+        if (isIOS) {
+          instructions += '📱 iOS Safari:\n1. Buka Settings > Safari\n2. Pilih Websites > Notifications\n3. Cari emydngroup.com\n4. Ubah ke "Allow"';
+        } else if (isMobile) {
+          instructions += '📱 Android Chrome:\n1. Tap ikon kunci (🔒) di address bar\n2. Pilih "Permissions"\n3. Aktifkan "Notifications"';
+        } else {
+          instructions += '💻 Desktop:\n1. Klik ikon kunci (🔒) di address bar\n2. Pilih "Site settings"\n3. Ubah Notifications ke "Allow"';
+        }
+        
+        alert(instructions);
+        return;
       }
-      
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        this.notificationStatus = 'active';
-        setTimeout(async () => {
-          await initFCM();
-          alert('✅ Notifikasi berhasil diaktifkan!\n\n🔔 Anda akan menerima notifikasi pengingat sholat dan bacaan harian');
-        }, 1000);
-      } else {
+
+      // Request permission with delay (avoid clickjacking detection)
+      try {
+        console.log('🔔 [PERMISSION] Requesting...');
+        
+        // CRITICAL: Add 500ms delay before showing permission dialog
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        const permission = await Notification.requestPermission();
+        console.log('🔔 [PERMISSION] Result:', permission);
+        
+        if (permission === 'granted') {
+          this.notificationStatus = 'active';
+          
+          // Init FCM after permission granted
+          setTimeout(async () => {
+            await initFCM();
+            
+            // Show test notification
+            new Notification('BarakahKu', {
+              body: '✅ Notifikasi berhasil diaktifkan!\n🔔 Anda akan menerima pengingat sholat dan bacaan harian',
+              icon: '/platform/barakahku1/assets/icons/icon-192.png',
+              badge: '/platform/barakahku1/assets/icons/icon-192.png',
+              tag: 'barakahku-welcome',
+              vibrate: [200, 100, 200]
+            });
+          }, 1000);
+        } else {
+          this.notificationStatus = 'denied';
+          alert('ℹ️ Izin notifikasi dibatalkan.\n\nAnda bisa mengaktifkannya nanti dari tombol notifikasi.');
+        }
+      } catch (error) {
+        console.error('❌ [PERMISSION] Error:', error);
         this.notificationStatus = 'denied';
-        alert('ℹ️ Izin notifikasi dibatalkan.\n\nAnda bisa mengaktifkannya nanti dari halaman Settings browser.');
+        alert('❌ Terjadi kesalahan saat meminta izin notifikasi.\n\nCoba refresh halaman dan ulangi lagi.');
       }
     },
 
@@ -435,7 +511,7 @@ document.addEventListener('alpine:init', () => {
       }
     }
 
-   }));
+  }));
   
   console.log('✅ [ALPINE] Data registered');
 });
