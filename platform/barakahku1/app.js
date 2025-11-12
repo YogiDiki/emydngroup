@@ -7,7 +7,16 @@ console.log('📦 [APP] Loading app.js...');
 // ------------------------------
 // Fungsi inisialisasi Firebase Messaging - SIMPLIFIED!
 // ------------------------------
+let fcmInitializing = false; // ← Guard flag
+
 async function initFirebaseMessaging() {
+  // ✅ Prevent double initialization
+  if (fcmInitializing) {
+    console.log('⚠️ [FCM] Already initializing, skipping...');
+    return;
+  }
+  fcmInitializing = true;
+  
   try {
     console.log('🔔 [FCM] Mulai inisialisasi...');
     
@@ -109,8 +118,10 @@ async function initFirebaseMessaging() {
     });
 
     console.log('✅ [FCM] Setup complete!');
+    fcmInitializing = false; // ← Reset flag
 
   } catch (error) {
+    fcmInitializing = false; // ← Reset flag on error
     console.error('❌ [FCM] Init failed:', error);
     console.error('❌ [FCM] Error code:', error.code);
     console.error('❌ [FCM] Error message:', error.message);
