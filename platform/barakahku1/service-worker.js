@@ -1,8 +1,8 @@
 // ====================================================
-// 🔥 BarakahKu - Service Worker (PWA + FCM) - v20
+// 🔥 BarakahKu - Service Worker (PWA + FCM) - v21
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v22';
+const CACHE_NAME = 'barakahku-cache-v23';
 
 const urlsToCache = [
   '/platform/barakahku1/',
@@ -13,61 +13,111 @@ const urlsToCache = [
   '/platform/barakahku1/assets/icons/icon-512.png'
 ];
 
-console.log('🚀 [SW] BarakahKu v20 starting...');
+console.log('🚀 [SW] BarakahKu v21 starting...');
 
 // ✅ FORCE SKIP WAITING
 self.skipWaiting();
 
 // ====================================================
-// FIREBASE MESSAGING
+// FIREBASE MESSAGING - IMPROVED ERROR HANDLING
 // ====================================================
 
-try {
-  importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
-  importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+let firebaseReady = false;
+let messagingInstance = null;
 
-  firebase.initializeApp({
-    apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
-    authDomain: "barakahku-app.firebaseapp.com",
-    projectId: "barakahku-app",
-    storageBucket: "barakahku-app.appspot.com",
-    messagingSenderId: "510231053293",
-    appId: "1:510231053293:web:921b9e574fc614492b5de4"
-  });
+async function initFirebase() {
+  if (firebaseReady) {
+    console.log('✅ [SW] Firebase already initialized');
+    return true;
+  }
 
-  const messaging = firebase.messaging();
-  
-  messaging.onBackgroundMessage((payload) => {
-    console.log('📩 [SW] Background message:', payload);
-    const title = payload.notification?.title || 'BarakahKu';
-    const options = {
-      body: payload.notification?.body || 'Notifikasi baru',
-      icon: '/platform/barakahku1/assets/icons/icon-192.png',
-      badge: '/platform/barakahku1/assets/icons/icon-192.png',
-      tag: 'barakahku-fcm',
-      vibrate: [200, 100, 200]
-    };
-    return self.registration.showNotification(title, options);
-  });
-  
-  console.log('✅ [SW] Firebase ready');
-} catch (err) {
-  console.warn('⚠️ [SW] Firebase init failed:', err);
+  try {
+    console.log('📦 [SW] Loading Firebase SDK...');
+    
+    // Load Firebase scripts with timeout
+    await Promise.race([
+      Promise.all([
+        new Promise((resolve, reject) => {
+          importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+          resolve();
+        }),
+        new Promise((resolve, reject) => {
+          importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+          resolve();
+        })
+      ]),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Firebase SDK timeout')), 10000)
+      )
+    ]);
+
+    console.log('✅ [SW] Firebase SDK loaded');
+
+    // Initialize Firebase
+    if (!firebase.apps || firebase.apps.length === 0) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
+        authDomain: "barakahku-app.firebaseapp.com",
+        projectId: "barakahku-app",
+        storageBucket: "barakahku-app.appspot.com",
+        messagingSenderId: "510231053293",
+        appId: "1:510231053293:web:921b9e574fc614492b5de4"
+      });
+      console.log('✅ [SW] Firebase app initialized');
+    }
+
+    // Get messaging instance
+    messagingInstance = firebase.messaging();
+    
+    // Setup background message handler
+    messagingInstance.onBackgroundMessage((payload) => {
+      console.log('📩 [SW] Background message:', payload);
+      const title = payload.notification?.title || 'BarakahKu';
+      const options = {
+        body: payload.notification?.body || 'Notifikasi baru',
+        icon: '/platform/barakahku1/assets/icons/icon-192.png',
+        badge: '/platform/barakahku1/assets/icons/icon-192.png',
+        tag: 'barakahku-fcm',
+        vibrate: [200, 100, 200],
+        data: payload.data || {}
+      };
+      return self.registration.showNotification(title, options);
+    });
+
+    firebaseReady = true;
+    console.log('✅ [SW] Firebase Messaging ready');
+    return true;
+
+  } catch (err) {
+    console.error('❌ [SW] Firebase init failed:', err);
+    firebaseReady = false;
+    return false;
+  }
 }
+
+// Initialize Firebase immediately
+initFirebase().then(success => {
+  if (success) {
+    console.log('✅ [SW] Firebase initialized successfully');
+  } else {
+    console.warn('⚠️ [SW] Firebase initialization failed');
+  }
+});
 
 // ====================================================
 // INSTALL
 // ====================================================
 
 self.addEventListener('install', (event) => {
-  console.log('✅ [SW] Installing v20...');
+  console.log('✅ [SW] Installing v21...');
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache);
-    }).then(() => {
-      console.log('✅ [SW] Cache populated');
-      return self.skipWaiting();
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(urlsToCache))
+      .then(() => {
+        console.log('✅ [SW] Cache populated');
+        return self.skipWaiting();
+      })
+      .catch(err => console.error('❌ [SW] Install error:', err))
   );
 });
 
@@ -76,20 +126,28 @@ self.addEventListener('install', (event) => {
 // ====================================================
 
 self.addEventListener('activate', (event) => {
-  console.log('✅ [SW] Activating v20...');
+  console.log('✅ [SW] Activating v21...');
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME)
-           .map((key) => {
-             console.log('🗑️ [SW] Deleting old cache:', key);
-             return caches.delete(key);
-           })
-      );
-    }).then(() => {
-      console.log('✅ [SW] Claiming clients');
-      return self.clients.claim();
+    Promise.all([
+      // Clean old caches
+      caches.keys().then((keys) => {
+        return Promise.all(
+          keys.filter((key) => key !== CACHE_NAME)
+             .map((key) => {
+               console.log('🗑️ [SW] Deleting old cache:', key);
+               return caches.delete(key);
+             })
+        );
+      }),
+      // Claim clients
+      self.clients.claim()
+    ])
+    .then(() => {
+      console.log('✅ [SW] Activated and claiming clients');
+      // Ensure Firebase is ready after activation
+      return initFirebase();
     })
+    .catch(err => console.error('❌ [SW] Activate error:', err))
   );
 });
 
@@ -170,14 +228,15 @@ self.addEventListener('notificationclick', (event) => {
   const url = event.notification.data?.url || '/platform/barakahku1';
   
   event.waitUntil(
-    clients.matchAll({ type: 'window' }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes('/platform/barakahku1') && 'focus' in client) {
-          return client.focus();
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url.includes('/platform/barakahku1') && 'focus' in client) {
+            return client.focus();
+          }
         }
-      }
-      return clients.openWindow(url);
-    })
+        return clients.openWindow(url);
+      })
   );
 });
 
@@ -186,9 +245,18 @@ self.addEventListener('notificationclick', (event) => {
 // ====================================================
 
 self.addEventListener('message', (event) => {
+  console.log('📨 [SW] Message received:', event.data);
+  
   if (event.data?.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
+  
+  if (event.data?.type === 'CHECK_FIREBASE') {
+    event.ports[0].postMessage({ 
+      ready: firebaseReady,
+      hasMessaging: !!messagingInstance
+    });
+  }
 });
 
-console.log('✅ [SW] v20 ready');
+console.log('✅ [SW] v21 ready');

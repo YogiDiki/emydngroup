@@ -1,18 +1,19 @@
 // ==============================
-// BarakahKu - app.js (SIMPLE FCM!)
+// BarakahKu - app.js (FIXED FCM!)
 // ==============================
 
 console.log('📦 [APP] Loading app.js...');
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging - SIMPLIFIED!
+// Fungsi inisialisasi Firebase Messaging - ROBUST VERSION!
 // ------------------------------
-let fcmInitializing = false; // ← Guard flag
+let fcmInitializing = false;
+let fcmInitialized = false;
 
 async function initFirebaseMessaging() {
   // ✅ Prevent double initialization
-  if (fcmInitializing) {
-    console.log('⚠️ [FCM] Already initializing, skipping...');
+  if (fcmInitializing || fcmInitialized) {
+    console.log('⚠️ [FCM] Already initializing/initialized, skipping...');
     return;
   }
   fcmInitializing = true;
@@ -22,41 +23,83 @@ async function initFirebaseMessaging() {
     
     if (Notification.permission !== 'granted') {
       console.log('⚠️ [FCM] Notifikasi belum diizinkan');
+      fcmInitializing = false;
       return;
     }
 
-    // ✅ Load Firebase SDK
+    // ✅ STEP 1: Wait for Service Worker to be FULLY ready
+    console.log('⏳ [FCM] Waiting for Service Worker...');
+    const swRegistration = await navigator.serviceWorker.ready;
+    console.log('✅ [FCM] SW Ready! Scope:', swRegistration.scope);
+    
+    // Give SW extra time to initialize Firebase
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Check if SW has Firebase ready
+    console.log('🔍 [FCM] Checking SW Firebase status...');
+    try {
+      const messageChannel = new MessageChannel();
+      const checkPromise = new Promise((resolve) => {
+        messageChannel.port1.onmessage = (event) => {
+          console.log('📨 [FCM] SW status:', event.data);
+          resolve(event.data);
+        };
+      });
+      
+      swRegistration.active.postMessage(
+        { type: 'CHECK_FIREBASE' },
+        [messageChannel.port2]
+      );
+      
+      const status = await Promise.race([
+        checkPromise,
+        new Promise(resolve => setTimeout(() => resolve({ ready: false }), 2000))
+      ]);
+      
+      if (!status.ready) {
+        console.warn('⚠️ [FCM] SW Firebase not ready yet, continuing anyway...');
+      }
+    } catch (err) {
+      console.warn('⚠️ [FCM] Could not check SW status:', err);
+    }
+
+    // ✅ STEP 2: Load Firebase SDK
     if (!window.firebase || !window.firebase.messaging) {
       console.log('📦 [FCM] Loading Firebase v8 SDK...');
       
-      await new Promise((resolve, reject) => {
-        const script1 = document.createElement('script');
-        script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
-        script1.onload = () => {
-          console.log('✅ [FCM] Firebase App v8 loaded');
-          const script2 = document.createElement('script');
-          script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
-          script2.onload = () => {
-            console.log('✅ [FCM] Firebase Messaging v8 loaded');
-            resolve();
+      await Promise.race([
+        new Promise((resolve, reject) => {
+          const script1 = document.createElement('script');
+          script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
+          script1.onload = () => {
+            console.log('✅ [FCM] Firebase App v8 loaded');
+            const script2 = document.createElement('script');
+            script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
+            script2.onload = () => {
+              console.log('✅ [FCM] Firebase Messaging v8 loaded');
+              resolve();
+            };
+            script2.onerror = () => reject(new Error('Failed to load Firebase Messaging'));
+            document.head.appendChild(script2);
           };
-          script2.onerror = reject;
-          document.head.appendChild(script2);
-        };
-        script1.onerror = reject;
-        document.head.appendChild(script1);
-      });
+          script1.onerror = () => reject(new Error('Failed to load Firebase App'));
+          document.head.appendChild(script1);
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Firebase SDK load timeout')), 15000)
+        )
+      ]);
     } else {
       console.log('✅ [FCM] Firebase v8 sudah loaded');
     }
 
-    // ✅ Initialize Firebase
+    // ✅ STEP 3: Initialize Firebase App
     if (!firebase.apps || firebase.apps.length === 0) {
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
         authDomain: "barakahku-app.firebaseapp.com",
         projectId: "barakahku-app",
-        storageBucket: "barakahku-app.firebasestorage.app",
+        storageBucket: "barakahku-app.appspot.com",
         messagingSenderId: "510231053293",
         appId: "1:510231053293:web:921b9e574fc614492b5de4"
       });
@@ -65,20 +108,25 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ V2: Gunakan SW yang sudah ada (bukan default Firebase SW)
+    // ✅ STEP 4: Get Messaging instance
+    console.log('📱 [FCM] Getting messaging instance...');
+    const messaging = firebase.messaging();
+    console.log('✅ [FCM] Messaging instance created');
+    
+    // ✅ STEP 5: Get token with timeout protection
     console.log('🔑 [FCM] Getting token with custom SW...');
     
-    const messaging = firebase.messaging();
-    
-    // ✅ CRITICAL: Tunggu dan gunakan SW yang sudah terdaftar
-    const swRegistration = await navigator.serviceWorker.ready;
-    console.log('✅ [FCM] SW Ready! Scope:', swRegistration.scope);
-    console.log('✅ [FCM] SW Active:', swRegistration.active);
-    
-    const currentToken = await messaging.getToken({ 
+    const tokenPromise = messaging.getToken({ 
       vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
       serviceWorkerRegistration: swRegistration
     });
+    
+    const currentToken = await Promise.race([
+      tokenPromise,
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Token request timeout after 15s')), 15000)
+      )
+    ]);
     
     if (currentToken) {
       console.log('🔑 [FCM] Token berhasil!');
@@ -92,14 +140,16 @@ async function initFirebaseMessaging() {
       localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
       console.log('💾 [FCM] Token tersimpan');
       
-      alert('🎉 FCM Token berhasil!\n\nToken: ' + currentToken.substring(0, 50) + '...\n\nAnda akan menerima notifikasi untuk:\n• Pengingat sholat\n• Notifikasi ibadah\n• Pesan motivasi');
+      alert('🎉 FCM Token berhasil!\n\n✅ Token: ' + currentToken.substring(0, 50) + '...\n\n📲 Anda akan menerima notifikasi untuk:\n• Pengingat sholat\n• Notifikasi ibadah\n• Pesan motivasi\n\n💡 Token telah disimpan di localStorage');
+      
+      fcmInitialized = true;
       
     } else {
       console.warn('⚠️ [FCM] Tidak dapat token');
-      alert('⚠️ Token tidak ditemukan.\n\nPastikan:\n1. Service Worker aktif\n2. Notifikasi diizinkan\n3. Refresh dan coba lagi');
+      alert('⚠️ Token tidak ditemukan.\n\nPastikan:\n1. Service Worker aktif\n2. Notifikasi diizinkan\n3. Refresh dan coba lagi\n\n🔧 Cek Console untuk detail error');
     }
 
-    // ✅ Handler foreground messages
+    // ✅ STEP 6: Handler foreground messages
     messaging.onMessage((payload) => {
       console.log('📩 [FCM] Foreground message:', payload);
       
@@ -112,31 +162,38 @@ async function initFirebaseMessaging() {
           icon: '/platform/barakahku1/assets/icons/icon-192.png',
           badge: '/platform/barakahku1/assets/icons/icon-192.png',
           tag: 'barakahku-fcm',
-          vibrate: [200, 100, 200]
+          vibrate: [200, 100, 200],
+          data: payload.data || {}
         });
       }
     });
 
     console.log('✅ [FCM] Setup complete!');
-    fcmInitializing = false; // ← Reset flag
 
   } catch (error) {
-    fcmInitializing = false; // ← Reset flag on error
     console.error('❌ [FCM] Init failed:', error);
+    console.error('❌ [FCM] Error name:', error.name);
     console.error('❌ [FCM] Error code:', error.code);
     console.error('❌ [FCM] Error message:', error.message);
+    console.error('❌ [FCM] Stack:', error.stack);
     
-    let errorMsg = 'Gagal menginisialisasi notifikasi.\n\n';
+    let errorMsg = '❌ Gagal menginisialisasi notifikasi.\n\n';
     
-    if (error.code === 'messaging/failed-service-worker-registration') {
-      errorMsg += '❌ Service Worker gagal.\n\nSolusi:\n1. Pastikan HTTPS aktif\n2. Cek console untuk error SW\n3. Hard refresh (Ctrl+Shift+R)';
+    if (error.message.includes('timeout')) {
+      errorMsg += '⏱️ Timeout!\n\nKemungkinan:\n1. Koneksi internet lambat\n2. Service Worker belum siap\n3. Firebase server lambat\n\n💡 Solusi:\n• Coba lagi dalam beberapa detik\n• Pastikan koneksi internet stabil\n• Hard refresh (Ctrl+Shift+R)';
+    } else if (error.code === 'messaging/failed-service-worker-registration') {
+      errorMsg += '❌ Service Worker gagal.\n\nSolusi:\n1. Pastikan HTTPS aktif\n2. Cek console untuk error SW\n3. Hard refresh (Ctrl+Shift+R)\n4. Clear cache browser';
+    } else if (error.code === 'messaging/token-subscribe-failed') {
+      errorMsg += '❌ Gagal subscribe token.\n\nSolusi:\n1. Periksa VAPID key\n2. Periksa Firebase config\n3. Coba unregister SW lalu register ulang';
     } else if (error.message && error.message.includes('supported')) {
       errorMsg += '❌ Browser tidak mendukung notifikasi.\n\nGunakan:\n• Chrome/Edge versi terbaru\n• Firefox versi terbaru';
     } else {
-      errorMsg += 'Error: ' + error.message + '\n\nCoba:\n1. Refresh halaman\n2. Clear cache\n3. Aktifkan ulang notifikasi';
+      errorMsg += '🔧 Error: ' + error.message + '\n\n💡 Coba:\n1. Refresh halaman\n2. Clear cache & cookies\n3. Aktifkan ulang notifikasi\n4. Lihat Console untuk detail';
     }
     
     alert(errorMsg);
+  } finally {
+    fcmInitializing = false;
   }
 }
 
@@ -544,62 +601,96 @@ document.addEventListener('alpine:init', () => {
       if (Notification.permission === 'granted') {
         const saved = localStorage.getItem('fcm_token');
         if (saved) {
-          alert('✅ Notifikasi sudah aktif!\n\nToken tersimpan dan siap digunakan.');
-          console.log('Token:', JSON.parse(saved));
+          const tokenInfo = JSON.parse(saved);
+          alert('✅ Notifikasi sudah aktif!\n\n📋 Token: ' + tokenInfo.token.substring(0, 50) + '...\n\n⏰ Terakhir update: ' + tokenInfo.timestamp);
+          console.log('💾 [FCM] Token tersimpan:', tokenInfo);
         } else {
-          alert('⏳ Menginisialisasi notifikasi...');
+          alert('⏳ Token belum ada. Menginisialisasi notifikasi...');
           await initFirebaseMessaging();
         }
         return;
       }
       
       if (Notification.permission === 'denied') {
-        alert('❌ Izin ditolak.\n\nAktifkan dari:\n1. Klik gembok di address bar\n2. Izinkan Notifications\n3. Refresh halaman');
+        alert('❌ Izin notifikasi ditolak.\n\n🔧 Cara mengaktifkan:\n\n1. Klik ikon gembok 🔒 di address bar\n2. Cari "Notifications" atau "Notifikasi"\n3. Ubah ke "Allow" atau "Izinkan"\n4. Refresh halaman ini\n5. Klik tombol notifikasi lagi');
         return;
       }
 
       try {
+        console.log('🔔 [APP] Requesting notification permission...');
         const permission = await Notification.requestPermission();
         
         if (permission === 'granted') {
-          alert('✅ Izin diberikan!\n\nSedang setup sistem notifikasi...');
+          alert('✅ Izin notifikasi diberikan!\n\n⏳ Sedang setup Firebase Cloud Messaging...\n\nProses ini mungkin memakan waktu 5-15 detik.');
           
+          // Give user time to read the alert
           setTimeout(async () => {
             await initFirebaseMessaging();
             
+            // Check if token was saved successfully
             const saved = localStorage.getItem('fcm_token');
             if (saved) {
-              alert('🎉 Notifikasi aktif!\n\nAnda akan menerima:\n• Pengingat sholat\n• Notifikasi ibadah\n• Pesan motivasi');
+              console.log('✅ [APP] FCM setup berhasil');
+            } else {
+              console.warn('⚠️ [APP] FCM setup gagal, coba manual');
+              alert('⚠️ Setup FCM belum selesai.\n\nSilakan cek Console untuk detail error.\n\nCoba:\n1. Refresh halaman\n2. Klik tombol notifikasi lagi');
             }
           }, 2000);
+        } else if (permission === 'denied') {
+          alert('❌ Anda menolak izin notifikasi.\n\nUntuk mengaktifkan kembali, ikuti langkah di atas.');
+        } else {
+          alert('⚠️ Izin notifikasi dibatalkan.\n\nSilakan coba lagi jika ingin menerima notifikasi.');
         }
       } catch (err) {
-        console.error('❌ [FCM] Error permission:', err);
-        alert('❌ Gagal: ' + err.message);
+        console.error('❌ [APP] Error permission:', err);
+        alert('❌ Gagal meminta izin: ' + err.message + '\n\nSilakan coba lagi atau cek Console untuk detail.');
       }
     },
 
     async registerServiceWorker() {
       if (!('serviceWorker' in navigator)) {
         console.warn('⚠️ [SW] Service Worker tidak didukung');
+        alert('⚠️ Browser Anda tidak mendukung Service Worker.\n\nGunakan browser modern:\n• Chrome 40+\n• Firefox 44+\n• Safari 11.1+\n• Edge 17+');
         return;
       }
 
       try {
+        console.log('📝 [SW] Registering Service Worker...');
+        
         const registration = await navigator.serviceWorker.register(
           '/platform/barakahku1/service-worker.js',
-          { scope: '/platform/barakahku1/' }
+          { 
+            scope: '/platform/barakahku1/',
+            updateViaCache: 'none' // Force fresh SW checks
+          }
         );
         
         console.log('✅ [SW] Service Worker registered');
         console.log('📍 [SW] Scope:', registration.scope);
+        console.log('🔄 [SW] Update check:', registration.update ? 'Available' : 'Not available');
         
-        await navigator.serviceWorker.ready;
+        // Wait for SW to be ready
+        const readyRegistration = await navigator.serviceWorker.ready;
         console.log('✅ [SW] Service Worker ready');
-        console.log('💡 [SW] FCM akan diinit saat user request');
+        console.log('💡 [SW] Active:', readyRegistration.active ? 'Yes' : 'No');
+        console.log('💡 [SW] FCM akan diinit saat user klik tombol notifikasi');
+        
+        // Handle SW updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          console.log('🔄 [SW] Update ditemukan');
+          
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('✅ [SW] Update tersedia, reload untuk update');
+              // Optionally notify user about update
+            }
+          });
+        });
         
       } catch (err) {
-        console.error('❌ [SW] Failed:', err);
+        console.error('❌ [SW] Registration failed:', err);
+        alert('❌ Service Worker gagal register.\n\nError: ' + err.message + '\n\nPastikan:\n1. HTTPS aktif\n2. Browser mendukung SW\n3. Path file benar');
       }
     },
 
@@ -775,4 +866,31 @@ window.addEventListener('appinstalled', () => {
   console.log('✅ [PWA] Aplikasi terinstall');
 });
 
+// ==============================
+// DEBUG: Check SW and FCM status
+// ==============================
+window.checkFCMStatus = async function() {
+  console.log('=== FCM Status Check ===');
+  console.log('Notification permission:', Notification.permission);
+  console.log('Service Worker support:', 'serviceWorker' in navigator);
+  
+  if ('serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+    console.log('SW Registration:', registration);
+    console.log('SW Active:', registration?.active);
+    console.log('SW Scope:', registration?.scope);
+  }
+  
+  const token = localStorage.getItem('fcm_token');
+  console.log('Saved FCM token:', token ? JSON.parse(token) : 'None');
+  
+  console.log('Firebase loaded:', typeof firebase !== 'undefined');
+  if (typeof firebase !== 'undefined') {
+    console.log('Firebase apps:', firebase.apps?.length || 0);
+  }
+  
+  console.log('========================');
+};
+
 console.log('✅ [APP] app.js loaded successfully');
+console.log('💡 [DEBUG] Ketik window.checkFCMStatus() di Console untuk cek status FCM')
