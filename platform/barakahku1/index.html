@@ -425,6 +425,16 @@
         </div>
       </template>
 
+      <!-- Tambahkan setelah button notifikasi -->
+<div x-show="notificationStatus === 'active'" 
+     x-transition
+     class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 z-50">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+  </svg>
+  <span>🔔 Notifikasi aktif!</span>
+</div>
+
       <!-- Qur'an -->
       <template x-if="activeTab === 'quran'">
         <div class="p-5">
