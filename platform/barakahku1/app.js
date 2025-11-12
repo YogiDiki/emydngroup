@@ -1,17 +1,16 @@
 // ==============================
-// BarakahKu - app.js (FIXED FCM v2!)
+// BarakahKu - app.js (FIXED FCM v3!)
 // ==============================
 
 console.log('📦 [APP] Loading app.js...');
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging - SUPER ROBUST!
+// Fungsi inisialisasi Firebase Messaging - ULTRA ROBUST!
 // ------------------------------
 let fcmInitializing = false;
 let fcmInitialized = false;
 
 async function initFirebaseMessaging() {
-  // ✅ Prevent double initialization
   if (fcmInitializing || fcmInitialized) {
     console.log('⚠️ [FCM] Already initializing/initialized, skipping...');
     return;
@@ -27,42 +26,65 @@ async function initFirebaseMessaging() {
       return;
     }
 
-    // ✅ STEP 1: Wait for Service Worker to be FULLY ready - INCREASED TIMEOUT
-    console.log('⏳ [FCM] Waiting for Service Worker (timeout: 10s)...');
-    const swRegistration = await Promise.race([
-      navigator.serviceWorker.ready,
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('SW ready timeout after 10s')), 10000) // ✅ Increased to 10s
-      )
-    ]);
-    console.log('✅ [FCM] SW Ready! Scope:', swRegistration.scope);
-    console.log('✅ [FCM] SW Active state:', swRegistration.active?.state);
+    // ✅ STEP 1: Get SW Registration directly
+    console.log('⏳ [FCM] Getting Service Worker registration...');
+    const swRegistration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
     
-    // ✅ Wait for SW to fully initialize Firebase (longer wait)
-    console.log('⏳ [FCM] Waiting 2s for SW Firebase init...');
-    await new Promise(resolve => setTimeout(resolve, 2000)); // ✅ Increased to 2s
-    console.log('✅ [FCM] Wait complete, proceeding...');
+    if (!swRegistration) {
+      throw new Error('Service Worker belum terdaftar. Refresh halaman dan coba lagi.');
+    }
+    
+    console.log('✅ [FCM] SW Registration found:', swRegistration.scope);
+    console.log('📊 [FCM] SW Active:', swRegistration.active?.state);
+    
+    // Wait for SW to be active
+    if (!swRegistration.active && (swRegistration.installing || swRegistration.waiting)) {
+      console.log('⏳ [FCM] Waiting for SW to activate (max 15s)...');
+      
+      await Promise.race([
+        new Promise((resolve) => {
+          const checkActive = () => {
+            if (swRegistration.active) {
+              console.log('✅ [FCM] SW is now active');
+              resolve();
+            } else {
+              setTimeout(checkActive, 100);
+            }
+          };
+          checkActive();
+        }),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('SW activation timeout after 15s')), 15000)
+        )
+      ]);
+    } else if (!swRegistration.active) {
+      throw new Error('Service Worker tidak aktif. Refresh halaman dan coba lagi.');
+    }
+    
+    console.log('✅ [FCM] SW is active and ready');
+    
+    // Give SW extra time to initialize Firebase
+    console.log('⏳ [FCM] Waiting 3s for SW Firebase initialization...');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    console.log('✅ [FCM] Wait complete');
 
     // ✅ STEP 2: Load Firebase SDK v8 (compat mode)
-    console.log('📦 [FCM] Starting Firebase SDK v8 load...');
+    console.log('📦 [FCM] Loading Firebase SDK v8...');
     if (!window.firebase || !window.firebase.messaging) {
-      console.log('📦 [FCM] Firebase not loaded, loading v8 SDK now...');
+      console.log('📥 [FCM] Firebase not loaded, loading now...');
       
       try {
         await Promise.race([
           new Promise((resolve, reject) => {
-            console.log('📥 [FCM] Loading firebase-app.js v8...');
             const script1 = document.createElement('script');
             script1.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js';
             script1.onload = () => {
               console.log('✅ [FCM] firebase-app.js v8 loaded');
               
-              console.log('📥 [FCM] Loading firebase-messaging.js v8...');
               const script2 = document.createElement('script');
               script2.src = 'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js';
               script2.onload = () => {
                 console.log('✅ [FCM] firebase-messaging.js v8 loaded');
-                console.log('✅ [FCM] Firebase SDK v8 complete');
                 resolve();
               };
               script2.onerror = (e) => {
@@ -77,15 +99,12 @@ async function initFirebaseMessaging() {
             };
             document.head.appendChild(script1);
           }),
-          new Promise((_, reject) => {
-            setTimeout(() => {
-              console.error('⏱️ [FCM] SDK load timeout!');
-              reject(new Error('Firebase SDK load timeout after 20s'));
-            }, 20000); // ✅ Increased timeout
-          })
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Firebase SDK load timeout after 20s')), 20000)
+          )
         ]);
         
-        console.log('✅ [FCM] Firebase SDK v8 loaded successfully');
+        console.log('✅ [FCM] Firebase SDK v8 loaded');
       } catch (err) {
         console.error('❌ [FCM] Firebase SDK load error:', err);
         throw err;
@@ -94,15 +113,14 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase SDK already loaded');
     }
 
-    // ✅ STEP 3: Initialize Firebase App with CORRECT config
-    console.log('🔧 [FCM] Checking Firebase app...');
+    // ✅ STEP 3: Initialize Firebase App
+    console.log('🔧 [FCM] Initializing Firebase app...');
     if (!firebase.apps || firebase.apps.length === 0) {
-      console.log('🔧 [FCM] Initializing Firebase app with correct config...');
       firebase.initializeApp({
         apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
         authDomain: "barakahku-app.firebaseapp.com",
         projectId: "barakahku-app",
-        storageBucket: "barakahku-app.firebasestorage.app", // ✅ FIXED: Updated URL
+        storageBucket: "barakahku-app.firebasestorage.app",
         messagingSenderId: "510231053293",
         appId: "1:510231053293:web:921b9e574fc614492b5de4"
       });
@@ -114,28 +132,26 @@ async function initFirebaseMessaging() {
     console.log('📊 [FCM] Firebase apps count:', firebase.apps.length);
 
     // ✅ STEP 4: Get Messaging instance
-    console.log('📱 [FCM] Getting messaging instance...');
+    console.log('📱 [FCM] Creating messaging instance...');
     const messaging = firebase.messaging();
     console.log('✅ [FCM] Messaging instance created');
     
-    // ✅ STEP 5: Get token with increased timeout
-    console.log('🔑 [FCM] Getting token with custom SW...');
+    // ✅ STEP 5: Get token
+    console.log('🔑 [FCM] Requesting FCM token...');
     console.log('🔑 [FCM] VAPID Key:', 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM');
     
-    const tokenPromise = messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-      serviceWorkerRegistration: swRegistration
-    });
-    
     const currentToken = await Promise.race([
-      tokenPromise,
+      messaging.getToken({ 
+        vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+        serviceWorkerRegistration: swRegistration
+      }),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Token request timeout after 20s')), 20000) // ✅ Increased timeout
+        setTimeout(() => reject(new Error('Token request timeout after 25s')), 25000)
       )
     ]);
     
     if (currentToken) {
-      console.log('🔑 [FCM] Token berhasil!');
+      console.log('🔑 [FCM] Token berhasil didapatkan!');
       console.log('📋 Token:', currentToken);
       
       const tokenInfo = {
@@ -144,15 +160,15 @@ async function initFirebaseMessaging() {
         platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
       };
       localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
-      console.log('💾 [FCM] Token tersimpan');
+      console.log('💾 [FCM] Token tersimpan di localStorage');
       
       alert('🎉 FCM Token berhasil!\n\n✅ Token: ' + currentToken.substring(0, 50) + '...\n\n📲 Anda akan menerima notifikasi untuk:\n• Pengingat sholat\n• Notifikasi ibadah\n• Pesan motivasi\n\n💡 Token telah disimpan di localStorage');
       
       fcmInitialized = true;
       
     } else {
-      console.warn('⚠️ [FCM] Tidak dapat token');
-      alert('⚠️ Token tidak ditemukan.\n\nPastikan:\n1. Service Worker aktif\n2. Notifikasi diizinkan\n3. Refresh dan coba lagi\n\n🔧 Cek Console untuk detail error');
+      console.warn('⚠️ [FCM] Token tidak didapatkan');
+      alert('⚠️ Token tidak ditemukan.\n\nPastikan:\n1. Service Worker aktif\n2. Notifikasi diizinkan\n3. Refresh dan coba lagi');
     }
 
     // ✅ STEP 6: Handler foreground messages
@@ -174,7 +190,7 @@ async function initFirebaseMessaging() {
       }
     });
 
-    console.log('✅ [FCM] Setup complete!');
+    console.log('✅ [FCM] Setup lengkap!');
 
   } catch (error) {
     console.error('❌ [FCM] Init failed:', error);
@@ -185,18 +201,18 @@ async function initFirebaseMessaging() {
     
     let errorMsg = '❌ Gagal menginisialisasi notifikasi.\n\n';
     
-    if (error.message.includes('SW ready timeout')) {
-      errorMsg += '⏱️ Service Worker Timeout!\n\nKemungkinan:\n1. Service Worker lambat/stuck\n2. Koneksi internet lambat\n3. Browser membatasi SW\n\n💡 Solusi:\n• Hard refresh (Ctrl+Shift+R)\n• Unregister SW di DevTools > Application > Service Workers\n• Clear cache & cookies\n• Restart browser\n• Coba di browser lain (Chrome/Firefox)';
+    if (error.message.includes('belum terdaftar') || error.message.includes('tidak aktif')) {
+      errorMsg += '🔧 Service Worker Error!\n\n' + error.message + '\n\n💡 Solusi:\n1. Hard refresh (Ctrl+Shift+R)\n2. Clear cache browser\n3. Tutup dan buka tab lagi\n4. Cek Console untuk detail error SW';
+    } else if (error.message.includes('activation timeout')) {
+      errorMsg += '⏱️ Service Worker Timeout!\n\nSW terlalu lama aktivasi.\n\n💡 Solusi:\n1. Refresh halaman\n2. Tunggu beberapa detik\n3. Coba lagi\n4. Jika masih gagal, clear cache & restart browser';
     } else if (error.message.includes('timeout')) {
-      errorMsg += '⏱️ Timeout!\n\nKemungkinan:\n1. Koneksi internet lambat\n2. Firebase server lambat\n3. Service Worker belum siap\n\n💡 Solusi:\n• Coba lagi dalam beberapa detik\n• Pastikan koneksi internet stabil\n• Hard refresh (Ctrl+Shift+R)';
+      errorMsg += '⏱️ Timeout!\n\nProses terlalu lama.\n\n💡 Solusi:\n• Cek koneksi internet\n• Refresh dan coba lagi\n• Tunggu beberapa saat';
     } else if (error.code === 'messaging/failed-service-worker-registration') {
-      errorMsg += '❌ Service Worker gagal.\n\nSolusi:\n1. Pastikan HTTPS aktif\n2. Cek console untuk error SW\n3. Hard refresh (Ctrl+Shift+R)\n4. Clear cache browser';
+      errorMsg += '❌ Service Worker gagal.\n\nSolusi:\n1. Pastikan HTTPS aktif\n2. Hard refresh (Ctrl+Shift+R)\n3. Clear cache browser';
     } else if (error.code === 'messaging/token-subscribe-failed') {
-      errorMsg += '❌ Gagal subscribe token.\n\nSolusi:\n1. Periksa VAPID key\n2. Periksa Firebase config\n3. Coba unregister SW lalu register ulang';
-    } else if (error.message && error.message.includes('supported')) {
-      errorMsg += '❌ Browser tidak mendukung notifikasi.\n\nGunakan:\n• Chrome/Edge versi terbaru\n• Firefox versi terbaru';
+      errorMsg += '❌ Gagal subscribe token.\n\nSolusi:\n1. Periksa VAPID key\n2. Periksa Firebase config\n3. Coba unregister SW di DevTools';
     } else {
-      errorMsg += '🔧 Error: ' + error.message + '\n\n💡 Coba:\n1. Refresh halaman\n2. Clear cache & cookies\n3. Aktifkan ulang notifikasi\n4. Lihat Console untuk detail';
+      errorMsg += '🔧 Error: ' + error.message + '\n\n💡 Coba:\n1. Ketik window.checkFCMStatus() di Console\n2. Lihat log untuk detail\n3. Refresh halaman';
     }
     
     alert(errorMsg);
@@ -304,7 +320,6 @@ document.addEventListener('alpine:init', () => {
         }
         
         const data = await res.json();
-        console.log('📦 [API] Response received:', data);
         
         if (!data || !data.data || !Array.isArray(data.data)) {
           throw new Error('Invalid response structure');
@@ -319,225 +334,6 @@ document.addEventListener('alpine:init', () => {
         
         console.log(`✅ [APP] ${this.quran.length} surah dimuat`);
       } catch (err) {
-        console.error('❌ [APP] Error load Quran:', err);
-        console.error('Stack:', err.stack);
-        this.quran = [
-          { nomor: 1, namaLatin: 'Al-Fatihah', arti: 'Pembukaan', jumlahAyat: 7 }
-        ];
-      }
-    },
-
-    async loadSurah(nomor) {
-      try {
-        console.log(`📖 [API] Buka surah ${nomor}...`);
-        const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
-        
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        
-        const data = await res.json();
-        console.log('📦 [API] Surah data:', data);
-        
-        this.currentSurah = {
-          nomor: nomor,
-          namaLatin: data.data.namaLatin,
-          ayat: data.data.ayat.map(a => ({
-            nomorAyat: a.nomorAyat,
-            arab: a.teksArab,
-            latin: a.teksLatin,
-            teks: a.teksIndonesia
-          }))
-        };
-        
-        this.lastRead = {
-          surah: nomor,
-          namaLatin: data.data.namaLatin,
-          ayat: 1,
-          timestamp: new Date().toLocaleString('id-ID')
-        };
-        localStorage.setItem('lastRead', JSON.stringify(this.lastRead));
-        
-        console.log(`✅ [APP] Surah ${data.data.namaLatin} dimuat`);
-        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-      } catch (err) {
-        console.error('❌ [APP] Error load surah:', err);
-      }
-    },
-
-    loadDoa() {
-      console.log('🙏 [APP] Memuat doa...');
-      this.doaList = [
-        {
-          id: 1,
-          judul: 'Doa Sebelum Makan',
-          arab: 'بِسْمِ اللهِ وَعَلَى بَرَكَةِ اللهِ',
-          latin: 'Bismillahi wa \'ala barakatillah',
-          terjemah: 'Dengan menyebut nama Allah dan atas berkah Allah'
-        },
-        {
-          id: 2,
-          judul: 'Doa Sesudah Makan',
-          arab: 'اَلْحَمْدُ ِللهِ الَّذِىْ اَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِيْنَ',
-          latin: 'Alhamdulillahilladzi ath\'amana wasaqona waja\'alana muslimin',
-          terjemah: 'Segala puji bagi Allah yang telah memberi kami makan dan minum serta menjadikan kami muslim'
-        },
-        {
-          id: 3,
-          judul: 'Doa Bangun Tidur',
-          arab: 'اَلْحَمْدُ ِللهِ الَّذِيْ اَحْيَانَا بَعْدَمَآ اَمَاتَنَا وَاِلَيْهِ النُّشُوْرُ',
-          latin: 'Alhamdu lillahil ladzi ahyana ba\'da ma amatana wa ilaihin nusyur',
-          terjemah: 'Segala puji bagi Allah yang telah menghidupkan kami sesudah kami mati dan hanya kepada-Nya kami kembali'
-        },
-        {
-          id: 4,
-          judul: 'Doa Sebelum Tidur',
-          arab: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
-          latin: 'Bismika Allahumma amuutu wa ahyaa',
-          terjemah: 'Dengan nama-Mu ya Allah aku mati dan aku hidup'
-        },
-        {
-          id: 5,
-          judul: 'Doa Masuk Kamar Mandi',
-          arab: 'اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِِ وَالْخَبَائِثِ',
-          latin: 'Allahumma inni a\'udzu bika minal khubutsi wal khaba\'its',
-          terjemah: 'Ya Allah, aku berlindung kepada-Mu dari godaan setan laki-laki dan perempuan'
-        },
-        {
-          id: 6,
-          judul: 'Doa Keluar Kamar Mandi',
-          arab: 'غُفْرَانَكَ',
-          latin: 'Ghufraanaka',
-          terjemah: 'Aku mohon ampunan-Mu'
-        },
-        {
-          id: 7,
-          judul: 'Doa Masuk Masjid',
-          arab: 'اَللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ',
-          latin: 'Allahummaftah lii abwaaba rahmatika',
-          terjemah: 'Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu'
-        },
-        {
-          id: 8,
-          judul: 'Doa Keluar Masjid',
-          arab: 'اَللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ',
-          latin: 'Allahumma inni as\'aluka min fadhlika',
-          terjemah: 'Ya Allah, sesungguhnya aku mohon kepada-Mu dari karunia-Mu'
-        },
-        {
-          id: 9,
-          judul: 'Doa Memakai Pakaian',
-          arab: 'اَلْحَمْدُ لِلَّهِ الَّذِيْ كَسَانِيْ هَذَا وَرَزَقَنِيْهِ مِنْ غَيْرِ حَوْلٍ مِنِّيْ وَلاَ قُوَّةٍ',
-          latin: 'Alhamdu lillahil ladzi kasani hadza wa razaqanihi min ghairi haulin minni wa laa quwwata',
-          terjemah: 'Segala puji bagi Allah yang memberi aku pakaian ini dan memberi rizki kepadaku tanpa daya dan kekuatan dariku'
-        },
-        {
-          id: 10,
-          judul: 'Doa Ketika Turun Hujan',
-          arab: 'اَللَّهُمَّ صَيِّبًا نَافِعًا',
-          latin: 'Allahumma shayyiban naafi\'aa',
-          terjemah: 'Ya Allah, turunkanlah hujan yang bermanfaat'
-        }
-      ];
-      console.log(`✅ [APP] ${this.doaList.length} doa dimuat`);
-    },
-
-    async loadMurotalList() {
-      try {
-        console.log('🎵 [API] Fetching murottal...');
-        const res = await fetch('https://equran.id/api/v2/surat');
-        
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        
-        const data = await res.json();
-        console.log('📦 [API] Murottal response:', data);
-
-        this.murotalList = data.data.map(s => {
-          let audioUrl = '';
-          if (s.audioFull && s.audioFull['05']) {
-            audioUrl = s.audioFull['05'];
-          } else if (s.audioFull && s.audioFull['01']) {
-            audioUrl = s.audioFull['01'];
-          }
-
-          return {
-            id: s.nomor,
-            nomor: s.nomor,
-            judul: s.namaLatin + ' - ' + s.nama,
-            qari: 'Mishari Rashid Al-Afasy',
-            audio: audioUrl
-          };
-        });
-
-        console.log(`✅ [APP] ${this.murotalList.length} murottal dimuat`);
-      } catch (err) {
-        console.error('❌ [APP] Error murottal:', err);
-        this.murotalList = [];
-      }
-    },
-
-    async loadJadwal() {
-      if (!navigator.geolocation) {
-        this.cityName = 'Lokasi tidak tersedia';
-        this.hijriDate = 'Tanggal tidak tersedia';
-        return;
-      }
-
-      console.log('📍 [APP] Get lokasi...');
-      this.cityName = 'Mendapatkan lokasi...';
-      this.hijriDate = 'Memuat tanggal...';
-
-      navigator.geolocation.getCurrentPosition(async pos => {
-        const { latitude, longitude } = pos.coords;
-        this.userCoords = { latitude, longitude };
-        console.log(`📍 [APP] Koordinat: ${latitude}, ${longitude}`);
-
-        try {
-          const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-          
-          if (!geoRes.ok) {
-            throw new Error(`Geolocation HTTP ${geoRes.status}`);
-          }
-          
-          const geoData = await geoRes.json();
-          console.log('📦 [API] Geo data:', geoData);
-
-          this.cityName = geoData.address.city ||
-                          geoData.address.town ||
-                          geoData.address.county ||
-                          geoData.address.state ||
-                          'Lokasi Anda';
-
-          console.log(`📍 [APP] Kota: ${this.cityName}`);
-
-          const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
-          
-          if (!res.ok) {
-            throw new Error(`Aladhan HTTP ${res.status}`);
-          }
-          
-          const data = await res.json();
-          console.log('📦 [API] Jadwal data:', data);
-          
-          this.jadwal = data.data.timings;
-          
-          if (data.data.date && data.data.date.hijri) {
-            const hijri = data.data.date.hijri;
-            this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
-            console.log(`📅 [APP] Hijriah: ${this.hijriDate}`);
-          }
-
-          this.checkAutoDarkMode();
-
-          console.log('✅ [APP] Jadwal sholat dimuat');
-        } catch (err) {
-          console.error('❌ [APP] Error jadwal:', err);
-          this.cityName = 'Gagal memuat lokasi';
-          this.hijriDate = 'Gagal memuat tanggal';
-        }
-      }, err => {
         console.error('❌ [APP] Error lokasi:', err);
         this.cityName = 'Lokasi ditolak';
         this.hijriDate = 'Tanggal tidak tersedia';
@@ -613,7 +409,7 @@ document.addEventListener('alpine:init', () => {
           alert('✅ Notifikasi sudah aktif!\n\n📋 Token: ' + tokenInfo.token.substring(0, 50) + '...\n\n⏰ Terakhir update: ' + tokenInfo.timestamp);
           console.log('💾 [FCM] Token tersimpan:', tokenInfo);
         } else {
-          alert('⏳ Token belum ada. Menginisialisasi notifikasi...');
+          alert('⏳ Token belum ada. Menginisialisasi notifikasi...\n\nProses ini bisa memakan waktu 15-30 detik.\nSilakan tunggu...');
           await initFirebaseMessaging();
         }
         return;
@@ -629,7 +425,7 @@ document.addEventListener('alpine:init', () => {
         const permission = await Notification.requestPermission();
         
         if (permission === 'granted') {
-          alert('✅ Izin notifikasi diberikan!\n\n⏳ Sedang setup Firebase Cloud Messaging...\n\nProses ini mungkin memakan waktu 10-20 detik.\n\nSilakan tunggu...');
+          alert('✅ Izin notifikasi diberikan!\n\n⏳ Sedang setup Firebase Cloud Messaging...\n\nProses ini bisa memakan waktu 15-30 detik.\nSilakan tunggu dan jangan tutup tab ini.');
           
           // Give user time to read the alert
           setTimeout(async () => {
@@ -640,8 +436,8 @@ document.addEventListener('alpine:init', () => {
             if (saved) {
               console.log('✅ [APP] FCM setup berhasil');
             } else {
-              console.warn('⚠️ [APP] FCM setup gagal, coba manual');
-              alert('⚠️ Setup FCM belum selesai.\n\nSilakan cek Console untuk detail error.\n\nCoba:\n1. Refresh halaman\n2. Klik tombol notifikasi lagi');
+              console.warn('⚠️ [APP] FCM setup gagal');
+              alert('⚠️ Setup FCM belum selesai.\n\nSilakan:\n1. Ketik window.checkFCMStatus() di Console\n2. Lihat error di Console\n3. Refresh dan coba lagi');
             }
           }, 2000);
         } else if (permission === 'denied') {
@@ -665,52 +461,67 @@ document.addEventListener('alpine:init', () => {
       try {
         console.log('📝 [SW] Registering Service Worker...');
         
-        // ✅ Unregister old SW first to ensure clean state
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        for (let registration of registrations) {
-          if (registration.scope.includes('/platform/barakahku1')) {
-            console.log('🗑️ [SW] Unregistering old SW:', registration.scope);
-            await registration.unregister();
+        // ✅ Check for existing registrations
+        const existingReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+        if (existingReg) {
+          console.log('🔄 [SW] Found existing registration');
+          console.log('📊 [SW] Active:', existingReg.active?.state);
+          console.log('📊 [SW] Installing:', existingReg.installing?.state);
+          console.log('📊 [SW] Waiting:', existingReg.waiting?.state);
+          
+          // If there's a waiting SW, activate it
+          if (existingReg.waiting) {
+            console.log('⏭️ [SW] Activating waiting SW...');
+            existingReg.waiting.postMessage({ type: 'SKIP_WAITING' });
           }
         }
         
-        console.log('📝 [SW] Registering fresh Service Worker...');
+        console.log('📝 [SW] Registering Service Worker...');
         const registration = await navigator.serviceWorker.register(
           '/platform/barakahku1/service-worker.js',
           { 
             scope: '/platform/barakahku1/',
-            updateViaCache: 'none' // Force fresh SW checks
+            updateViaCache: 'none'
           }
         );
         
-        console.log('✅ [SW] Service Worker registered');
+        console.log('✅ [SW] Service Worker registered successfully');
         console.log('📍 [SW] Scope:', registration.scope);
-        console.log('🔄 [SW] Update check:', registration.update ? 'Available' : 'Not available');
+        console.log('📊 [SW] Active:', registration.active?.state);
+        console.log('📊 [SW] Installing:', registration.installing?.state);
+        console.log('📊 [SW] Waiting:', registration.waiting?.state);
         
-        // Wait for SW to be ready with logging
-        console.log('⏳ [SW] Waiting for Service Worker to be ready...');
-        const readyRegistration = await navigator.serviceWorker.ready;
-        console.log('✅ [SW] Service Worker ready!');
-        console.log('💡 [SW] Active:', readyRegistration.active ? 'Yes' : 'No');
-        console.log('💡 [SW] Active state:', readyRegistration.active?.state);
-        console.log('💡 [SW] FCM akan diinit saat user klik tombol notifikasi');
+        // Wait for the SW to be ready
+        if (registration.installing) {
+          console.log('⏳ [SW] Waiting for SW to install...');
+          registration.installing.addEventListener('statechange', (e) => {
+            console.log('🔄 [SW] State changed to:', e.target.state);
+          });
+        }
         
-        // Handle SW updates
+        // Handle updates
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
-          console.log('🔄 [SW] Update ditemukan');
+          console.log('🔄 [SW] Update found');
           
           newWorker.addEventListener('statechange', () => {
+            console.log('🔄 [SW] New worker state:', newWorker.state);
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              console.log('✅ [SW] Update tersedia, reload untuk update');
-              // Optionally notify user about update
+              console.log('✅ [SW] New version available');
+              // Optionally notify user
             }
           });
         });
         
+        console.log('✅ [SW] Registration complete');
+        
       } catch (err) {
         console.error('❌ [SW] Registration failed:', err);
-        alert('❌ Service Worker gagal register.\n\nError: ' + err.message + '\n\nPastikan:\n1. HTTPS aktif\n2. Browser mendukung SW\n3. Path file benar');
+        console.error('❌ [SW] Error name:', err.name);
+        console.error('❌ [SW] Error message:', err.message);
+        console.error('❌ [SW] Error stack:', err.stack);
+        
+        alert('❌ Service Worker gagal register.\n\nError: ' + err.message + '\n\nPastikan:\n1. HTTPS aktif\n2. Browser mendukung SW\n3. Path file benar\n4. File service-worker.js tidak ada syntax error\n\n🔍 Cek Console untuk detail lengkap');
       }
     },
 
@@ -761,7 +572,6 @@ document.addEventListener('alpine:init', () => {
         }
 
         const data = await res.json();
-        console.log('📦 [API] Masjid data:', data);
 
         const mosques = data.elements
           .filter(el => el.tags && el.tags.name)
@@ -890,22 +700,37 @@ window.addEventListener('appinstalled', () => {
 // DEBUG: Check SW and FCM status
 // ==============================
 window.checkFCMStatus = async function() {
-  console.log('=== FCM Status Check ===');
+  console.log('=== 🔍 FCM Status Check ===');
   console.log('Notification permission:', Notification.permission);
   console.log('Service Worker support:', 'serviceWorker' in navigator);
   
   if ('serviceWorker' in navigator) {
-    const registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
-    console.log('SW Registration:', registration);
-    console.log('SW Active:', registration?.active);
-    console.log('SW State:', registration?.active?.state);
-    console.log('SW Scope:', registration?.scope);
+    try {
+      const registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+      console.log('SW Registration:', registration);
+      console.log('SW Active:', registration?.active);
+      console.log('SW Active State:', registration?.active?.state);
+      console.log('SW Installing:', registration?.installing);
+      console.log('SW Waiting:', registration?.waiting);
+      console.log('SW Scope:', registration?.scope);
+      
+      // Try to check Firebase in SW
+      if (registration?.active) {
+        const messageChannel = new MessageChannel();
+        messageChannel.port1.onmessage = (event) => {
+          console.log('SW Firebase Status:', event.data);
+        };
+        registration.active.postMessage({ type: 'CHECK_FIREBASE' }, [messageChannel.port2]);
+      }
+    } catch (e) {
+      console.error('Error getting SW registration:', e);
+    }
   }
   
   const token = localStorage.getItem('fcm_token');
   console.log('Saved FCM token:', token ? JSON.parse(token) : 'None');
   
-  console.log('Firebase loaded:', typeof firebase !== 'undefined');
+  console.log('Firebase loaded in page:', typeof firebase !== 'undefined');
   if (typeof firebase !== 'undefined') {
     console.log('Firebase apps:', firebase.apps?.length || 0);
   }
@@ -913,5 +738,676 @@ window.checkFCMStatus = async function() {
   console.log('========================');
 };
 
+// ==============================
+// DEBUG: Force reinit FCM
+// ==============================
+window.reinitFCM = async function() {
+  console.log('🔄 [DEBUG] Force reinit FCM...');
+  fcmInitializing = false;
+  fcmInitialized = false;
+  await initFirebaseMessaging();
+};
+
+// ==============================
+// DEBUG: Clear SW and reload
+// ==============================
+window.clearSWAndReload = async function() {
+  console.log('🗑️ [DEBUG] Clearing SW and reloading...');
+  
+  if ('serviceWorker' in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    for (let registration of registrations) {
+      console.log('Unregistering:', registration.scope);
+      await registration.unregister();
+    }
+  }
+  
+  console.log('✅ All SW unregistered');
+  console.log('🔄 Reloading in 2 seconds...');
+  
+  setTimeout(() => {
+    window.location.reload(true);
+  }, 2000);
+};
+
 console.log('✅ [APP] app.js loaded successfully');
-console.log('💡 [DEBUG] Ketik window.checkFCMStatus() di Console untuk cek status FCM');
+console.log('💡 [DEBUG] Available commands:');
+console.log('  - window.checkFCMStatus() : Check FCM & SW status');
+console.log('  - window.reinitFCM() : Force reinitialize FCM');
+console.log('  - window.clearSWAndReload() : Clear all SW and reload'); load Quran:', err);
+        this.quran = [
+          { nomor: 1, namaLatin: 'Al-Fatihah', arti: 'Pembukaan', jumlahAyat: 7 }
+        ];
+      }
+    },
+
+    async loadSurah(nomor) {
+      try {
+        console.log(`📖 [API] Buka surah ${nomor}...`);
+        const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        
+        const data = await res.json();
+        
+        this.currentSurah = {
+          nomor: nomor,
+          namaLatin: data.data.namaLatin,
+          ayat: data.data.ayat.map(a => ({
+            nomorAyat: a.nomorAyat,
+            arab: a.teksArab,
+            latin: a.teksLatin,
+            teks: a.teksIndonesia
+          }))
+        };
+        
+        this.lastRead = {
+          surah: nomor,
+          namaLatin: data.data.namaLatin,
+          ayat: 1,
+          timestamp: new Date().toLocaleString('id-ID')
+        };
+        localStorage.setItem('lastRead', JSON.stringify(this.lastRead));
+        
+        console.log(`✅ [APP] Surah ${data.data.namaLatin} dimuat`);
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+      } catch (err) {
+        console.error('❌ [APP] Error load surah:', err);
+      }
+    },
+
+    loadDoa() {
+      console.log('🙏 [APP] Memuat doa...');
+      this.doaList = [
+        {
+          id: 1,
+          judul: 'Doa Sebelum Makan',
+          arab: 'بِسْمِ اللهِ وَعَلَى بَرَكَةِ اللهِ',
+          latin: 'Bismillahi wa \'ala barakatillah',
+          terjemah: 'Dengan menyebut nama Allah dan atas berkah Allah'
+        },
+        {
+          id: 2,
+          judul: 'Doa Sesudah Makan',
+          arab: 'اَلْحَمْدُ ِللهِ الَّذِىْ اَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِيْنَ',
+          latin: 'Alhamdulillahilladzi ath\'amana wasaqona waja\'alana muslimin',
+          terjemah: 'Segala puji bagi Allah yang telah memberi kami makan dan minum serta menjadikan kami muslim'
+        },
+        {
+          id: 3,
+          judul: 'Doa Bangun Tidur',
+          arab: 'اَلْحَمْدُ ِللهِ الَّذِيْ اَحْيَانَا بَعْدَمَآ اَمَاتَنَا وَاِلَيْهِ النُّشُوْرُ',
+          latin: 'Alhamdu lillahil ladzi ahyana ba\'da ma amatana wa ilaihin nusyur',
+          terjemah: 'Segala puji bagi Allah yang telah menghidupkan kami sesudah kami mati dan hanya kepada-Nya kami kembali'
+        },
+        {
+          id: 4,
+          judul: 'Doa Sebelum Tidur',
+          arab: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',
+          latin: 'Bismika Allahumma amuutu wa ahyaa',
+          terjemah: 'Dengan nama-Mu ya Allah aku mati dan aku hidup'
+        },
+        {
+          id: 5,
+          judul: 'Doa Masuk Kamar Mandi',
+          arab: 'اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِِ وَالْخَبَائِثِ',
+          latin: 'Allahumma inni a\'udzu bika minal khubutsi wal khaba\'its',
+          terjemah: 'Ya Allah, aku berlindung kepada-Mu dari godaan setan laki-laki dan perempuan'
+        },
+        {
+          id: 6,
+          judul: 'Doa Keluar Kamar Mandi',
+          arab: 'غُفْرَانَكَ',
+          latin: 'Ghufraanaka',
+          terjemah: 'Aku mohon ampunan-Mu'
+        },
+        {
+          id: 7,
+          judul: 'Doa Masuk Masjid',
+          arab: 'اَللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ',
+          latin: 'Allahummaftah lii abwaaba rahmatika',
+          terjemah: 'Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu'
+        },
+        {
+          id: 8,
+          judul: 'Doa Keluar Masjid',
+          arab: 'اَللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ',
+          latin: 'Allahumma inni as\'aluka min fadhlika',
+          terjemah: 'Ya Allah, sesungguhnya aku mohon kepada-Mu dari karunia-Mu'
+        },
+        {
+          id: 9,
+          judul: 'Doa Memakai Pakaian',
+          arab: 'اَلْحَمْدُ لِلَّهِ الَّذِيْ كَسَانِيْ هَذَا وَرَزَقَنِيْهِ مِنْ غَيْرِ حَوْلٍ مِنِّيْ وَلاَ قُوَّةٍ',
+          latin: 'Alhamdu lillahil ladzi kasani hadza wa razaqanihi min ghairi haulin minni wa laa quwwata',
+          terjemah: 'Segala puji bagi Allah yang memberi aku pakaian ini dan memberi rizki kepadaku tanpa daya dan kekuatan dariku'
+        },
+        {
+          id: 10,
+          judul: 'Doa Ketika Turun Hujan',
+          arab: 'اَللَّهُمَّ صَيِّبًا نَافِعًا',
+          latin: 'Allahumma shayyiban naafi\'aa',
+          terjemah: 'Ya Allah, turunkanlah hujan yang bermanfaat'
+        }
+      ];
+      console.log(`✅ [APP] ${this.doaList.length} doa dimuat`);
+    },
+
+    async loadMurotalList() {
+      try {
+        console.log('🎵 [API] Fetching murottal...');
+        const res = await fetch('https://equran.id/api/v2/surat');
+        
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        
+        const data = await res.json();
+
+        this.murotalList = data.data.map(s => {
+          let audioUrl = '';
+          if (s.audioFull && s.audioFull['05']) {
+            audioUrl = s.audioFull['05'];
+          } else if (s.audioFull && s.audioFull['01']) {
+            audioUrl = s.audioFull['01'];
+          }
+
+          return {
+            id: s.nomor,
+            nomor: s.nomor,
+            judul: s.namaLatin + ' - ' + s.nama,
+            qari: 'Mishari Rashid Al-Afasy',
+            audio: audioUrl
+          };
+        });
+
+        console.log(`✅ [APP] ${this.murotalList.length} murottal dimuat`);
+      } catch (err) {
+        console.error('❌ [APP] Error murottal:', err);
+        this.murotalList = [];
+      }
+    },
+
+    async loadJadwal() {
+      if (!navigator.geolocation) {
+        this.cityName = 'Lokasi tidak tersedia';
+        this.hijriDate = 'Tanggal tidak tersedia';
+        return;
+      }
+
+      console.log('📍 [APP] Get lokasi...');
+      this.cityName = 'Mendapatkan lokasi...';
+      this.hijriDate = 'Memuat tanggal...';
+
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const { latitude, longitude } = pos.coords;
+        this.userCoords = { latitude, longitude };
+        console.log(`📍 [APP] Koordinat: ${latitude}, ${longitude}`);
+
+        try {
+          const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          
+          if (!geoRes.ok) {
+            throw new Error(`Geolocation HTTP ${geoRes.status}`);
+          }
+          
+          const geoData = await geoRes.json();
+
+          this.cityName = geoData.address.city ||
+                          geoData.address.town ||
+                          geoData.address.county ||
+                          geoData.address.state ||
+                          'Lokasi Anda';
+
+          console.log(`📍 [APP] Kota: ${this.cityName}`);
+
+          const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=11`);
+          
+          if (!res.ok) {
+            throw new Error(`Aladhan HTTP ${res.status}`);
+          }
+          
+          const data = await res.json();
+          
+          this.jadwal = data.data.timings;
+          
+          if (data.data.date && data.data.date.hijri) {
+            const hijri = data.data.date.hijri;
+            this.hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} AH`;
+            console.log(`📅 [APP] Hijriah: ${this.hijriDate}`);
+          }
+
+          this.checkAutoDarkMode();
+
+          console.log('✅ [APP] Jadwal sholat dimuat');
+        } catch (err) {
+          console.error('❌ [APP] Error jadwal:', err);
+          this.cityName = 'Gagal memuat lokasi';
+          this.hijriDate = 'Gagal memuat tanggal';
+        }
+      }, err => {
+        console.error('❌ [APP] Error lokasi:', err);
+        this.cityName = 'Lokasi ditolak';
+        this.hijriDate = 'Tanggal tidak tersedia';
+      });
+    },
+
+    loadChecklist() {
+      const saved = localStorage.getItem('checklist');
+      if (saved) {
+        try {
+          this.checklist = JSON.parse(saved);
+          console.log('✅ [APP] Checklist loaded from localStorage');
+        } catch (e) {
+          console.error('❌ [APP] Error checklist:', e);
+        }
+      }
+
+      const lastDate = localStorage.getItem('checklistDate');
+      const today = new Date().toDateString();
+      if (lastDate !== today) {
+        this.checklist.forEach(item => item.done = false);
+        localStorage.setItem('checklistDate', today);
+        this.saveChecklist();
+        console.log('✅ [APP] Checklist reset untuk hari baru');
+      }
+    },
+
+    saveChecklist() {
+      try {
+        localStorage.setItem('checklist', JSON.stringify(this.checklist));
+        console.log('💾 [APP] Checklist saved');
+      } catch (e) {
+        console.error('❌ [APP] Error save:', e);
+      }
+    },
+
+    bookmarkAyat(nomorAyat) {
+      try {
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        const key = `${this.currentSurah.namaLatin}-${nomorAyat}`;
+
+        if (!bookmarks.includes(key)) {
+          bookmarks.push(key);
+          localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+          alert(`✅ Ayat ${nomorAyat} tersimpan! 🔖`);
+        } else {
+          alert('ℹ️ Ayat sudah tersimpan');
+        }
+      } catch (e) {
+        console.error('❌ [APP] Error bookmark:', e);
+      }
+    },
+
+    installApp() {
+      if (window.deferredPrompt) {
+        window.deferredPrompt.prompt();
+        window.deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('✅ [PWA] Install accepted');
+          }
+          window.deferredPrompt = null;
+        });
+      } else {
+        alert('ℹ️ Aplikasi sudah terinstall atau browser tidak mendukung PWA.\n\nCara install:\n• Chrome Android: Menu → Install app\n• Safari iOS: Share → Add to Home Screen');
+      }
+    },
+
+    async requestNotificationPermission() {
+      if (Notification.permission === 'granted') {
+        const saved = localStorage.getItem('fcm_token');
+        if (saved) {
+          const tokenInfo = JSON.parse(saved);
+          alert('✅ Notifikasi sudah aktif!\n\n📋 Token: ' + tokenInfo.token.substring(0, 50) + '...\n\n⏰ Terakhir update: ' + tokenInfo.timestamp);
+          console.log('💾 [FCM] Token tersimpan:', tokenInfo);
+        } else {
+          alert('⏳ Token belum ada. Menginisialisasi notifikasi...\n\nProses ini bisa memakan waktu 15-30 detik.\nSilakan tunggu...');
+          await initFirebaseMessaging();
+        }
+        return;
+      }
+      
+      if (Notification.permission === 'denied') {
+        alert('❌ Izin notifikasi ditolak.\n\n🔧 Cara mengaktifkan:\n\n1. Klik ikon gembok 🔒 di address bar\n2. Cari "Notifications" atau "Notifikasi"\n3. Ubah ke "Allow" atau "Izinkan"\n4. Refresh halaman ini\n5. Klik tombol notifikasi lagi');
+        return;
+      }
+
+      try {
+        console.log('🔔 [APP] Requesting notification permission...');
+        const permission = await Notification.requestPermission();
+        
+        if (permission === 'granted') {
+          alert('✅ Izin notifikasi diberikan!\n\n⏳ Sedang setup Firebase Cloud Messaging...\n\nProses ini bisa memakan waktu 15-30 detik.\nSilakan tunggu dan jangan tutup tab ini.');
+          
+          setTimeout(async () => {
+            await initFirebaseMessaging();
+            
+            const saved = localStorage.getItem('fcm_token');
+            if (saved) {
+              console.log('✅ [APP] FCM setup berhasil');
+            } else {
+              console.warn('⚠️ [APP] FCM setup gagal');
+              alert('⚠️ Setup FCM belum selesai.\n\nSilakan:\n1. Ketik window.checkFCMStatus() di Console\n2. Lihat error di Console\n3. Refresh dan coba lagi');
+            }
+          }, 2000);
+        } else if (permission === 'denied') {
+          alert('❌ Anda menolak izin notifikasi.\n\nUntuk mengaktifkan kembali, ikuti langkah di atas.');
+        } else {
+          alert('⚠️ Izin notifikasi dibatalkan.\n\nSilakan coba lagi jika ingin menerima notifikasi.');
+        }
+      } catch (err) {
+        console.error('❌ [APP] Error permission:', err);
+        alert('❌ Gagal meminta izin: ' + err.message + '\n\nSilakan coba lagi atau cek Console untuk detail.');
+      }
+    },
+
+    async registerServiceWorker() {
+      if (!('serviceWorker' in navigator)) {
+        console.warn('⚠️ [SW] Service Worker tidak didukung');
+        alert('⚠️ Browser Anda tidak mendukung Service Worker.\n\nGunakan browser modern:\n• Chrome 40+\n• Firefox 44+\n• Safari 11.1+\n• Edge 17+');
+        return;
+      }
+
+      try {
+        console.log('📝 [SW] Registering Service Worker...');
+        
+        const existingReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+        if (existingReg) {
+          console.log('🔄 [SW] Found existing registration');
+          console.log('📊 [SW] Active:', existingReg.active?.state);
+          
+          if (existingReg.waiting) {
+            console.log('⏭️ [SW] Activating waiting SW...');
+            existingReg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        }
+        
+        console.log('📝 [SW] Registering Service Worker...');
+        const registration = await navigator.serviceWorker.register(
+          '/platform/barakahku1/service-worker.js',
+          { 
+            scope: '/platform/barakahku1/',
+            updateViaCache: 'none'
+          }
+        );
+        
+        console.log('✅ [SW] Service Worker registered successfully');
+        console.log('📍 [SW] Scope:', registration.scope);
+        console.log('📊 [SW] Active:', registration.active?.state);
+        
+        if (registration.installing) {
+          console.log('⏳ [SW] Waiting for SW to install...');
+          registration.installing.addEventListener('statechange', (e) => {
+            console.log('🔄 [SW] State changed to:', e.target.state);
+          });
+        }
+        
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          console.log('🔄 [SW] Update found');
+          
+          newWorker.addEventListener('statechange', () => {
+            console.log('🔄 [SW] New worker state:', newWorker.state);
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              console.log('✅ [SW] New version available');
+            }
+          });
+        });
+        
+        console.log('✅ [SW] Registration complete');
+        
+      } catch (err) {
+        console.error('❌ [SW] Registration failed:', err);
+        console.error('❌ [SW] Error name:', err.name);
+        console.error('❌ [SW] Error message:', err.message);
+        console.error('❌ [SW] Error stack:', err.stack);
+        
+        alert('❌ Service Worker gagal register.\n\nError: ' + err.message + '\n\nPastikan:\n1. HTTPS aktif\n2. Browser mendukung SW\n3. Path file benar\n4. File service-worker.js tidak ada syntax error\n\n🔍 Cek Console untuk detail lengkap');
+      }
+    },
+
+    loadLastRead() {
+      const saved = localStorage.getItem('lastRead');
+      if (saved) {
+        try {
+          this.lastRead = JSON.parse(saved);
+          console.log('📖 [APP] Progress bacaan dimuat:', this.lastRead);
+        } catch (e) {
+          console.error('❌ [APP] Error load progress:', e);
+        }
+      }
+    },
+
+    continueReading() {
+      if (this.lastRead && this.lastRead.surah) {
+        this.activeTab = 'quran';
+        setTimeout(() => {
+          this.loadSurah(this.lastRead.surah);
+        }, 100);
+      }
+    },
+
+    async findNearbyMosques() {
+      if (!this.userCoords) {
+        alert('📍 Aktifkan lokasi terlebih dahulu untuk menemukan masjid terdekat');
+        return;
+      }
+
+      this.loadingMosques = true;
+      this.nearbyMosques = [];
+
+      try {
+        console.log('🕌 [API] Mencari masjid terdekat...');
+        const { latitude, longitude } = this.userCoords;
+        
+        const radius = 2000;
+        const query = `[out:json];(node["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${latitude},${longitude});way["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${latitude},${longitude}););out body;`;
+        
+        const res = await fetch('https://overpass-api.de/api/interpreter', {
+          method: 'POST',
+          body: query
+        });
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        const mosques = data.elements
+          .filter(el => el.tags && el.tags.name)
+          .map(el => {
+            const lat = el.lat || el.center?.lat;
+            const lon = el.lon || el.center?.lon;
+            const distance = this.calculateDistance(latitude, longitude, lat, lon);
+            
+            return {
+              name: el.tags.name,
+              address: el.tags['addr:full'] || el.tags['addr:street'] || 'Alamat tidak tersedia',
+              lat: lat,
+              lon: lon,
+              distance: distance.toFixed(2)
+            };
+          })
+          .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance))
+          .slice(0, 10);
+
+        this.nearbyMosques = mosques;
+        console.log(`✅ [APP] ${mosques.length} masjid ditemukan`);
+
+        if (mosques.length === 0) {
+          alert('ℹ️ Tidak ada masjid ditemukan dalam radius 2km.\n\nCoba perbesar radius pencarian atau cek lokasi Anda.');
+        }
+
+      } catch (err) {
+        console.error('❌ [APP] Error mencari masjid:', err);
+        alert('❌ Gagal mencari masjid. Coba lagi nanti.');
+      } finally {
+        this.loadingMosques = false;
+      }
+    },
+
+    calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    },
+
+    openGoogleMaps(lat, lon, name) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}&query_place_id=${encodeURIComponent(name)}`;
+      window.open(url, '_blank');
+    },
+
+    setMood(mood) {
+      this.currentMood = mood;
+      console.log('💛 [APP] Mood set:', mood);
+    },
+
+    clearMood() {
+      this.currentMood = null;
+      console.log('💛 [APP] Mood cleared');
+    },
+
+    initDarkMode() {
+      const saved = localStorage.getItem('darkMode');
+      if (saved === 'true') {
+        this.darkMode = true;
+        document.documentElement.classList.add('dark');
+        console.log('🌑 [APP] Dark mode aktif');
+      } else {
+        this.darkMode = false;
+        document.documentElement.classList.remove('dark');
+        console.log('☀️ [APP] Light mode aktif');
+      }
+    },
+
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+      if (this.darkMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('darkMode', 'true');
+        console.log('🌑 [APP] Dark mode diaktifkan');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('darkMode', 'false');
+        console.log('☀️ [APP] Light mode diaktifkan');
+      }
+    },
+
+    checkAutoDarkMode() {
+      if (this.jadwal.Maghrib && this.jadwal.Fajr) {
+        const now = new Date();
+        const currentTime = now.getHours() * 60 + now.getMinutes();
+        
+        const [maghribH, maghribM] = this.jadwal.Maghrib.split(':').map(Number);
+        const [fajrH, fajrM] = this.jadwal.Fajr.split(':').map(Number);
+        
+        const maghribTime = maghribH * 60 + maghribM;
+        const fajrTime = fajrH * 60 + fajrM;
+        
+        const isNight = currentTime >= maghribTime || currentTime < fajrTime;
+        
+        if (isNight && !this.darkMode) {
+          console.log('🌙 [APP] Auto dark mode (malam hari)');
+        }
+      }
+    }
+  }));
+  
+  console.log('✅ [ALPINE] App component registered');
+});
+
+// ==============================
+// PWA INSTALL PROMPT HANDLER
+// ==============================
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.deferredPrompt = e;
+  console.log('📲 [PWA] Install prompt tersedia');
+});
+
+window.addEventListener('appinstalled', () => {
+  window.deferredPrompt = null;
+  console.log('✅ [PWA] Aplikasi terinstall');
+});
+
+// ==============================
+// DEBUG: Check SW and FCM status
+// ==============================
+window.checkFCMStatus = async function() {
+  console.log('=== 🔍 FCM Status Check ===');
+  console.log('Notification permission:', Notification.permission);
+  console.log('Service Worker support:', 'serviceWorker' in navigator);
+  
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.getRegistration('/platform/barakahku1/');
+      console.log('SW Registration:', registration);
+      console.log('SW Active:', registration?.active);
+      console.log('SW Active State:', registration?.active?.state);
+      console.log('SW Installing:', registration?.installing);
+      console.log('SW Waiting:', registration?.waiting);
+      console.log('SW Scope:', registration?.scope);
+      
+      if (registration?.active) {
+        const messageChannel = new MessageChannel();
+        messageChannel.port1.onmessage = (event) => {
+          console.log('SW Firebase Status:', event.data);
+        };
+        registration.active.postMessage({ type: 'CHECK_FIREBASE' }, [messageChannel.port2]);
+      }
+    } catch (e) {
+      console.error('Error getting SW registration:', e);
+    }
+  }
+  
+  const token = localStorage.getItem('fcm_token');
+  console.log('Saved FCM token:', token ? JSON.parse(token) : 'None');
+  
+  console.log('Firebase loaded in page:', typeof firebase !== 'undefined');
+  if (typeof firebase !== 'undefined') {
+    console.log('Firebase apps:', firebase.apps?.length || 0);
+  }
+  
+  console.log('========================');
+};
+
+window.reinitFCM = async function() {
+  console.log('🔄 [DEBUG] Force reinit FCM...');
+  fcmInitializing = false;
+  fcmInitialized = false;
+  await initFirebaseMessaging();
+};
+
+window.clearSWAndReload = async function() {
+  console.log('🗑️ [DEBUG] Clearing SW and reloading...');
+  
+  if ('serviceWorker' in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    for (let registration of registrations) {
+      console.log('Unregistering:', registration.scope);
+      await registration.unregister();
+    }
+  }
+  
+  console.log('✅ All SW unregistered');
+  console.log('🔄 Reloading in 2 seconds...');
+  
+  setTimeout(() => {
+    window.location.reload(true);
+  }, 2000);
+};
+
+console.log('✅ [APP] app.js loaded successfully');
+console.log('💡 [DEBUG] Available commands:');
+console.log('  - window.checkFCMStatus() : Check FCM & SW status');
+console.log('  - window.reinitFCM() : Force reinitialize FCM');
+console.log('  - window.clearSWAndReload() : Clear all SW and reload');
