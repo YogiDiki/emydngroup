@@ -56,14 +56,15 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ SIMPLE APPROACH: Langsung request token dengan custom SW path!
-    console.log('🔑 [FCM] Requesting token directly...');
+    // ✅ V2: Gunakan SW yang sudah ada (bukan default Firebase SW)
+    console.log('🔑 [FCM] Getting token with custom SW...');
     
     const messaging = firebase.messaging();
     
-    // ✅ CRITICAL: Gunakan SW yang sudah ada
+    // ✅ CRITICAL: Tunggu dan gunakan SW yang sudah terdaftar
     const swRegistration = await navigator.serviceWorker.ready;
-    console.log('✅ [FCM] Using existing SW:', swRegistration.scope);
+    console.log('✅ [FCM] SW Ready! Scope:', swRegistration.scope);
+    console.log('✅ [FCM] SW Active:', swRegistration.active);
     
     const currentToken = await messaging.getToken({ 
       vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
