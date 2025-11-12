@@ -1,11 +1,11 @@
 // ==============================
-// BarakahKu - app.js (FIXED FCM!)
+// BarakahKu - app.js (SIMPLE FCM!)
 // ==============================
 
 console.log('📦 [APP] Loading app.js...');
 
 // ------------------------------
-// Fungsi inisialisasi Firebase Messaging (v8) - FIXED!
+// Fungsi inisialisasi Firebase Messaging - SIMPLIFIED!
 // ------------------------------
 async function initFirebaseMessaging() {
   try {
@@ -56,40 +56,13 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ CRITICAL FIX: Tunggu SW dengan cara yang benar
-    console.log('⏳ [FCM] Waiting for Service Worker...');
-    
-    let swRegistration;
-    
-    // Cek apakah SW sudah ready
-    if (navigator.serviceWorker.controller) {
-      console.log('✅ [FCM] SW controller sudah ada');
-      swRegistration = await navigator.serviceWorker.ready;
-    } else {
-      // Tunggu SW dengan timeout yang lebih panjang
-      console.log('⏳ [FCM] Waiting for SW ready...');
-      swRegistration = await Promise.race([
-        navigator.serviceWorker.ready,
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('SW timeout after 10s')), 10000)
-        )
-      ]);
-    }
-    
-    console.log('✅ [FCM] Service Worker ready!');
-    console.log('📍 [FCM] SW scope:', swRegistration.scope);
-
-    // ✅ Request token dengan SW registration
-    console.log('🔑 [FCM] Requesting token...');
+    // ✅ SIMPLE APPROACH: Langsung request token!
+    console.log('🔑 [FCM] Requesting token directly...');
     
     const messaging = firebase.messaging();
     
-    // Use SW registration explicitly
-    messaging.useServiceWorker(swRegistration);
-    
     const currentToken = await messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
-      serviceWorkerRegistration: swRegistration
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
     });
     
     if (currentToken) {
@@ -104,12 +77,11 @@ async function initFirebaseMessaging() {
       localStorage.setItem('fcm_token', JSON.stringify(tokenInfo));
       console.log('💾 [FCM] Token tersimpan');
       
-      // Show alert
-      alert('🎉 FCM Token berhasil!\n\nToken: ' + currentToken.substring(0, 50) + '...');
+      alert('🎉 FCM Token berhasil!\n\nToken: ' + currentToken.substring(0, 50) + '...\n\nAnda akan menerima notifikasi untuk:\n• Pengingat sholat\n• Notifikasi ibadah\n• Pesan motivasi');
       
     } else {
       console.warn('⚠️ [FCM] Tidak dapat token');
-      alert('⚠️ Token tidak ditemukan. Coba refresh page.');
+      alert('⚠️ Token tidak ditemukan.\n\nPastikan:\n1. Service Worker aktif\n2. Notifikasi diizinkan\n3. Refresh dan coba lagi');
     }
 
     // ✅ Handler foreground messages
@@ -134,16 +106,20 @@ async function initFirebaseMessaging() {
 
   } catch (error) {
     console.error('❌ [FCM] Init failed:', error);
-    console.error('❌ [FCM] Error name:', error.name);
+    console.error('❌ [FCM] Error code:', error.code);
     console.error('❌ [FCM] Error message:', error.message);
-    console.error('❌ [FCM] Error stack:', error.stack);
     
-    // User-friendly error message
-    let errorMsg = 'Gagal menginisialisasi notifikasi.';
-    if (error.message.includes('timeout')) {
-      errorMsg += '\n\nService Worker belum siap. Coba:\n1. Refresh halaman\n2. Tunggu beberapa detik\n3. Coba lagi';
+    let errorMsg = 'Gagal menginisialisasi notifikasi.\n\n';
+    
+    if (error.code === 'messaging/failed-service-worker-registration') {
+      errorMsg += '❌ Service Worker gagal.\n\nSolusi:\n1. Pastikan HTTPS aktif\n2. Cek console untuk error SW\n3. Hard refresh (Ctrl+Shift+R)';
+    } else if (error.message && error.message.includes('supported')) {
+      errorMsg += '❌ Browser tidak mendukung notifikasi.\n\nGunakan:\n• Chrome/Edge versi terbaru\n• Firefox versi terbaru';
+    } else {
+      errorMsg += 'Error: ' + error.message + '\n\nCoba:\n1. Refresh halaman\n2. Clear cache\n3. Aktifkan ulang notifikasi';
     }
-    alert('❌ FCM Error: ' + errorMsg);
+    
+    alert(errorMsg);
   }
 }
 
@@ -154,7 +130,6 @@ document.addEventListener('alpine:init', () => {
   console.log('🎨 [ALPINE] Registering app component...');
   
   Alpine.data('app', () => ({
-    // Data Properties
     _initialized: false,
     activeTab: 'beranda',
     showSearch: false,
@@ -175,7 +150,7 @@ document.addEventListener('alpine:init', () => {
     moodSuggestions: {
       sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
       senang: { ayat: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ', arti: 'Dan terhadap nikmat Tuhanmu, hendaklah kamu nyatakan', ref: 'QS. Ad-Duha: 11' },
-      cemas: { ayat: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', arti: 'Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram', ref: 'QS. Ar\'d: 28' },
+      cemas: { ayat: 'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', arti: 'Ingatlah, hanya dengan mengingat Allah hati menjadi tenteram', ref: 'QS. Ar-Ra\'d: 28' },
       syukur: { ayat: 'لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ', arti: 'Jika kamu bersyukur, niscaya Aku akan menambah nikmat kepadamu', ref: 'QS. Ibrahim: 7' },
       lelah: { ayat: 'وَلَا تَهِنُوا وَلَا تَحْزَنُوا', arti: 'Janganlah kamu lemah dan jangan pula bersedih hati', ref: 'QS. Ali Imran: 139' }
     },
@@ -192,9 +167,7 @@ document.addEventListener('alpine:init', () => {
       { id: 10, name: 'Doa Malam', description: 'Doa sebelum tidur', icon: '🌛', done: false }
     ],
 
-    // Init Method
     init() {
-      // ✅ GUARD: Prevent double initialization
       if (this._initialized) {
         console.log('⚠️ [APP] Already initialized, skipping...');
         return;
@@ -204,7 +177,6 @@ document.addEventListener('alpine:init', () => {
       console.log('🚀 [APP] BarakahKu - Memulai aplikasi...');
       console.log('📊 [APP] Alpine.js version:', Alpine.version);
       
-      // ✅ Register SW first
       this.registerServiceWorker();
       
       console.log('📖 [APP] Loading Quran...');
@@ -240,7 +212,6 @@ document.addEventListener('alpine:init', () => {
       console.log('✅ [APP] Aplikasi siap');
     },
 
-    // Methods
     async loadQuran() {
       try {
         console.log('📖 [API] Fetching surah...');
@@ -576,7 +547,6 @@ document.addEventListener('alpine:init', () => {
         if (permission === 'granted') {
           alert('✅ Izin diberikan!\n\nSedang setup sistem notifikasi...');
           
-          // Tunggu sebentar untuk memastikan SW ready
           setTimeout(async () => {
             await initFirebaseMessaging();
             
@@ -607,13 +577,9 @@ document.addEventListener('alpine:init', () => {
         console.log('✅ [SW] Service Worker registered');
         console.log('📍 [SW] Scope:', registration.scope);
         
-        // ✅ CRITICAL: Tunggu SW benar-benar ready
         await navigator.serviceWorker.ready;
         console.log('✅ [SW] Service Worker ready');
-        
-        // ✅ CRITICAL: Jangan langsung init FCM, tunggu user klik tombol
-        // Hapus auto-init FCM dari sini
-        console.log('💡 [SW] SW ready, FCM akan diinit saat user request');
+        console.log('💡 [SW] FCM akan diinit saat user request');
         
       } catch (err) {
         console.error('❌ [SW] Failed:', err);
@@ -654,7 +620,7 @@ document.addEventListener('alpine:init', () => {
         console.log('🕌 [API] Mencari masjid terdekat...');
         const { latitude, longitude } = this.userCoords;
         
-        const radius = 2000; // 2km
+        const radius = 2000;
         const query = `[out:json];(node["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${latitude},${longitude});way["amenity"="place_of_worship"]["religion"="muslim"](around:${radius},${latitude},${longitude}););out body;`;
         
         const res = await fetch('https://overpass-api.de/api/interpreter', {
@@ -703,7 +669,7 @@ document.addEventListener('alpine:init', () => {
     },
 
     calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Radius bumi dalam km
+      const R = 6371;
       const dLat = (lat2 - lat1) * Math.PI / 180;
       const dLon = (lon2 - lon1) * Math.PI / 180;
       const a = 
