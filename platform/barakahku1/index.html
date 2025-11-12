@@ -272,7 +272,7 @@
     <main class="flex-1 overflow-y-auto pb-28 bg-cream">
       
       <!-- Beranda -->
-      <template x-if="activeTab === 'beranda'">
+      <div x-show="activeTab === 'beranda'">
         <div class="p-5 space-y-5">
           <!-- Ayat Quote -->
           <div class="card-islamic p-5 text-center islamic-pattern">
@@ -438,54 +438,53 @@
             <span>Install Aplikasi di Perangkat</span>
           </button>
 
- <button 
-  @click="requestNotificationPermission()" 
-  class="w-full flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
-  :class="[
-    notificationStatus === 'active' ? 'bg-gradient-to-r from-green-600 to-green-700 text-white animate-pulse-success' : 
-    notificationStatus === 'denied' ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white' : 
-    'bg-gradient-to-r from-amber-600 to-amber-700 text-white'
-  ]"
->
-  <template x-if="notificationStatus === 'active'">
-    <span class="text-xl">✅</span>
-  </template>
-  <template x-if="notificationStatus === 'denied'">
-    <span class="text-xl">🔕</span>
-  </template>
-  <template x-if="notificationStatus === 'inactive'">
-    <span class="text-xl animate-bounce-bell">🔔</span>
-  </template>
-  <span x-text="notificationStatus === 'active' ? 'Notifikasi Aktif' : notificationStatus === 'denied' ? 'Notifikasi Diblokir' : 'Aktifkan Notifikasi'"></span>
-</button>
+          <button 
+            @click="requestNotificationPermission()" 
+            class="w-full flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]"
+            :class="[
+              notificationStatus === 'active' ? 'bg-gradient-to-r from-green-600 to-green-700 text-white animate-pulse-success' : 
+              notificationStatus === 'denied' ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white' : 
+              'bg-gradient-to-r from-amber-600 to-amber-700 text-white'
+            ]"
+          >
+            <template x-if="notificationStatus === 'active'">
+              <span class="text-xl">✅</span>
+            </template>
+            <template x-if="notificationStatus === 'denied'">
+              <span class="text-xl">🔕</span>
+            </template>
+            <template x-if="notificationStatus === 'inactive'">
+              <span class="text-xl animate-bounce-bell">🔔</span>
+            </template>
+            <span x-text="notificationStatus === 'active' ? 'Notifikasi Aktif' : notificationStatus === 'denied' ? 'Notifikasi Diblokir' : 'Aktifkan Notifikasi'"></span>
+          </button>
 
-<template x-if="notificationStatus === 'active'">
-  <div class="animate-slide-in-up card-islamic p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-l-4 border-green-600">
-    <div class="flex items-start gap-2">
-      <span class="text-lg mt-0.5">✅</span>
-      <div>
-        <p class="text-sm font-bold text-green-800 dark:text-green-400">Notifikasi sudah aktif!</p>
-        <p class="text-xs text-green-700 dark:text-green-500 mt-0.5">🔔 Anda akan menerima notifikasi dari BarakahKu</p>
+          <template x-if="notificationStatus === 'active'">
+            <div class="animate-slide-in-up card-islamic p-3 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-l-4 border-green-600">
+              <div class="flex items-start gap-2">
+                <span class="text-lg mt-0.5">✅</span>
+                <div>
+                  <p class="text-sm font-bold text-green-800 dark:text-green-400">Notifikasi sudah aktif!</p>
+                  <p class="text-xs text-green-700 dark:text-green-500 mt-0.5">🔔 Anda akan menerima notifikasi dari BarakahKu</p>
+                </div>
+              </div>
+            </div>
+          </template>
+          <template x-if="notificationStatus === 'denied'">
+            <div class="animate-slide-in-up card-islamic p-3 bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-400">
+              <div class="flex items-start gap-2">
+                <span class="text-lg mt-0.5">ℹ️</span>
+                <div>
+                  <p class="text-xs text-gray-600 dark:text-gray-400">Aktifkan notifikasi di Settings browser untuk menerima pengingat</p>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
-    </div>
-  </div>
-</template>
-<template x-if="notificationStatus === 'denied'">
-  <div class="animate-slide-in-up card-islamic p-3 bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-400">
-    <div class="flex items-start gap-2">
-      <span class="text-lg mt-0.5">ℹ️</span>
-      <div>
-        <p class="text-xs text-gray-600 dark:text-gray-400">Aktifkan notifikasi di Settings browser untuk menerima pengingat</p>
-      </div>
-    </div>
-  </div>
-</template>
-
-
-      
 
       <!-- Qur'an -->
-      <template x-if="activeTab === 'quran'">
+      <div x-show="activeTab === 'quran'">
         <div class="p-5">
           <template x-if="!currentSurah">
             <div class="space-y-3">
@@ -545,10 +544,10 @@
             </div>
           </template>
         </div>
-      </template>
+      </div>
 
       <!-- Doa -->
-      <template x-if="activeTab === 'doa'">
+      <div x-show="activeTab === 'doa'">
         <div class="p-5">
           <template x-if="!currentDoa">
             <div class="space-y-3">
@@ -601,10 +600,10 @@
             </div>
           </template>
         </div>
-      </template>
+      </div>
 
       <!-- Murottal -->
-      <template x-if="activeTab === 'murottal'">
+      <div x-show="activeTab === 'murottal'">
         <div class="p-5 space-y-3">
           <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
             <p class="text-sm opacity-90 font-medium">Murottal Al-Qur'an</p>
@@ -639,10 +638,10 @@
             </div>
           </template>
         </div>
-      </template>
+      </div>
 
       <!-- Ibadah Checklist -->
-      <template x-if="activeTab === 'ibadah'">
+      <div x-show="activeTab === 'ibadah'">
         <div class="p-5">
           <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white mb-4">
             <p class="text-sm opacity-90 font-medium">Checklist Ibadah Hari Ini</p>
@@ -684,10 +683,10 @@
             </p>
           </div>
         </div>
-      </template>
+      </div>
 
       <!-- Masjid Terdekat -->
-      <template x-if="activeTab === 'masjid'">
+      <div x-show="activeTab === 'masjid'">
         <div class="p-5">
           <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white mb-4">
             <p class="text-sm opacity-90 font-medium">Masjid Terdekat</p>
@@ -756,7 +755,7 @@
             </div>
           </template>
         </div>
-      </template>
+      </div>
 
     </main>
 
