@@ -56,20 +56,30 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ CRITICAL: Tunggu SW ready
-    const swRegistration = await navigator.serviceWorker.ready;
+    // ✅ CRITICAL: Tunggu SW ready dengan timeout
+    console.log('⏳ [FCM] Waiting for Service Worker...');
+    const swRegistration = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('SW timeout after 5s')), 5000)
+      )
+    ]);
     console.log('✅ [FCM] Service Worker ready:', swRegistration.scope);
 
     // ✅ Get messaging instance
+    console.log('📱 [FCM] Creating messaging instance...');
     const messaging = firebase.messaging();
+    
+    console.log('🔗 [FCM] Linking SW to messaging...');
     messaging.useServiceWorker(swRegistration);
     console.log('✅ [FCM] Messaging menggunakan existing SW');
     
-    // ✅ CRITICAL: Request token!
+    // ✅ CRITICAL: Request token dengan error handling
     console.log('🔑 [FCM] Requesting token...');
     
     const currentToken = await messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+      serviceWorkerRegistration: swRegistration
     });
     
     if (currentToken) {
@@ -85,7 +95,7 @@ async function initFirebaseMessaging() {
       console.log('💾 [FCM] Token tersimpan');
       
     } else {
-      console.warn('⚠️ [FCM] Tidak dapat token');
+      console.warn('⚠️ [FCM] Tidak dapat token (no error thrown)');
     }
 
     // ✅ Handler foreground messages
@@ -110,8 +120,9 @@ async function initFirebaseMessaging() {
 
   } catch (error) {
     console.error('❌ [FCM] Init failed:', error);
-    console.error('Detail:', error.message);
-    console.error('Stack:', error.stack);
+    console.error('❌ [FCM] Error name:', error.name);
+    console.error('❌ [FCM] Error message:', error.message);
+    console.error('❌ [FCM] Error stack:', error.stack);
   }
 }
 
