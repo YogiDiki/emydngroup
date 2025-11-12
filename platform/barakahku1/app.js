@@ -56,13 +56,18 @@ async function initFirebaseMessaging() {
       console.log('✅ [FCM] Firebase sudah initialized');
     }
 
-    // ✅ SIMPLE APPROACH: Langsung request token!
+    // ✅ SIMPLE APPROACH: Langsung request token dengan custom SW path!
     console.log('🔑 [FCM] Requesting token directly...');
     
     const messaging = firebase.messaging();
     
+    // ✅ CRITICAL: Gunakan SW yang sudah ada
+    const swRegistration = await navigator.serviceWorker.ready;
+    console.log('✅ [FCM] Using existing SW:', swRegistration.scope);
+    
     const currentToken = await messaging.getToken({ 
-      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM'
+      vapidKey: 'BEFVvRCw1LLJSS1Ss7VSeCFAmLx57Is7MgJHqsn-dtS3jUcI1S-PZjK9ybBK3XAFdnSLgm0iH9RvvRiDOAnhmsM',
+      serviceWorkerRegistration: swRegistration
     });
     
     if (currentToken) {
