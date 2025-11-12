@@ -156,8 +156,10 @@
     }
   </style>
   
-  <!-- CRITICAL FIX: Load Alpine.js FIRST before app.js -->
-  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <!-- TAMBAHKAN DI SINI - PERSIS SEPERTI INI -->
+<script src="/platform/barakahku1/app.js"></script>
+<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
 </head>
 <body class="h-full">
   <div class="flex flex-col h-full max-w-lg mx-auto shadow-2xl relative">
@@ -777,8 +779,6 @@
 
   </div>
 
-<!-- CRITICAL: Load app.js AFTER Alpine.js is loaded -->
-<script src="/platform/barakahku1/app.js"></script>
 
 </body>
 </html>
