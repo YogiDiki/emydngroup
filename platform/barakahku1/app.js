@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js v25 (Minimal Clean)
+// BarakahKu - app.js v26 (Fixed)
 // ==============================
 
 console.log('📦 [APP] Loading...');
@@ -69,7 +69,6 @@ async function initFCM() {
         platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
       }));
       console.log('✅ [FCM] Token:', token);
-      // Tidak ada popup/alert - token tersimpan di console & localStorage
     }
     
     messaging.onMessage((payload) => {
@@ -97,10 +96,12 @@ async function initFCM() {
 
 document.addEventListener('alpine:init', () => {
   Alpine.data('app', () => ({
+    // State variables
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
     currentSurah: null,
+    currentDoa: null,
     doaList: [],
     murotalList: [],
     jadwal: {},
@@ -112,6 +113,7 @@ document.addEventListener('alpine:init', () => {
     loadingMosques: false,
     userCoords: null,
     currentMood: null,
+    notificationStatus: 'inactive',
     moodSuggestions: {
       sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
       senang: { ayat: 'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ', arti: 'Dan terhadap nikmat Tuhanmu, hendaklah kamu nyatakan', ref: 'QS. Ad-Duha: 11' },
@@ -291,10 +293,10 @@ document.addEventListener('alpine:init', () => {
 
     async requestNotificationPermission() {
       if (Notification.permission === 'granted') {
+        this.notificationStatus = 'active';
         const saved = localStorage.getItem('fcm_token');
         if (saved) {
           console.log('💾 [FCM] Token tersimpan:', JSON.parse(saved));
-          // Tidak ada alert, hanya log di console
         } else {
           await initFCM();
         }
@@ -302,12 +304,16 @@ document.addEventListener('alpine:init', () => {
       }
       
       if (Notification.permission === 'denied') {
+        this.notificationStatus = 'denied';
         return alert('❌ Izin notifikasi ditolak.\n\nAktifkan di Settings browser');
       }
       
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
+        this.notificationStatus = 'active';
         setTimeout(() => initFCM(), 1000);
+      } else {
+        this.notificationStatus = 'denied';
       }
     },
 
