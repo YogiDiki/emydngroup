@@ -297,23 +297,29 @@ document.addEventListener('alpine:init', () => {
         const saved = localStorage.getItem('fcm_token');
         if (saved) {
           console.log('💾 [FCM] Token tersimpan:', JSON.parse(saved));
+          alert('✅ Notifikasi sudah aktif!\n\n🔔 Anda akan menerima notifikasi dari BarakahKu');
         } else {
           await initFCM();
+          alert('✅ Notifikasi berhasil diaktifkan!\n\n🔔 Anda akan menerima notifikasi pengingat sholat dan bacaan harian');
         }
         return;
       }
       
       if (Notification.permission === 'denied') {
         this.notificationStatus = 'denied';
-        return alert('❌ Izin notifikasi ditolak.\n\nAktifkan di Settings browser');
+        return alert('❌ Izin notifikasi ditolak.\n\nSilakan aktifkan di Settings browser:\n1. Tap ikon kunci/info\n2. Pilih Permissions\n3. Aktifkan Notifications');
       }
       
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         this.notificationStatus = 'active';
-        setTimeout(() => initFCM(), 1000);
+        setTimeout(async () => {
+          await initFCM();
+          alert('✅ Notifikasi berhasil diaktifkan!\n\n🔔 Anda akan menerima notifikasi pengingat sholat dan bacaan harian');
+        }, 1000);
       } else {
         this.notificationStatus = 'denied';
+        alert('ℹ️ Izin notifikasi dibatalkan.\n\nAnda bisa mengaktifkannya nanti dari halaman Settings browser.');
       }
     },
 
