@@ -43,24 +43,14 @@ async function initFirebase() {
     try {
       console.log('📦 [SW] Loading Firebase SDK v8...');
       
-      // Load Firebase scripts with extended timeout
-      await Promise.race([
-        (async () => {
-          console.log('📥 [SW] Importing firebase-app.js v8...');
-          importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
-          console.log('✅ [SW] firebase-app.js loaded');
-          
-          console.log('📥 [SW] Importing firebase-messaging.js v8...');
-          importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
-          console.log('✅ [SW] firebase-messaging.js loaded');
-        })(),
-        new Promise((_, reject) => 
-          setTimeout(() => {
-            console.error('⏱️ [SW] Firebase SDK timeout!');
-            reject(new Error('Firebase SDK timeout'));
-          }, 15000) // Extended to 15s
-        )
-      ]);
+      // Load Firebase scripts
+      console.log('📥 [SW] Importing firebase-app.js v8...');
+      self.importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+      console.log('✅ [SW] firebase-app.js loaded');
+      
+      console.log('📥 [SW] Importing firebase-messaging.js v8...');
+      self.importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
+      console.log('✅ [SW] firebase-messaging.js loaded');
 
       console.log('✅ [SW] Firebase SDK imported');
       console.log('📊 [SW] Firebase available:', typeof firebase !== 'undefined');
@@ -110,11 +100,10 @@ async function initFirebase() {
       console.error('❌ [SW] Firebase init failed:', err);
       console.error('❌ [SW] Error name:', err.name);
       console.error('❌ [SW] Error message:', err.message);
-      console.error('❌ [SW] Error stack:', err.stack);
       firebaseReady = false;
       return false;
     } finally {
-      initPromise = null; // Clear the promise when done
+      initPromise = null;
     }
   })();
 
