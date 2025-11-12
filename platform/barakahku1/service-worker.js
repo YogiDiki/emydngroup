@@ -2,7 +2,7 @@
 // 🔥 BarakahKu - Service Worker (PWA + FCM) - v20
 // ====================================================
 
-const CACHE_NAME = 'barakahku-cache-v20';
+const CACHE_NAME = 'barakahku-cache-v21';
 
 const urlsToCache = [
   '/platform/barakahku1/',
