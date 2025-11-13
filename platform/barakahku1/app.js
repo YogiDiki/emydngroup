@@ -632,7 +632,7 @@ document.addEventListener('alpine:init', () => {
 });
 
 // ====================================================
-// PWA
+// PWA1
 // ====================================================
 
 window.addEventListener('beforeinstallprompt', (e) => {
