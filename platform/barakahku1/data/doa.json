@@ -2,19 +2,1000 @@
   {
     "id": 1,
     "judul": "Doa Sebelum Makan",
-    "arab": "بِسْمِ اللهِ وَعَلَى بَرَكَةِ اللهِ",
-    "latin": "Bismillāhi wa 'alā barakatillāh",
-    "terjemah": "Dengan menyebut nama Allah dan atas berkah Allah.",
-    "sumber": "HR. Abu Dawud no. 3767",
+    "arab": "بِسْمِ اللهِ",
+    "latin": "Bismillāh",
+    "terjemah": "Dengan menyebut nama Allah.",
+    "sumber": "HR. Bukhari no. 5376 & Muslim no. 2017",
     "kategori": "harian"
   },
   {
     "id": 2,
     "judul": "Doa Sesudah Makan",
-    "arab": "الْـحَمْدُ لِلّٰهِ الَّذِيْ أَطْعَمَنِيْ هٰذَا وَرَزَقَنِيْهِ مِنْ غَيْرِ حَوْلٍ مِنِّيْ وَلَا قُوَّةٍ",
-    "latin": "Alhamdulillāhil-ladzī ath'amanī hādzā wa razaqanīhi min ghairi haulin minnī wa lā quwwah",
-    "terjemah": "Segala puji bagi Allah yang telah memberi aku makanan ini dan rezeki tanpa daya dan kekuatanku.",
-    "sumber": "HR. Abu Dawud no. 4023",
+    "arab": "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ",
+    "latin": "Alḥamdu lillāhil-lażī aṭ'amanā wa saqānā wa ja'alanā muslimīn",
+    "terjemah": "Segala puji bagi Allah yang telah memberi kami makan dan minum serta menjadikan kami muslim.",
+    "sumber": "HR. Abu Dawud no. 3850 & Tirmidzi no. 3458",
     "kategori": "harian"
+  },
+  {
+    "id": 3,
+    "judul": "Doa Lupa Membaca Bismillah Sebelum Makan",
+    "arab": "بِسْمِ اللهِ أَوَّلَهُ وَآخِرَهُ",
+    "latin": "Bismillāhi awwalahu wa ākhirahu",
+    "terjemah": "Dengan nama Allah pada awal dan akhirnya.",
+    "sumber": "HR. Abu Dawud no. 3767 & Tirmidzi no. 1858",
+    "kategori": "harian"
+  },
+  {
+    "id": 4,
+    "judul": "Doa Minum",
+    "arab": "الْحَمْدُ لِلَّهِ",
+    "latin": "Alḥamdu lillāh",
+    "terjemah": "Segala puji bagi Allah.",
+    "sumber": "HR. Bukhari dalam Adabul Mufrad no. 1260",
+    "kategori": "harian"
+  },
+  {
+    "id": 5,
+    "judul": "Doa Masuk Rumah",
+    "arab": "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ الْمَوْلِجِ وَخَيْرَ الْمَخْرَجِ، بِسْمِ اللهِ وَلَجْنَا وَبِسْمِ اللهِ خَرَجْنَا، وَعَلَى اللهِ رَبِّنَا تَوَكَّلْنَا",
+    "latin": "Allāhumma innī as'aluka khairal mauliji wa khairal makhraji, bismillāhi walajna wa bismillāhi kharajna, wa 'alallāhi rabbinā tawakkalnā",
+    "terjemah": "Ya Allah, sesungguhnya aku mohon kepada-Mu kebaikan tempat masuk dan kebaikan tempat keluar. Dengan nama Allah kami masuk, dengan nama Allah kami keluar, dan kepada Allah Tuhan kami, kami bertawakkal.",
+    "sumber": "HR. Abu Dawud no. 5096",
+    "kategori": "harian"
+  },
+  {
+    "id": 6,
+    "judul": "Doa Keluar Rumah",
+    "arab": "بِسْمِ اللهِ، تَوَكَّلْتُ عَلَى اللهِ، وَلاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللهِ",
+    "latin": "Bismillāh, tawakkaltu 'alallāh, wa lā ḥaula wa lā quwwata illā billāh",
+    "terjemah": "Dengan nama Allah, aku bertawakkal kepada Allah, dan tidak ada daya serta kekuatan melainkan dengan pertolongan Allah.",
+    "sumber": "HR. Abu Dawud no. 5095 & Tirmidzi no. 3426",
+    "kategori": "harian"
+  },
+  {
+    "id": 7,
+    "judul": "Doa Sebelum Tidur",
+    "arab": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+    "latin": "Bismika Allāhumma amūtu wa aḥyā",
+    "terjemah": "Dengan nama-Mu ya Allah, aku mati dan aku hidup.",
+    "sumber": "HR. Bukhari no. 6324",
+    "kategori": "harian"
+  },
+  {
+    "id": 8,
+    "judul": "Doa Bangun Tidur",
+    "arab": "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+    "latin": "Alḥamdu lillāhil-lażī aḥyānā ba'da mā amātanā wa ilaihin-nusyūr",
+    "terjemah": "Segala puji bagi Allah yang telah menghidupkan kami setelah mematikan kami, dan kepada-Nya kami akan dibangkitkan.",
+    "sumber": "HR. Bukhari no. 6312",
+    "kategori": "harian"
+  },
+  {
+    "id": 9,
+    "judul": "Doa Masuk Kamar Mandi",
+    "arab": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+    "latin": "Allāhumma innī a'ūżu bika minal khubutsi wal khabā'its",
+    "terjemah": "Ya Allah, aku berlindung kepada-Mu dari godaan setan laki-laki dan setan perempuan.",
+    "sumber": "HR. Bukhari no. 142 & Muslim no. 375",
+    "kategori": "harian"
+  },
+  {
+    "id": 10,
+    "judul": "Doa Keluar Kamar Mandi",
+    "arab": "غُفْرَانَكَ",
+    "latin": "Ghufrānaka",
+    "terjemah": "Aku memohon ampunan-Mu.",
+    "sumber": "HR. Abu Dawud no. 30 & Tirmidzi no. 7",
+    "kategori": "harian"
+  },
+  {
+    "id": 11,
+    "judul": "Doa Memakai Pakaian",
+    "arab": "الْحَمْدُ لِلَّهِ الَّذِي كَسَانِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلاَ قُوَّةٍ",
+    "latin": "Alḥamdu lillāhil-lażī kasānī hāżā wa razaqanīhi min ghairi ḥaulin minnī wa lā quwwah",
+    "terjemah": "Segala puji bagi Allah yang telah memberi aku pakaian ini dan memberiku rezeki tanpa daya dan kekuatan dariku.",
+    "sumber": "HR. Abu Dawud no. 4023 & Tirmidzi no. 3458",
+    "kategori": "harian"
+  },
+  {
+    "id": 12,
+    "judul": "Doa Memakai Pakaian Baru",
+    "arab": "اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ كَسَوْتَنِيهِ، أَسْأَلُكَ خَيْرَهُ وَخَيْرَ مَا صُنِعَ لَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّهِ وَشَرِّ مَا صُنِعَ لَهُ",
+    "latin": "Allāhumma lakal ḥamdu anta kasautanīhi, as'aluka khairahu wa khaira mā ṣuni'a lahu, wa a'ūżu bika min syarrihi wa syarri mā ṣuni'a lahu",
+    "terjemah": "Ya Allah, bagi-Mu segala puji, Engkau yang telah memberi pakaian ini kepadaku. Aku memohon kepada-Mu kebaikan pakaian ini dan kebaikan apa yang dibuat untuknya, dan aku berlindung kepada-Mu dari kejahatan pakaian ini dan kejahatan apa yang dibuat untuknya.",
+    "sumber": "HR. Abu Dawud no. 4020 & Tirmidzi no. 1767",
+    "kategori": "harian"
+  },
+  {
+    "id": 13,
+    "judul": "Doa Masuk Masjid",
+    "arab": "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",
+    "latin": "Allāhummaftaḥ lī abwāba raḥmatika",
+    "terjemah": "Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu.",
+    "sumber": "HR. Muslim no. 713",
+    "kategori": "harian"
+  },
+  {
+    "id": 14,
+    "judul": "Doa Keluar Masjid",
+    "arab": "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",
+    "latin": "Allāhumma innī as'aluka min faḍlika",
+    "terjemah": "Ya Allah, sesungguhnya aku memohon kepada-Mu sebagian dari karunia-Mu.",
+    "sumber": "HR. Muslim no. 713",
+    "kategori": "harian"
+  },
+  {
+    "id": 15,
+    "judul": "Doa Bercermin",
+    "arab": "اللَّهُمَّ كَمَا حَسَّنْتَ خَلْقِي فَحَسِّنْ خُلُقِي",
+    "latin": "Allāhumma kamā ḥassanta khalqī fa ḥassin khuluqī",
+    "terjemah": "Ya Allah, sebagaimana Engkau baguskan penciptaanku maka baguskanlah akhlakku.",
+    "sumber": "HR. Ahmad no. 24673 & Ibnu Hibban no. 5654",
+    "kategori": "harian"
+  },
+  {
+    "id": 16,
+    "judul": "Doa Ketika Turun Hujan",
+    "arab": "اللَّهُمَّ صَيِّبًا نَافِعًا",
+    "latin": "Allāhumma ṣayyiban nāfi'ā",
+    "terjemah": "Ya Allah, turunkanlah hujan yang bermanfaat.",
+    "sumber": "HR. Bukhari no. 1032",
+    "kategori": "harian"
+  },
+  {
+    "id": 17,
+    "judul": "Doa Setelah Turun Hujan",
+    "arab": "مُطِرْنَا بِفَضْلِ اللهِ وَرَحْمَتِهِ",
+    "latin": "Muṭirnā bifaḍlillāhi wa raḥmatihi",
+    "terjemah": "Kita diberi hujan berkat karunia Allah dan rahmat-Nya.",
+    "sumber": "HR. Bukhari no. 846 & Muslim no. 71",
+    "kategori": "harian"
+  },
+  {
+    "id": 18,
+    "judul": "Doa Mendengar Petir",
+    "arab": "سُبْحَانَ الَّذِي يُسَبِّحُ الرَّعْدُ بِحَمْدِهِ وَالْمَلاَئِكَةُ مِنْ خِيفَتِهِ",
+    "latin": "Subḥānallażī yusabbiḥur-ra'du biḥamdihi wal-malā'ikatu min khīfatih",
+    "terjemah": "Maha Suci Allah yang guntur bertasbih dengan memuji-Nya, dan para malaikat karena takut kepada-Nya.",
+    "sumber": "HR. Malik dalam Al-Muwaththa no. 1829",
+    "kategori": "harian"
+  },
+  {
+    "id": 19,
+    "judul": "Doa Melihat Bulan Baru (Hilal)",
+    "arab": "اللهُ أَكْبَرُ، اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْأَمْنِ وَالْإِيمَانِ، وَالسَّلَامَةِ وَالْإِسْلَامِ، رَبِّي وَرَبُّكَ اللهُ",
+    "latin": "Allāhu akbar, Allāhumma ahillahu 'alainā bil-amni wal-īmān, was-salāmati wal-islām, rabbī wa rabbukallāh",
+    "terjemah": "Allah Maha Besar. Ya Allah, tampakkanlah bulan ini kepada kami dengan membawa keamanan dan keimanan, keselamatan dan Islam. Tuhanku dan Tuhanmu adalah Allah.",
+    "sumber": "HR. Tirmidzi no. 3451 & Darimi no. 1729",
+    "kategori": "harian"
+  },
+  {
+    "id": 20,
+    "judul": "Doa Ketika Ada Musibah",
+    "arab": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ، اللَّهُمَّ أْجُرْنِي فِي مُصِيبَتِي وَأَخْلِفْ لِي خَيْرًا مِنْهَا",
+    "latin": "Innā lillāhi wa innā ilaihi rāji'ūn, Allāhumma-'jurnī fī muṣībatī wa akhlif lī khairan minhā",
+    "terjemah": "Sesungguhnya kami milik Allah dan kepada-Nya kami akan kembali. Ya Allah, berilah aku pahala dalam musibahku dan gantilah dengan yang lebih baik.",
+    "sumber": "HR. Muslim no. 918",
+    "kategori": "harian"
+  },
+
+  {
+    "id": 21,
+    "judul": "Doa Sebelum Wudhu",
+    "arab": "بِسْمِ اللهِ",
+    "latin": "Bismillāh",
+    "terjemah": "Dengan nama Allah.",
+    "sumber": "HR. Abu Dawud no. 101 & Ibnu Majah no. 397",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 22,
+    "judul": "Doa Sesudah Wudhu",
+    "arab": "أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
+    "latin": "Asyhadu an lā ilāha illallāhu waḥdahu lā syarīka lah, wa asyhadu anna Muḥammadan 'abduhu wa rasūluh",
+    "terjemah": "Aku bersaksi bahwa tidak ada tuhan yang berhak disembah selain Allah Yang Maha Esa, tiada sekutu bagi-Nya, dan aku bersaksi bahwa Muhammad adalah hamba dan utusan-Nya.",
+    "sumber": "HR. Muslim no. 234",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 23,
+    "judul": "Doa Iftitah (Pembuka Shalat)",
+    "arab": "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلاَ إِلَهَ غَيْرُكَ",
+    "latin": "Subḥānaka Allāhumma wa biḥamdika, wa tabārakasmuka, wa ta'ālā jadduka, wa lā ilāha ghairuk",
+    "terjemah": "Maha Suci Engkau ya Allah, dan dengan memuji-Mu, Maha Berkah nama-Mu, dan Maha Tinggi keagungan-Mu, dan tidak ada tuhan selain Engkau.",
+    "sumber": "HR. Abu Dawud no. 775 & Tirmidzi no. 242",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 24,
+    "judul": "Doa Ruku",
+    "arab": "سُبْحَانَ رَبِّيَ الْعَظِيمِ (3x)",
+    "latin": "Subḥāna rabbiya al-'aẓīm (3x)",
+    "terjemah": "Maha Suci Tuhanku Yang Maha Agung. (3 kali)",
+    "sumber": "HR. Abu Dawud no. 886 & Tirmidzi no. 261",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 25,
+    "judul": "Doa I'tidal (Bangun dari Ruku)",
+    "arab": "سَمِعَ اللهُ لِمَنْ حَمِدَهُ، رَبَّنَا وَلَكَ الْحَمْدُ",
+    "latin": "Sami'allāhu liman ḥamidah, rabbanā wa lakal ḥamd",
+    "terjemah": "Allah mendengar orang yang memuji-Nya. Ya Tuhan kami, bagi-Mu segala puji.",
+    "sumber": "HR. Bukhari no. 789 & Muslim no. 392",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 26,
+    "judul": "Doa Sujud",
+    "arab": "سُبْحَانَ رَبِّيَ الأَعْلَى (3x)",
+    "latin": "Subḥāna rabbiya al-a'lā (3x)",
+    "terjemah": "Maha Suci Tuhanku Yang Maha Tinggi. (3 kali)",
+    "sumber": "HR. Abu Dawud no. 886 & Tirmidzi no. 261",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 27,
+    "judul": "Doa Duduk Antara Dua Sujud",
+    "arab": "رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي",
+    "latin": "Rabbighfir lī, rabbighfir lī",
+    "terjemah": "Ya Tuhanku, ampunilah aku. Ya Tuhanku, ampunilah aku.",
+    "sumber": "HR. Abu Dawud no. 874 & Ibnu Majah no. 898",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 28,
+    "judul": "Doa Tasyahud Awal",
+    "arab": "التَّحِيَّاتُ لِلَّهِ وَالصَّلَوَاتُ وَالطَّيِّبَاتُ، السَّلاَمُ عَلَيْكَ أَيُّهَا النَّبِيُّ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ، السَّلاَمُ عَلَيْنَا وَعَلَى عِبَادِ اللهِ الصَّالِحِينَ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا رَسُولُ اللهِ",
+    "latin": "Attaḥiyyātu lillāhi waṣ-ṣalawātu waṭ-ṭayyibāt, assalāmu 'alaika ayyuhan-nabiyyu wa raḥmatullāhi wa barakātuh, assalāmu 'alainā wa 'alā 'ibādillāhiṣ-ṣāliḥīn, asyhadu an lā ilāha illallāh wa asyhadu anna Muḥammadar-rasūlullāh",
+    "terjemah": "Segala penghormatan, keberkahan, dan kebaikan hanya untuk Allah. Semoga keselamatan, rahmat, dan berkah Allah tercurahkan kepadamu wahai Nabi. Semoga keselamatan tercurah kepada kami dan hamba-hamba Allah yang shalih. Aku bersaksi bahwa tidak ada tuhan selain Allah, dan aku bersaksi bahwa Muhammad adalah utusan Allah.",
+    "sumber": "HR. Bukhari no. 6328 & Muslim no. 402",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 29,
+    "judul": "Doa Tasyahud Akhir (Shalawat Ibrahim)",
+    "arab": "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ، اللَّهُمَّ بَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
+    "latin": "Allāhumma ṣalli 'alā Muḥammadin wa 'alā āli Muḥammad, kamā ṣallaita 'alā Ibrāhīma wa 'alā āli Ibrāhīm, innaka ḥamīdum majīd. Allāhumma bārik 'alā Muḥammadin wa 'alā āli Muḥammad, kamā bārakta 'alā Ibrāhīma wa 'alā āli Ibrāhīm, innaka ḥamīdum majīd",
+    "terjemah": "Ya Allah, limpahkanlah rahmat kepada Nabi Muhammad dan keluarganya sebagaimana Engkau limpahkan rahmat kepada Ibrahim dan keluarganya. Sesungguhnya Engkau Maha Terpuji lagi Maha Agung. Ya Allah, limpahkanlah berkah kepada Nabi Muhammad dan keluarganya sebagaimana Engkau limpahkan berkah kepada Ibrahim dan keluarganya. Sesungguhnya Engkau Maha Terpuji lagi Maha Agung.",
+    "sumber": "HR. Bukhari no. 3370 & Muslim no. 406",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 30,
+    "judul": "Doa Setelah Salam dari Shalat",
+    "arab": "اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ",
+    "latin": "Allāhumma antas-salāmu wa minkas-salām, tabārakta yā żal-jalāli wal-ikrām",
+    "terjemah": "Ya Allah, Engkaulah Zat Yang Maha Sempurna dan dari-Mulah kesempurnaan. Maha Suci Engkau wahai Zat Yang Memiliki keagungan dan kemuliaan.",
+    "sumber": "HR. Muslim no. 591",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 31,
+    "judul": "Doa Qunut Subuh",
+    "arab": "اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ، وَعَافِنِي فِيمَنْ عَافَيْتَ، وَتَوَلَّنِي فِيمَنْ تَوَلَّيْتَ، وَبَارِكْ لِي فِيمَا أَعْطَيْتَ، وَقِنِي شَرَّ مَا قَضَيْتَ، إِنَّكَ تَقْضِي وَلاَ يُقْضَى عَلَيْكَ، وَإِنَّهُ لاَ يَذِلُّ مَنْ وَالَيْتَ، تَبَارَكْتَ رَبَّنَا وَتَعَالَيْتَ",
+    "latin": "Allāhummahdini fīman hadaita, wa 'āfinī fīman 'āfaita, wa tawallani fīman tawallaita, wa bārikli fīmā a'ṭaita, wa qinī syarra mā qaḍaita, innaka taqḍī wa lā yuqḍā 'alaik, wa innahu lā yażillu man wālaita, tabārakta rabbanā wa ta'ālaita",
+    "terjemah": "Ya Allah, berilah aku petunjuk bersama orang-orang yang telah Engkau beri petunjuk, berilah aku kesehatan bersama orang-orang yang telah Engkau beri kesehatan, peliharalah aku bersama orang-orang yang telah Engkau pelihara, berkahilah untukku apa yang telah Engkau berikan kepadaku, dan peliharalah aku dari kejahatan yang telah Engkau tetapkan. Sesungguhnya Engkau yang menetapkan dan tidak ada yang dapat menetapkan atas-Mu. Dan sesungguhnya tidak akan hina orang yang telah Engkau pelihara. Maha Suci Engkau Ya Tuhan kami dan Maha Tinggi Engkau.",
+    "sumber": "HR. Abu Dawud no. 1425 & Tirmidzi no. 464",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 32,
+    "judul": "Doa Mendengar Adzan",
+    "arab": "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلاَةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ",
+    "latin": "Allāhumma rabba hāżihid-da'watit-tāmmah, waṣ-ṣalātil-qā'imah, āti Muḥammadanil-wasīlata wal-faḍīlah, wab'athu maqāman maḥmūdanil-lażī wa'adtah",
+    "terjemah": "Ya Allah, Tuhan pemilik seruan yang sempurna ini dan shalat yang akan didirikan, berikanlah kepada Nabi Muhammad wasilah dan keutamaan, dan bangkitkanlah dia pada tempat yang terpuji yang telah Engkau janjikan kepadanya.",
+    "sumber": "HR. Bukhari no. 614",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 33,
+    "judul": "Doa Niat Puasa Ramadhan",
+    "arab": "نَوَيْتُ صَوْمَ غَدٍ عَنْ أَدَاءِ فَرْضِ شَهْرِ رَمَضَانَ هَذِهِ السَّنَةِ لِلَّهِ تَعَالَى",
+    "latin": "Nawaitu ṣauma ghadin 'an adā'i farḍi syahri Ramaḍāna hāżihis-sanati lillāhi ta'ālā",
+    "terjemah": "Aku berniat berpuasa esok hari untuk menunaikan kewajiban bulan Ramadhan tahun ini karena Allah Ta'ala.",
+    "sumber": "Sumber: Kitab Fiqih (niat dalam hati sudah sah)",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 34,
+    "judul": "Doa Berbuka Puasa",
+    "arab": "اللَّهُمَّ إِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",
+    "latin": "Allāhumma innī laka ṣumtu wa bika āmantu wa 'alaika tawakkaltu wa 'alā rizqika afṭartu",
+    "terjemah": "Ya Allah, untuk-Mu aku berpuasa, kepada-Mu aku beriman, kepada-Mu aku bertawakal, dan dengan rezeki-Mu aku berbuka.",
+    "sumber": "HR. Abu Dawud no. 2358",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 35,
+    "judul": "Doa Berbuka Puasa (Versi Singkat)",
+    "arab": "ذَهَبَ الظَّمَأُ، وَابْتَلَّتِ الْعُرُوقُ، وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللهُ",
+    "latin": "Żahabaẓ-ẓama', wabtallatil-'urūq, wa thabatal-ajru insyā'allāh",
+    "terjemah": "Telah hilang dahaga, telah basah kerongkongan, dan telah ditetapkan pahala insya Allah.",
+    "sumber": "HR. Abu Dawud no. 2357",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 36,
+    "judul": "Doa Sujud Tilawah",
+    "arab": "سَجَدَ وَجْهِيَ لِلَّذِي خَلَقَهُ وَشَقَّ سَمْعَهُ وَبَصَرَهُ بِحَوْلِهِ وَقُوَّتِهِ",
+    "latin": "Sajada wajhiya lillażī khalaqahu wa syaqqa sam'ahu wa baṣarahu biḥaulihi wa quwwatih",
+    "terjemah": "Wajahku bersujud kepada Zat yang menciptakannya dan membentuk pendengaran serta penglihatannya dengan kekuatan dan kekuasaan-Nya.",
+    "sumber": "HR. Tirmidzi no. 580 & Hakim no. 1089",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 37,
+    "judul": "Doa Istikharah",
+    "arab": "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ، وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ، وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ، فَإِنَّكَ تَقْدِرُ وَلاَ أَقْدِرُ، وَتَعْلَمُ وَلاَ أَعْلَمُ، وَأَنْتَ عَلاَّمُ الْغُيُوبِ، اللَّهُمَّ إِنْ كُنْتَ تَعْلَمُ أَنَّ هَذَا الأَمْرَ خَيْرٌ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاقْدُرْهُ لِي وَيَسِّرْهُ لِي ثُمَّ بَارِكْ لِي فِيهِ، وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هَذَا الأَمْرَ شَرٌّ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاصْرِفْهُ عَنِّي وَاصْرِفْنِي عَنْهُ، وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِي بِهِ",
+    "latin": "Allāhumma innī astakhīruka bi'ilmika, wa astaqdiruka biqudratika, wa as'aluka min faḍlikal-'aẓīm, fa innaka taqdiru wa lā aqdiru, wa ta'lamu wa lā a'lamu, wa anta 'allāmul-ghuyūb. Allāhumma in kunta ta'lamu anna hāżal-amra khairun lī fī dīnī wa ma'āsyī wa 'āqibati amrī faqdurhu lī wa yassirhu lī tsumma bārik lī fīh, wa in kunta ta'lamu anna hāżal-amra syarrun lī fī dīnī wa ma'āsyī wa 'āqibati amrī faṣrifhu 'annī waṣrifnī 'anh, waqdur liyal-khaira ḥaitsu kāna tsumma arḍinī bih",
+    "terjemah": "Ya Allah, aku meminta pilihan yang baik kepada-Mu dengan ilmu-Mu, dan aku memohon kekuatan kepada-Mu dengan kekuatan-Mu, dan aku memohon kepada-Mu sebagian dari karunia-Mu yang agung. Karena sesungguhnya Engkau Maha Kuasa sedangkan aku tidak berkuasa, Engkau Maha Mengetahui sedangkan aku tidak mengetahui, dan Engkau Maha Mengetahui segala yang gaib. Ya Allah, jika Engkau mengetahui bahwa perkara ini baik bagiku dalam agamaku, kehidupanku, dan akibat urusanku maka tetapkanlah untukku dan mudahkanlah bagiku kemudian berkahilah aku padanya. Dan jika Engkau mengetahui bahwa perkara ini buruk bagiku dalam agamaku, kehidupanku, dan akibat urusanku maka palingkanlah ia dariku dan palingkanlah aku darinya, dan tetapkanlah untukku kebaikan di mana pun ia berada, kemudian ridhoilah aku dengannya.",
+    "sumber": "HR. Bukhari no. 1162",
+    "kategori": "ibadah"
+  },
+
+  {
+    "id": 38,
+    "judul": "Doa untuk Kedua Orang Tua",
+    "arab": "رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا",
+    "latin": "Rabbir-ḥamhumā kamā rabbayānī ṣaghīrā",
+    "terjemah": "Ya Tuhanku, sayangilah keduanya sebagaimana mereka berdua telah mendidik aku waktu kecil.",
+    "sumber": "QS. Al-Isra: 24",
+    "kategori": "keluarga"
+  },
+  {
+    "id": 39,
+    "judul": "Doa Mohon Keturunan yang Shalih",
+    "arab": "رَبِّ هَبْ لِي مِنْ لَدُنْكَ ذُرِّيَّةً طَيِّبَةً إِنَّكَ سَمِيعُ الدُّعَاءِ",
+    "latin": "Rabbi hab lī min ladunka żurriyyatan ṭayyibah, innaka samī'ud-du'ā'",
+    "terjemah": "Ya Tuhanku, anugerahkanlah kepadaku dari sisi-Mu keturunan yang baik. Sesungguhnya Engkau Maha Mendengar doa.",
+    "sumber": "QS. Ali Imran: 38",
+    "kategori": "keluarga"
+  },
+  {
+    "id": 40,
+    "judul": "Doa untuk Pasangan dan Anak",
+    "arab": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+    "latin": "Rabbanā hab lanā min azwājinā wa żurriyyātinā qurrata a'yunin waj'alnā lil-muttaqīna imāmā",
+    "terjemah": "Ya Tuhan kami, anugerahkanlah kepada kami pasangan dan keturunan kami sebagai penyejuk hati, dan jadikanlah kami pemimpin bagi orang-orang yang bertakwa.",
+    "sumber": "QS. Al-Furqan: 74",
+    "kategori": "keluarga"
+  },
+  {
+    "id": 41,
+    "judul": "Doa untuk Bayi yang Baru Lahir (Tahnik)",
+    "arab": "بَارَكَ اللهُ لَكَ فِي الْمَوْهُوبِ لَكَ، وَشَكَرْتَ الْوَاهِبَ، وَبَلَغَ أَشُدَّهُ، وَرُزِقْتَ بِرَّهُ",
+    "latin": "Bārakallāhu laka fil-mauhūbi lak, wa syakarta al-wāhib, wa balagha asyyuddah, wa ruziqta birrah",
+    "terjemah": "Semoga Allah memberkahi anak yang dianugerahkan kepadamu, semoga engkau bersyukur kepada Yang Memberi, semoga ia sampai dewasa, dan semoga engkau dikaruniai kebaikannya.",
+    "sumber": "HR. Abu Dawud no. 5165",
+    "kategori": "keluarga"
+  },
+  {
+    "id": 42,
+    "judul": "Doa Ketika Anak Sakit",
+    "arab": "أَذْهِبِ الْبَاسَ رَبَّ النَّاسِ، وَاشْفِ أَنْتَ الشَّافِي، لاَ شِفَاءَ إِلاَّ شِفَاؤُكَ، شِفَاءً لاَ يُغَادِرُ سَقَمًا",
+    "latin": "Ażhibil-ba'sa rabban-nās, wasyfi antasy-syāfī, lā syifā'a illā syifā'uk, syifā'an lā yughādiru saqamā",
+    "terjemah": "Hilangkanlah penyakit wahai Tuhan manusia, sembuhkanlah, Engkaulah Yang Maha Menyembuhkan, tidak ada kesembuhan kecuali kesembuhan dari-Mu, kesembuhan yang tidak meninggalkan penyakit.",
+    "sumber": "HR. Bukhari no. 5675 & Muslim no. 2191",
+    "kategori": "keluarga"
+  },
+  {
+    "id": 43,
+    "judul": "Doa Pengantin (Nikah)",
+    "arab": "بَارَكَ اللهُ لَكَ، وَبَارَكَ عَلَيْكَ، وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+    "latin": "Bārakallāhu laka, wa bāraka 'alaika, wa jama'a bainakumā fī khair",
+    "terjemah": "Semoga Allah memberkahimu, melimpahkan berkah kepadamu, dan mengumpulkan kalian berdua dalam kebaikan.",
+    "sumber": "HR. Abu Dawud no. 2130 & Tirmidzi no. 1091",
+    "kategori": "keluarga"
+  },
+  {
+    "id": 44,
+    "judul": "Doa Malam Pertama (Pengantin Baru)",
+    "arab": "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا وَخَيْرَ مَا جَبَلْتَهَا عَلَيْهِ، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا جَبَلْتَهَا عَلَيْهِ",
+    "latin": "Allāhumma innī as'aluka khairahā wa khaira mā jabaltahā 'alaih, wa a'ūżu bika min syarrihā wa syarri mā jabaltahā 'alaih",
+    "terjemah": "Ya Allah, aku mohon kepada-Mu kebaikan darinya dan kebaikan sifat yang Engkau ciptakan padanya, dan aku berlindung kepada-Mu dari keburukan darinya dan keburukan sifat yang Engkau ciptakan padanya.",
+    "sumber": "HR. Abu Dawud no. 2160 & Ibnu Majah no. 1918",
+    "kategori": "keluarga"
+  },
+
+  {
+    "id": 45,
+    "judul": "Doa Naik Kendaraan",
+    "arab": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
+    "latin": "Subḥānallażī sakhkhara lanā hāżā wa mā kunnā lahu muqrinīn, wa innā ilā rabbinā lamunqalibūn",
+    "terjemah": "Maha Suci Allah yang telah menundukkan semua ini bagi kami padahal kami sebelumnya tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Tuhan kami.",
+    "sumber": "QS. Az-Zukhruf: 13-14",
+    "kategori": "perjalanan"
+  },
+  {
+    "id": 46,
+    "judul": "Doa Memulai Perjalanan",
+    "arab": "اللهُ أَكْبَرُ، اللهُ أَكْبَرُ، اللهُ أَكْبَرُ، سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ. اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى، وَمِنَ الْعَمَلِ مَا تَرْضَى، اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا، وَاطْوِ عَنَّا بُعْدَهُ، اللَّهُمَّ أَنْتَ الصَّاحِبُ فِي السَّفَرِ، وَالْخَلِيفَةُ فِي الأَهْلِ",
+    "latin": "Allāhu akbar, Allāhu akbar, Allāhu akbar, subḥānallażī sakhkhara lanā hāżā wa mā kunnā lahu muqrinīn, wa innā ilā rabbinā lamunqalibūn. Allāhumma innā nas'aluka fī safarinā hāżal-birra wat-taqwā, wa minal-'amali mā tarḍā, Allāhumma hawwin 'alainā safaranā hāżā waṭwi 'annā bu'dah, Allāhumma antaṣ-ṣāḥibu fis-safar, wal-khalīfatu fil-ahl",
+    "terjemah": "Allah Maha Besar, Allah Maha Besar, Allah Maha Besar. Maha Suci Allah yang telah menundukkan semua ini bagi kami padahal kami tidak mampu menguasainya, dan sesungguhnya kami akan kembali kepada Tuhan kami. Ya Allah, sesungguhnya kami mohon kepada-Mu dalam perjalanan kami ini kebaikan dan ketakwaan, dan amal yang Engkau ridhai. Ya Allah, mudahkanlah perjalanan kami ini dan dekatkanlah jaraknya. Ya Allah, Engkaulah teman dalam perjalanan dan pengganti bagi keluarga.",
+    "sumber": "HR. Muslim no. 1342",
+    "kategori": "perjalanan"
+  },
+  {
+    "id": 47,
+    "judul": "Doa Kembali dari Bepergian",
+    "arab": "آيِبُونَ تَائِبُونَ عَابِدُونَ لِرَبِّنَا حَامِدُونَ",
+    "latin": "Āyibūna tā'ibūna 'ābidūna lirabbinā ḥāmidūn",
+    "terjemah": "Kami kembali dengan bertaubat, beribadah, dan memuji Tuhan kami.",
+    "sumber": "HR. Bukhari no. 1797 & Muslim no. 1342",
+    "kategori": "perjalanan"
+  },
+  {
+    "id": 48,
+    "judul": "Doa Ketika Singgah di Suatu Tempat",
+    "arab": "أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+    "latin": "A'ūżu bikalimatillāhit-tāmmāti min syarri mā khalaq",
+    "terjemah": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang Dia ciptakan.",
+    "sumber": "HR. Muslim no. 2708",
+    "kategori": "perjalanan"
+  },
+  {
+    "id": 49,
+    "judul": "Doa Musafir untuk yang Ditinggalkan",
+    "arab": "أَسْتَوْدِعُكُمُ اللهَ الَّذِي لاَ تَضِيعُ وَدَائِعُهُ",
+    "latin": "Astaudi'ukumullāhallażī lā taḍī'u wadā'i'uh",
+    "terjemah": "Aku menitipkan kalian kepada Allah yang tidak akan pernah menyia-nyiakan titipan-Nya.",
+    "sumber": "HR. Ahmad no. 2578 & Ibnu Majah no. 2825",
+    "kategori": "perjalanan"
+  },
+  {
+    "id": 50,
+    "judul": "Doa yang Ditinggalkan untuk Musafir",
+    "arab": "أَسْتَوْدِعُ اللهَ دِينَكَ وَأَمَانَتَكَ وَخَوَاتِيمَ عَمَلِكَ",
+    "latin": "Astaudi'ullāha dīnaka wa amānataka wa khawātīma 'amalik",
+    "terjemah": "Aku titipkan kepada Allah agamamu, amanatmu, dan penutup amalmu.",
+    "sumber": "HR. Abu Dawud no. 2600 & Tirmidzi no. 3443",
+    "kategori": "perjalanan"
+  },
+
+  {
+    "id": 51,
+    "judul": "Doa Perlindungan Pagi dan Petang",
+    "arab": "أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+    "latin": "A'ūżu bikalimatillāhit-tāmmāti min syarri mā khalaq",
+    "terjemah": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kejahatan makhluk yang Dia ciptakan.",
+    "sumber": "HR. Muslim no. 2708",
+    "kategori": "perlindungan"
+  },
+  {
+    "id": 52,
+    "judul": "Ayat Kursi (Perlindungan)",
+    "arab": "اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ، لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ، لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الأَرْضِ، مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ، يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ، وَلاَ يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلاَّ بِمَا شَاءَ، وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالأَرْضَ، وَلاَ يَئُودُهُ حِفْظُهُمَا، وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+    "latin": "Allāhu lā ilāha illā huwal-ḥayyul-qayyūm, lā ta'khudzuhu sinatuw-wa lā naum, lahu mā fis-samāwāti wa mā fil-arḍ, man żallażī yasyfa'u 'indahu illā bi'iżnih, ya'lamu mā baina aidīhim wa mā khalfahum, wa lā yuḥīṭūna bisyai'im-min 'ilmihī illā bimā syā', wasi'a kursiyyuhus-samāwāti wal-arḍ, wa lā ya'ūduhu ḥifẓuhumā, wa huwal-'aliyyul-'aẓīm",
+    "terjemah": "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus-menerus mengurus makhluk-Nya. Dia tidak dilanda oleh kantuk dan tidak pula tidur. Milik-Nya apa yang ada di langit dan apa yang ada di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang ada di hadapan dan di belakang mereka. Mereka tidak mengetahui sesuatu apa pun dari ilmu-Nya, kecuali apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi, dan Dia tidak merasa berat memelihara keduanya. Dia Yang Mahatinggi, Mahabesar.",
+    "sumber": "QS. Al-Baqarah: 255",
+    "kategori": "perlindungan"
+  },
+  {
+    "id": 53,
+    "judul": "Doa Berlindung dari Setan",
+    "arab": "أَعُوذُ بِاللهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+    "latin": "A'ūżu billāhi minasy-syaiṭānir-rajīm",
+    "terjemah": "Aku berlindung kepada Allah dari setan yang terkutuk.",
+    "sumber": "QS. An-Nahl: 98",
+    "kategori": "perlindungan"
+  },
+  {
+    "id": 54,
+    "judul": "Doa Berlindung dari Mimpi Buruk",
+    "arab": "أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّةِ مِنْ غَضَبِهِ وَعِقَابِهِ، وَشَرِّ عِبَادِهِ، وَمِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَنْ يَحْضُرُونِ",
+    "latin": "A'ūżu bikalimatillāhit-tāmmati min ghaḍabihi wa 'iqābihi, wa syarri 'ibādih, wa min hamazātisy-syayāṭīni wa an yaḥḍurūn",
+    "terjemah": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari kemurkaan-Nya dan siksa-Nya, dari kejahatan hamba-hamba-Nya, dari bisikan setan dan dari kedatangan mereka kepadaku.",
+    "sumber": "HR. Abu Dawud no. 3893 & Tirmidzi no. 3528",
+    "kategori": "perlindungan"
+  },
+  {
+    "id": 55,
+    "judul": "Doa Perlindungan dari 'Ain (Mata Jahat)",
+    "arab": "أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لاَمَّةٍ",
+    "latin": "A'ūżu bikalimatillāhit-tāmmāti min kulli syaiṭānin wa hāmmah, wa min kulli 'ainin lāmmah",
+    "terjemah": "Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari setiap setan dan binatang berbisa, serta dari setiap mata (pandangan) yang jahat.",
+    "sumber": "HR. Bukhari no. 3371",
+    "kategori": "perlindungan"
+  },
+  {
+    "id": 56,
+    "judul": "Doa Ketika Takut pada Suatu Kaum",
+    "arab": "اللَّهُمَّ اكْفِنِيهِمْ بِمَا شِئْتَ",
+    "latin": "Allāhummakfinīhim bimā syi'ta",
+    "terjemah": "Ya Allah, cukupkanlah (lindungilah) aku dari mereka dengan cara apa pun yang Engkau kehendaki.",
+    "sumber": "HR. Muslim no. 2300",
+    "kategori": "perlindungan"
+  },
+  {
+    "id": 57,
+    "judul": "Doa Berlindung dari Segala Kejahatan",
+    "arab": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ",
+    "latin": "Allāhumma innī a'ūżu bika minal-hammi wal-ḥazan, wa a'ūżu bika minal-'ajzi wal-kasal, wa a'ūżu bika minal-jubni wal-bukhl, wa a'ūżu bika min ghalabatid-daini wa qahrir-rijāl",
+    "terjemah": "Ya Allah, sesungguhnya aku berlindung kepada-Mu dari kesedihan dan kesusahan, aku berlindung kepada-Mu dari kelemahan dan kemalasan, aku berlindung kepada-Mu dari sifat pengecut dan kikir, dan aku berlindung kepada-Mu dari lilitan hutang dan penindasan orang.",
+    "sumber": "HR. Bukhari no. 6369",
+    "kategori": "perlindungan"
+  },
+
+  {
+    "id": 58,
+    "judul": "Istighfar (Memohon Ampunan)",
+    "arab": "أَسْتَغْفِرُ اللهَ الْعَظِيمَ الَّذِي لاَ إِلَهَ إِلاَّ هُوَ الْحَيَّ الْقَيُّومَ وَأَتُوبُ إِلَيْهِ",
+    "latin": "Astaghfirullāhal-'aẓīmallażī lā ilāha illā huwal-ḥayyul-qayyūmu wa atūbu ilaih",
+    "terjemah": "Aku memohon ampunan kepada Allah Yang Maha Agung, yang tidak ada tuhan selain Dia, Yang Mahahidup, Yang Berdiri Sendiri, dan aku bertaubat kepada-Nya.",
+    "sumber": "HR. Abu Dawud no. 1517 & Tirmidzi no. 3577",
+    "kategori": "taubat"
+  },
+  {
+    "id": 59,
+    "judul": "Sayyidul Istighfar (Penghulu Istighfar)",
+    "arab": "اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ",
+    "latin": "Allāhumma anta rabbī lā ilāha illā anta, khalaqtanī wa ana 'abduk, wa ana 'alā 'ahdika wa wa'dika mas-taṭa'tu, a'ūżu bika min syarri mā ṣana'tu, abū'u laka bini'matika 'alayya, wa abū'u biżanbī faghfir lī, fa innahu lā yaghfiruż-żunūba illā ant",
+    "terjemah": "Ya Allah, Engkau adalah Tuhanku, tidak ada tuhan selain Engkau. Engkau telah menciptakanku dan aku adalah hamba-Mu. Aku berada dalam perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari kejahatan yang telah aku perbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku, maka ampunilah aku. Sesungguhnya tidak ada yang mengampuni dosa kecuali Engkau.",
+    "sumber": "HR. Bukhari no. 6306",
+    "kategori": "taubat"
+  },
+  {
+    "id": 60,
+    "judul": "Doa Taubat",
+    "arab": "رَبِّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي",
+    "latin": "Rabbi innī ẓalamtu nafsī faghfir lī",
+    "terjemah": "Ya Tuhanku, sesungguhnya aku telah menganiaya diriku sendiri, maka ampunilah aku.",
+    "sumber": "HR. Bukhari no. 834 & Muslim no. 2705",
+    "kategori": "taubat"
+  },
+  {
+    "id": 61,
+    "judul": "Doa Mohon Ampunan untuk Orang Tua",
+    "arab": "رَبِّ اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
+    "latin": "Rabbighfir lī wa liwālidayya wa lil-mu'minīna yauma yaqūmul-ḥisāb",
+    "terjemah": "Ya Tuhanku, ampunilah aku, kedua orang tuaku, dan orang-orang mukmin pada hari diadakan perhitungan (hari kiamat).",
+    "sumber": "QS. Ibrahim: 41",
+    "kategori": "taubat"
+  },
+  {
+    "id": 62,
+    "judul": "Doa Nabi Yunus AS",
+    "arab": "لاَ إِلَهَ إِلاَّ أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+    "latin": "Lā ilāha illā anta subḥānaka innī kuntu minaẓ-ẓālimīn",
+    "terjemah": "Tidak ada tuhan selain Engkau, Maha Suci Engkau. Sesungguhnya aku termasuk orang-orang yang zalim.",
+    "sumber": "QS. Al-Anbiya: 87",
+    "kategori": "taubat"
+  },
+
+  {
+    "id": 63,
+    "judul": "Doa Meminta Rezeki yang Halal",
+    "arab": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلاً مُتَقَبَّلاً",
+    "latin": "Allāhumma innī as'aluka 'ilman nāfi'ā, wa rizqan ṭayyibā, wa 'amalan mutaqabbalā",
+    "terjemah": "Ya Allah, sesungguhnya aku memohon kepada-Mu ilmu yang bermanfaat, rezeki yang baik, dan amal yang diterima.",
+    "sumber": "HR. Ibnu Majah no. 925",
+    "kategori": "rezeki"
+  },
+  {
+    "id": 64,
+    "judul": "Doa Meminta Keberkahan Rezeki",
+    "arab": "اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ",
+    "latin": "Allāhumma bārik lanā fīmā razaqtanā wa qinā 'ażāban-nār",
+    "terjemah": "Ya Allah, berkahilah kami dalam rezeki yang telah Engkau berikan kepada kami, dan peliharalah kami dari azab neraka.",
+    "sumber": "HR. Tirmidzi no. 3458",
+    "kategori": "rezeki"
+  },
+  {
+    "id": 65,
+    "judul": "Doa Ketika Kesulitan Ekonomi",
+    "arab": "اللَّهُمَّ اكْفِنِي بِحَلاَلِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    "latin": "Allāhummakfinī biḥalālika 'an ḥarāmik, wa aghninī bifaḍlika 'amman siwāk",
+    "terjemah": "Ya Allah, cukupkanlah aku dengan rezeki yang halal dari yang haram, dan cukupkanlah aku dengan karunia-Mu dari selain-Mu.",
+    "sumber": "HR. Tirmidzi no. 3563 & Ahmad no. 1338",
+    "kategori": "rezeki"
+  },
+  {
+    "id": 66,
+    "judul": "Doa Melunasi Hutang",
+    "arab": "اللَّهُمَّ اكْفِنِي بِحَلاَلِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    "latin": "Allāhummakfinī biḥalālika 'an ḥarāmik, wa aghninī bifaḍlika 'amman siwāk",
+    "terjemah": "Ya Allah, cukupkanlah aku dengan yang halal dari yang haram, dan kayakanlah aku dengan karunia-Mu dari selain-Mu.",
+    "sumber": "HR. Tirmidzi no. 3563",
+    "kategori": "rezeki"
+  },
+  {
+    "id": 67,
+    "judul": "Doa Meminta Kemudahan Urusan",
+    "arab": "اللَّهُمَّ لاَ سَهْلَ إِلاَّ مَا جَعَلْتَهُ سَهْلاً، وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلاً",
+    "latin": "Allāhumma lā sahla illā mā ja'altahu sahlā, wa anta taj'alul-ḥazna iżā syi'ta sahlā",
+    "terjemah": "Ya Allah, tidak ada kemudahan kecuali yang Engkau jadikan mudah. Dan Engkau menjadikan kesedihan (kesulitan) jika Engkau kehendaki menjadi mudah.",
+    "sumber": "HR. Ibnu Hibban no. 2427",
+    "kategori": "rezeki"
+  },
+
+  {
+    "id": 68,
+    "judul": "Doa Nabi Adam AS",
+    "arab": "رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
+    "latin": "Rabbanā ẓalamnā anfusanā wa illam taghfir lanā wa tarḥamnā lanakūnanna minal-khāsirīn",
+    "terjemah": "Ya Tuhan kami, kami telah menganiaya diri kami sendiri, dan jika Engkau tidak mengampuni kami dan memberi rahmat kepada kami, niscaya pastilah kami termasuk orang-orang yang merugi.",
+    "sumber": "QS. Al-A'raf: 23",
+    "kategori": "quran"
+  },
+  {
+    "id": 69,
+    "judul": "Doa Nabi Ibrahim AS",
+    "arab": "رَبِّ اجْعَلْنِي مُقِيمَ الصَّلاَةِ وَمِنْ ذُرِّيَّتِي رَبَّنَا وَتَقَبَّلْ دُعَاءِ",
+    "latin": "Rabbij'alnī muqīmaṣ-ṣalāti wa min żurriyyatī, rabbanā wa taqabbal du'ā'",
+    "terjemah": "Ya Tuhanku, jadikanlah aku dan anak cucuku orang-orang yang tetap mendirikan shalat. Ya Tuhan kami, perkenankanlah doaku.",
+    "sumber": "QS. Ibrahim: 40",
+    "kategori": "quran"
+  },
+  {
+    "id": 70,
+    "judul": "Doa Nabi Musa AS",
+    "arab": "رَبِّ اشْرَحْ لِي صَدْرِي، وَيَسِّرْ لِي أَمْرِي، وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي، يَفْقَهُوا قَوْلِي",
+    "latin": "Rabbisyraḥ lī ṣadrī, wa yassir lī amrī, waḥlul 'uqdatan min lisānī, yafqahū qaulī",
+    "terjemah": "Ya Tuhanku, lapangkanlah dadaku, mudahkanlah urusanku, dan lepaskanlah kekakuan dari lidahku, supaya mereka mengerti perkataanku.",
+    "sumber": "QS. Thaha: 25-28",
+    "kategori": "quran"
+  },
+  {
+    "id": 71,
+    "judul": "Doa Nabi Sulaiman AS",
+    "arab": "رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِي أَنْعَمْتَ عَلَيَّ وَعَلَى وَالِدَيَّ وَأَنْ أَعْمَلَ صَالِحًا تَرْضَاهُ وَأَدْخِلْنِي بِرَحْمَتِكَ فِي عِبَادِكَ الصَّالِحِينَ",
+    "latin": "Rabbi auzi'nī an asykura ni'matakal-latī an'amta 'alayya wa 'alā wālidayya wa an a'mala ṣāliḥan tarḍāhu wa adkhilnī biraḥmatika fī 'ibādikaṣ-ṣāliḥīn",
+    "terjemah": "Ya Tuhanku, ilhamkanlah aku untuk tetap mensyukuri nikmat-Mu yang telah Engkau anugerahkan kepadaku dan kepada kedua orang tuaku dan untuk mengerjakan amal saleh yang Engkau ridhai; dan masukkanlah aku dengan rahmat-Mu ke dalam golongan hamba-hamba-Mu yang saleh.",
+    "sumber": "QS. An-Naml: 19",
+    "kategori": "quran"
+  },
+  {
+    "id": 72,
+    "judul": "Doa Memohon Kebaikan Dunia dan Akhirat",
+    "arab": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+    "latin": "Rabbanā ātinā fid-dunyā ḥasanatan wa fil-ākhirati ḥasanatan wa qinā 'ażāban-nār",
+    "terjemah": "Ya Tuhan kami, berilah kami kebaikan di dunia dan kebaikan di akhirat, dan peliharalah kami dari azab neraka.",
+    "sumber": "QS. Al-Baqarah: 201",
+    "kategori": "quran"
+  },
+  {
+    "id": 73,
+    "judul": "Doa Memohon Ilmu",
+    "arab": "رَبِّ زِدْنِي عِلْمًا",
+    "latin": "Rabbi zidnī 'ilmā",
+    "terjemah": "Ya Tuhanku, tambahkanlah kepadaku ilmu pengetahuan.",
+    "sumber": "QS. Thaha: 114",
+    "kategori": "quran"
+  },
+  {
+    "id": 74,
+    "judul": "Doa Memohon Kemantapan Iman",
+    "arab": "رَبَّنَا لاَ تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ",
+    "latin": "Rabbanā lā tuzigh qulūbanā ba'da iż hadaitanā wa hab lanā mil-ladunka raḥmah, innaka antal-wahhāb",
+    "terjemah": "Ya Tuhan kami, janganlah Engkau jadikan hati kami condong kepada kesesatan sesudah Engkau beri petunjuk kepada kami, dan karuniakanlah kepada kami rahmat dari sisi-Mu; karena sesungguhnya Engkau Maha Pemberi.",
+    "sumber": "QS. Ali Imran: 8",
+    "kategori": "quran"
+  },
+  {
+    "id": 75,
+    "judul": "Doa Mohon Keteguhan Hati",
+    "arab": "رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا وَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ",
+    "latin": "Rabbanā afrigh 'alainā ṣabrā wa tsabbit aqdāmanā wanṣurnā 'alal-qaumil-kāfirīn",
+    "terjemah": "Ya Tuhan kami, limpahkanlah kesabaran kepada kami, dan kokohkanlah pendirian kami, dan tolonglah kami terhadap orang-orang kafir.",
+    "sumber": "QS. Al-Baqarah: 250",
+    "kategori": "quran"
+  },
+
+  {
+    "id": 76,
+    "judul": "Subhanallah (Tasbih)",
+    "arab": "سُبْحَانَ اللهِ",
+    "latin": "Subḥānallāh",
+    "terjemah": "Maha Suci Allah.",
+    "sumber": "Dzikir shahih dari Al-Qur'an dan Hadits",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 77,
+    "judul": "Alhamdulillah (Tahmid)",
+    "arab": "الْحَمْدُ لِلَّهِ",
+    "latin": "Alḥamdu lillāh",
+    "terjemah": "Segala puji bagi Allah.",
+    "sumber": "Dzikir shahih dari Al-Qur'an dan Hadits",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 78,
+    "judul": "Allahu Akbar (Takbir)",
+    "arab": "اللهُ أَكْبَرُ",
+    "latin": "Allāhu akbar",
+    "terjemah": "Allah Maha Besar.",
+    "sumber": "Dzikir shahih dari Al-Qur'an dan Hadits",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 79,
+    "judul": "La ilaha illallah (Tahlil)",
+    "arab": "لاَ إِلَهَ إِلاَّ اللهُ",
+    "latin": "Lā ilāha illallāh",
+    "terjemah": "Tiada tuhan selain Allah.",
+    "sumber": "Dzikir shahih dari Al-Qur'an dan Hadits",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 80,
+    "judul": "La hawla wala quwwata illa billah",
+    "arab": "لاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللهِ",
+    "latin": "Lā ḥaula wa lā quwwata illā billāh",
+    "terjemah": "Tiada daya dan kekuatan kecuali dengan pertolongan Allah.",
+    "sumber": "HR. Bukhari no. 4205 & Muslim no. 2704",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 81,
+    "judul": "Dzikir Pagi (33x-33x-34x)",
+    "arab": "سُبْحَانَ اللهِ (33x)، الْحَمْدُ لِلَّهِ (33x)، اللهُ أَكْبَرُ (34x)",
+    "latin": "Subḥānallāh (33x), Alḥamdu lillāh (33x), Allāhu akbar (34x)",
+    "terjemah": "Maha Suci Allah (33x), Segala puji bagi Allah (33x), Allah Maha Besar (34x).",
+    "sumber": "HR. Muslim no. 597",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 82,
+    "judul": "Dzikir Setelah Shalat Fardhu",
+    "arab": "سُبْحَانَ اللهِ (33x)، الْحَمْدُ لِلَّهِ (33x)، اللهُ أَكْبَرُ (33x)، لاَ إِلَهَ إِلاَّ اللهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+    "latin": "Subḥānallāh (33x), Alḥamdu lillāh (33x), Allāhu akbar (33x), Lā ilāha illallāhu waḥdahu lā syarīka lah, lahul-mulku wa lahul-ḥamdu wa huwa 'alā kulli syai'in qadīr",
+    "terjemah": "Maha Suci Allah (33x), Segala puji bagi Allah (33x), Allah Maha Besar (33x), Tiada tuhan selain Allah Yang Maha Esa, tiada sekutu bagi-Nya. Bagi-Nya kerajaan dan bagi-Nya segala puji. Dia Maha Kuasa atas segala sesuatu.",
+    "sumber": "HR. Muslim no. 597",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 83,
+    "judul": "Shalawat Nabi",
+    "arab": "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+    "latin": "Allāhumma ṣalli wa sallim 'alā nabiyyinā Muḥammad",
+    "terjemah": "Ya Allah, limpahkanlah shalawat dan salam kepada Nabi kami Muhammad.",
+    "sumber": "Shalawat shahih dari berbagai riwayat",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 84,
+    "judul": "Dzikir Pagi: Ayat Kursi",
+    "arab": "اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ...",
+    "latin": "Allāhu lā ilāha illā huwal-ḥayyul-qayyūm...",
+    "terjemah": "Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus mengurus makhluk-Nya...",
+    "sumber": "QS. Al-Baqarah: 255 - dibaca pagi dan petang",
+    "kategori": "dzikir"
+  },
+  {
+    "id": 85,
+    "judul": "Dzikir Pagi: Surat Al-Ikhlas, Al-Falaq, An-Nas (3x)",
+    "arab": "قُلْ هُوَ اللَّهُ أَحَدٌ..., قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ..., قُلْ أَعُوذُ بِرَبِّ النَّاسِ...",
+    "latin": "Qul huwallāhu aḥad..., Qul a'ūżu birabbil-falaq..., Qul a'ūżu rabbin-nās...",
+    "terjemah": "Katakanlah: Dialah Allah Yang Maha Esa... (3 kali pagi dan petang)",
+    "sumber": "HR. Abu Dawud no. 5082 & Tirmidzi no. 3575",
+    "kategori": "dzikir"
+  },
+
+  {
+    "id": 86,
+    "judul": "Doa Ketika Ada Angin Kencang",
+    "arab": "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا وَخَيْرَ مَا فِيهَا وَخَيْرَ مَا أُرْسِلَتْ بِهِ، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا فِيهَا وَشَرِّ مَا أُرْسِلَتْ بِهِ",
+    "latin": "Allāhumma innī as'aluka khairahā wa khaira mā fīhā wa khaira mā ursilat bih, wa a'ūżu bika min syarrihā wa syarri mā fīhā wa syarri mā ursilat bih",
+    "terjemah": "Ya Allah, aku mohon kepada-Mu kebaikannya, kebaikan yang ada padanya, dan kebaikan yang dibawanya. Aku berlindung kepada-Mu dari keburukannya, keburukan yang ada padanya, dan keburukan yang dibawanya.",
+    "sumber": "HR. Muslim no. 899",
+    "kategori": "umum"
+  },
+  {
+    "id": 87,
+    "judul": "Doa Ketika Mendengar Berita Gembira",
+    "arab": "الْحَمْدُ لِلَّهِ الَّذِي بِنِعْمَتِهِ تَتِمُّ الصَّالِحَاتُ",
+    "latin": "Alḥamdu lillāhil-lażī bini'matihi tatimmuṣ-ṣāliḥāt",
+    "terjemah": "Segala puji bagi Allah yang dengan nikmat-Nya segala kebaikan menjadi sempurna.",
+    "sumber": "HR. Ibnu Majah no. 3803 & Hakim",
+    "kategori": "umum"
+  },
+  {
+    "id": 88,
+    "judul": "Doa Ketika Mendengar Berita Buruk",
+    "arab": "الْحَمْدُ لِلَّهِ عَلَى كُلِّ حَالٍ",
+    "latin": "Alḥamdu lillāhi 'alā kulli ḥāl",
+    "terjemah": "Segala puji bagi Allah dalam segala keadaan.",
+    "sumber": "HR. Ibnu Majah no. 3803",
+    "kategori": "umum"
+  },
+  {
+    "id": 89,
+    "judul": "Doa Menjenguk Orang Sakit",
+    "arab": "لاَ بَأْسَ طَهُورٌ إِنْ شَاءَ اللهُ",
+    "latin": "Lā ba'sa ṭahūrun insyā'allāh",
+    "terjemah": "Tidak mengapa, semoga menjadi penghapus dosa insya Allah.",
+    "sumber": "HR. Bukhari no. 3616",
+    "kategori": "umum"
+  },
+  {
+    "id": 90,
+    "judul": "Doa untuk Orang Sakit",
+    "arab": "أَسْأَلُ اللهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ (7x)",
+    "latin": "As'alullāhal-'aẓīma rabbal-'arsyil-'aẓīmi an yasyfiyaka (7x)",
+    "terjemah": "Aku memohon kepada Allah Yang Maha Agung, Tuhan yang memiliki 'Arasy yang agung, agar menyembuhkanmu. (7 kali)",
+    "sumber": "HR. Abu Dawud no. 3106 & Tirmidzi no. 2083",
+    "kategori": "umum"
+  },
+  {
+    "id": 91,
+    "judul": "Doa Ketika Ada yang Meninggal",
+    "arab": "إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ، اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ وَعَافِهِ وَاعْفُ عَنْهُ",
+    "latin": "Innā lillāhi wa innā ilaihi rāji'ūn, Allāhummaghfir lahu warḥamhu wa 'āfihi wa'fu 'anh",
+    "terjemah": "Sesungguhnya kami milik Allah dan kepada-Nya kami akan kembali. Ya Allah, ampunilah dia, rahmatilah dia, berilah dia kesehatan dan maafkanlah dia.",
+    "sumber": "HR. Muslim no. 918",
+    "kategori": "umum"
+  },
+  {
+    "id": 92,
+    "judul": "Doa Ta'ziyah (Bela Sungkawa)",
+    "arab": "إِنَّ لِلَّهِ مَا أَخَذَ، وَلَهُ مَا أَعْطَى، وَكُلُّ شَيْءٍ عِنْدَهُ بِأَجَلٍ مُسَمًّى، فَلْتَصْبِرْ وَلْتَحْتَسِبْ",
+    "latin": "Inna lillāhi mā akhaża, wa lahu mā a'ṭā, wa kullu syai'in 'indahu bi'ajalin musammā, faltaṣbir waltaḥtasib",
+    "terjemah": "Sesungguhnya milik Allah apa yang diambil-Nya, dan milik-Nya apa yang diberi-Nya. Segala sesuatu di sisi-Nya ada waktu yang telah ditentukan. Maka bersabarlah dan harapkanlah pahala.",
+    "sumber": "HR. Bukhari no. 1284 & Muslim no. 923",
+    "kategori": "umum"
+  },
+  {
+    "id": 93,
+    "judul": "Doa Shalat Jenazah",
+    "arab": "اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الْخَطَايَا كَمَا نَقَّيْتَ الثَّوْبَ الأَبْيَضَ مِنَ الدَّنَسِ",
+    "latin": "Allāhummaghfir lahu warḥamhu, wa 'āfihi wa'fu 'anh, wa akrim nuzulahu, wa wassi' mudkhalahu, waghsilhu bil-mā'i wats-tsalji wal-barad, wa naqqihi minal-khaṭāyā kamā naqqaitats-tsaubal-abyaḍa minad-danas",
+    "terjemah": "Ya Allah, ampunilah dia dan rahmatilah dia, berilah dia kesehatan dan maafkanlah dia. Muliakanlah tempat tinggalnya, lapangkanlah tempat masuknya. Basuhlah dia dengan air, salju, dan embun. Bersihkanlah dia dari kesalahan sebagaimana Engkau bersihkan kain putih dari kotoran.",
+    "sumber": "HR. Muslim no. 963",
+    "kategori": "umum"
+  },
+  {
+    "id": 94,
+    "judul": "Doa Setelah Bersin",
+    "arab": "الْحَمْدُ لِلَّهِ",
+    "latin": "Alḥamdu lillāh",
+    "terjemah": "Segala puji bagi Allah.",
+    "sumber": "HR. Bukhari no. 6224",
+    "kategori": "umum"
+  },
+  {
+    "id": 95,
+    "judul": "Doa Menjawab Orang yang Bersin",
+    "arab": "يَرْحَمُكَ اللهُ",
+    "latin": "Yarḥamukallāh",
+    "terjemah": "Semoga Allah merahmatmu.",
+    "sumber": "HR. Bukhari no. 6224",
+    "kategori": "umum"
+  },
+  {
+    "id": 96,
+    "judul": "Jawaban dari Orang yang Bersin",
+    "arab": "يَهْدِيكُمُ اللهُ وَيُصْلِحُ بَالَكُمْ",
+    "latin": "Yahdīkumullāhu wa yuṣliḥu bālakum",
+    "terjemah": "Semoga Allah memberi petunjuk kepadamu dan memperbaiki keadaanmu.",
+    "sumber": "HR. Bukhari no. 6224",
+    "kategori": "umum"
+  },
+  {
+    "id": 97,
+    "judul": "Doa Ketika Melihat Orang yang Tertimpa Musibah",
+    "arab": "الْحَمْدُ لِلَّهِ الَّذِي عَافَانِي مِمَّا ابْتَلاَكَ بِهِ، وَفَضَّلَنِي عَلَى كَثِيرٍ مِمَّنْ خَلَقَ تَفْضِيلاً",
+    "latin": "Alḥamdu lillāhil-lażī 'āfānī mimmabtalāka bih, wa faḍḍalanī 'alā katsīrim mimman khalaqa tafḍīlā",
+    "terjemah": "Segala puji bagi Allah yang telah menyelamatkan aku dari musibah yang menimpamu, dan telah melebihkan aku atas kebanyakan makhluk-Nya dengan kelebihan yang sempurna.",
+    "sumber": "HR. Tirmidzi no. 3432 & Ibnu Majah no. 3892",
+    "kategori": "umum"
+  },
+  {
+    "id": 98,
+    "judul": "Doa Ketika Marah",
+    "arab": "أَعُوذُ بِاللهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+    "latin": "A'ūżu billāhi minasy-syaiṭānir-rajīm",
+    "terjemah": "Aku berlindung kepada Allah dari setan yang terkutuk.",
+    "sumber": "HR. Bukhari no. 3282 & Muslim no. 2610",
+    "kategori": "umum"
+  },
+  {
+    "id": 99,
+    "judul": "Doa Nabi Zakaria AS (Mohon Keturunan)",
+    "arab": "رَبِّ لاَ تَذَرْنِي فَرْدًا وَأَنْتَ خَيْرُ الْوَارِثِينَ",
+    "latin": "Rabbi lā tażarnī fardaw-wa anta khairul-wāritsīn",
+    "terjemah": "Ya Tuhanku, janganlah Engkau membiarkan aku hidup seorang diri dan Engkaulah Waris Yang Paling Baik.",
+    "sumber": "QS. Al-Anbiya: 89",
+    "kategori": "umum"
+  },
+  {
+    "id": 100,
+    "judul": "Doa Penutup Majelis",
+    "arab": "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ أَنْتَ، أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ",
+    "latin": "Subḥānaka Allāhumma wa biḥamdika, asyhadu allā ilāha illā anta, astaghfiruka wa atūbu ilaik",
+    "terjemah": "Maha Suci Engkau ya Allah dan dengan memuji-Mu, aku bersaksi bahwa tidak ada tuhan selain Engkau, aku memohon ampun kepada-Mu dan bertaubat kepada-Mu.",
+    "sumber": "HR. Abu Dawud no. 4859 & Tirmidzi no. 3433",
+    "kategori": "umum"
+  },
+  {
+    "id": 101,
+    "judul": "Doa Ketika Menghadapi Kesulitan",
+    "arab": "حَسْبُنَا اللهُ وَنِعْمَ الْوَكِيلُ",
+    "latin": "Ḥasbunallāhu wa ni'mal-wakīl",
+    "terjemah": "Cukuplah Allah menjadi penolong kami dan Allah adalah sebaik-baik pelindung.",
+    "sumber": "QS. Ali Imran: 173",
+    "kategori": "umum"
+  },
+  {
+    "id": 102,
+    "judul": "Doa Meminta Hujan",
+    "arab": "اللَّهُمَّ اسْقِنَا غَيْثًا مُغِيثًا مَرِيئًا مَرِيعًا نَافِعًا غَيْرَ ضَارٍّ، عَاجِلاً غَيْرَ آجِلٍ",
+    "latin": "Allāhummaskināā ghaitsan mughītsan marī'an marī'an nāfi'an ghaira ḍārr, 'ājilan ghaira ājil",
+    "terjemah": "Ya Allah, turunkanlah kepada kami hujan yang bermanfaat, yang menyuburkan, yang baik, yang bermanfaat tanpa mudarat, yang segera dan tidak ditunda.",
+    "sumber": "HR. Abu Dawud no. 1169",
+    "kategori": "umum"
+  },
+  {
+    "id": 103,
+    "judul": "Doa Ketika Hujan Lebat",
+    "arab": "اللَّهُمَّ حَوَالَيْنَا وَلاَ عَلَيْنَا، اللَّهُمَّ عَلَى الآكَامِ وَالظِّرَابِ، وَبُطُونِ الأَوْدِيَةِ، وَمَنَابِتِ الشَّجَرِ",
+    "latin": "Allāhumma ḥawālainā wa lā 'alainā, Allāhumma 'alal-ākāmi waẓ-ẓirāb, wa buṭūnil-audiyah, wa manābitisy-syajar",
+    "terjemah": "Ya Allah, turunkanlah hujan di sekitar kami dan jangan menimpa kami. Ya Allah, turunkanlah di atas bukit-bukit, gunung-gunung kecil, lembah-lembah, dan tempat tumbuhnya pepohonan.",
+    "sumber": "HR. Bukhari no. 1013 & Muslim no. 897",
+    "kategori": "umum"
+  },
+  {
+    "id": 104,
+    "judul": "Doa Setelah Melihat Petir dan Kilat",
+    "arab": "اللَّهُمَّ لاَ تَقْتُلْنَا بِغَضَبِكَ، وَلاَ تُهْلِكْنَا بِعَذَابِكَ، وَعَافِنَا قَبْلَ ذَلِكَ",
+    "latin": "Allāhumma lā taqtulnā bighaḍabik, wa lā tuhliknā bi'ażābik, wa 'āfinā qabla żālik",
+    "terjemah": "Ya Allah, janganlah Engkau bunuh kami dengan kemurkaan-Mu, janganlah Engkau binasakan kami dengan azab-Mu, dan berilah kami kesejahteraan sebelum itu.",
+    "sumber": "HR. Tirmidzi no. 3450",
+    "kategori": "umum"
+  },
+  {
+    "id": 105,
+    "judul": "Doa Ketika Menghidangkan Makanan untuk Tamu",
+    "arab": "اللَّهُمَّ بَارِكْ لَهُمْ فِيمَا رَزَقْتَهُمْ، وَاغْفِرْ لَهُمْ وَارْحَمْهُمْ",
+    "latin": "Allāhumma bārik lahum fīmā razaqtahum, waghfir lahum warḥamhum",
+    "terjemah": "Ya Allah, berkahilah mereka dalam rezeki yang telah Engkau berikan kepada mereka, ampunilah mereka dan rahmatilah mereka.",
+    "sumber": "HR. Muslim no. 2042",
+    "kategori": "umum"
+  },
+  {
+    "id": 106,
+    "judul": "Doa Tamu untuk Tuan Rumah",
+    "arab": "اللَّهُمَّ بَارِكْ لَهُمْ فِيمَا رَزَقْتَهُمْ، وَاغْفِرْ لَهُمْ وَارْحَمْهُمْ",
+    "latin": "Allāhumma bārik lahum fīmā razaqtahum, waghfir lahum warḥamhum",
+    "terjemah": "Ya Allah, berkahilah mereka dalam rezeki yang telah Engkau berikan, ampunilah mereka dan rahmatilah mereka.",
+    "sumber": "HR. Muslim no. 2042",
+    "kategori": "umum"
+  },
+  {
+    "id": 107,
+    "judul": "Doa Ketika Melihat Buah Pertama Kali di Musimnya",
+    "arab": "اللَّهُمَّ بَارِكْ لَنَا فِي ثَمَرِنَا، وَبَارِكْ لَنَا فِي مَدِينَتِنَا، وَبَارِكْ لَنَا فِي صَاعِنَا، وَبَارِكْ لَنَا فِي مُدِّنَا",
+    "latin": "Allāhumma bārik lanā fī tsamarinā, wa bārik lanā fī madīnatinā, wa bārik lanā fī ṣā'inā, wa bārik lanā fī muddinā",
+    "terjemah": "Ya Allah, berkahilah kami pada buah-buahan kami, berkahilah kami pada kota kami, berkahilah kami pada takaran sha' kami, dan berkahilah kami pada takaran mud kami.",
+    "sumber": "HR. Muslim no. 1373",
+    "kategori": "umum"
+  },
+  {
+    "id": 108,
+    "judul": "Doa Ketika Memuji Seseorang",
+    "arab": "اللَّهُمَّ لاَ تُؤَاخِذْهُ بِمَا يَقُولُونَ، وَاغْفِرْ لَهُ مَا لاَ يَعْلَمُونَ، وَاجْعَلْهُ خَيْرًا مِمَّا يَظُنُّونَ",
+    "latin": "Allāhumma lā tu'ākhiżhu bimā yaqūlūn, waghfir lahu mā lā ya'lamūn, waj'alhu khairan mimmā yaẓunnūn",
+    "terjemah": "Ya Allah, janganlah Engkau hukum dia dengan apa yang mereka katakan, ampunilah dia dengan apa yang mereka tidak ketahui, dan jadikanlah dia lebih baik dari apa yang mereka sangka.",
+    "sumber": "HR. Baihaqi dalam Syu'abul Iman no. 5158",
+    "kategori": "umum"
+  },
+  {
+    "id": 109,
+    "judul": "Doa Niat Membayar Zakat",
+    "arab": "نَوَيْتُ أَنْ أُخْرِجَ زَكَاةَ الْمَالِ فَرْضًا لِلَّهِ تَعَالَى",
+    "latin": "Nawaitu an ukhrija zakātal-māli farḍan lillāhi ta'ālā",
+    "terjemah": "Aku niat mengeluarkan zakat harta sebagai kewajiban karena Allah Ta'ala.",
+    "sumber": "Sumber: Kitab Fiqih (niat dalam hati sudah sah)",
+    "kategori": "ibadah"
+  },
+  {
+    "id": 110,
+    "judul": "Doa Ketika Menerima Nikmat",
+    "arab": "اللَّهُمَّ إِنِّي أَسْأَلُكَ فِعْلَ الْخَيْرَاتِ، وَتَرْكَ الْمُنْكَرَاتِ، وَحُبَّ الْمَسَاكِينِ",
+    "latin": "Allāhumma innī as'aluka fi'lal-khairāt, wa tarkal-munkarāt, wa ḥubbal-masākīn",
+    "terjemah": "Ya Allah, aku mohon kepada-Mu kemampuan melakukan kebaikan, meninggalkan kemungkaran, dan cinta kepada orang-orang miskin.",
+    "sumber": "HR. Tirmidzi no. 3235",
+    "kategori": "umum"
   }
 ]
