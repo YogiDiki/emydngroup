@@ -247,26 +247,74 @@ document.addEventListener('alpine:init', () => {
       ];
     },
 
-    async loadMurotalList() {
-      this.loadingMurottal = true;
-      try {
-        const res = await fetch('https://equran.id/api/v2/surat');
-        const data = await res.json();
-        this.murotalList = data.data.map(s => ({
-          id: s.nomor,
-          nomor: s.nomor,
-          judul: `${s.namaLatin} - ${s.nama}`,
-          qari: 'Mishari Rashid Al-Afasy',
-          audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
-        }));
-        console.log('✅ Loaded', this.murotalList.length, 'murottal');
-      } catch (err) {
-        console.error('❌ Murottal:', err);
-      } finally {
-        this.loadingMurottal = false;
-      }
-    },
+// =============================
+// OPTIMIZED MUROTTAL LOADER v32
+// =============================
+async loadMurotalList() {
+  this.loadingMurottal = true;
 
+  // 🧠 Step 1: Cek cache di localStorage dulu
+  const cached = localStorage.getItem('murotalCache');
+  const cacheTime = localStorage.getItem('murotalCacheTime');
+  const cacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 1000 * 60 * 60 * 6); // 6 jam
+
+  if (cached && cacheValid) {
+    try {
+      this.murotalList = JSON.parse(cached);
+      console.log('⚡ [MUROTTAL] Loaded from cache:', this.murottalList.length);
+      this.loadingMurottal = false;
+
+      // Prefetch update di background (biar next open lebih cepat)
+      this.prefetchMurottal();
+      return;
+    } catch (e) {
+      console.warn('⚠️ Cache murottal corrupt, refetching...');
+    }
+  }
+
+  // 🕐 Step 2: Kalau belum ada cache, fetch dari API
+  try {
+    const res = await fetch('https://equran.id/api/v2/surat');
+    const data = await res.json();
+    this.murottalList = data.data.map(s => ({
+      id: s.nomor,
+      nomor: s.nomor,
+      judul: `${s.namaLatin} - ${s.nama}`,
+      qari: 'Mishari Rashid Al-Afasy',
+      audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
+    }));
+
+    // ✅ Simpan ke cache
+    localStorage.setItem('murotalCache', JSON.stringify(this.murottalList));
+    localStorage.setItem('murotalCacheTime', Date.now().toString());
+    console.log('✅ [MUROTTAL] Cached', this.murottalList.length, 'items');
+  } catch (err) {
+    console.error('❌ [MUROTTAL] Load error:', err);
+    this.murottalList = [];
+  } finally {
+    this.loadingMurottal = false;
+  }
+},
+
+// 🔄 Helper tambahan: prefetch murottal background update
+async prefetchMurottal() {
+  try {
+    const res = await fetch('https://equran.id/api/v2/surat');
+    const data = await res.json();
+    const freshList = data.data.map(s => ({
+      id: s.nomor,
+      nomor: s.nomor,
+      judul: `${s.namaLatin} - ${s.nama}`,
+      qari: 'Mishari Rashid Al-Afasy',
+      audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
+    }));
+    localStorage.setItem('murotalCache', JSON.stringify(freshList));
+    localStorage.setItem('murotalCacheTime', Date.now().toString());
+    console.log('🌀 [MUROTTAL] Prefetch updated cache');
+  } catch (err) {
+    console.warn('⚠️ [MUROTTAL] Prefetch failed:', err.message);
+  }
+},
     async loadJadwal() {
       if (!navigator.geolocation) return;
       
