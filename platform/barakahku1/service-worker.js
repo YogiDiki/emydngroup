@@ -1,8 +1,7 @@
 // ====================================================
-// BarakahKu - Service Worker v25 (Minimal Clean)
+// BarakahKu - Service Worker v26 (Minimal Fix)
 // ====================================================
-
-const CACHE_NAME = 'barakahku-v25';
+const CACHE_NAME = 'barakahku-v26';
 const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
@@ -12,56 +11,52 @@ const urlsToCache = [
   '/platform/barakahku1/assets/icons/icon-512.png'
 ];
 
-console.log('🚀 [SW] v25 starting...');
+console.log('🚀 [SW] v26 starting...');
 self.skipWaiting();
 
 // ====================================================
-// FIREBASE MESSAGING
+// FIREBASE MESSAGING - INIT IMMEDIATELY (FIX!)
 // ====================================================
 
 let firebaseReady = false;
 let messaging = null;
 
-async function initFirebase() {
-  if (firebaseReady) return true;
+// ✅ Load Firebase SEKARANG (bukan di activate)
+try {
+  self.importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+  self.importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
   
-  try {
-    self.importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
-    self.importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
-    
-    if (!firebase.apps.length) {
-      firebase.initializeApp({
-        apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
-        authDomain: "barakahku-app.firebaseapp.com",
-        projectId: "barakahku-app",
-        storageBucket: "barakahku-app.firebasestorage.app",
-        messagingSenderId: "510231053293",
-        appId: "1:510231053293:web:921b9e574fc614492b5de4"
-      });
-    }
-    
-    messaging = firebase.messaging();
-    messaging.onBackgroundMessage((payload) => {
-      return self.registration.showNotification(
-        payload.notification?.title || 'BarakahKu',
-        {
-          body: payload.notification?.body || 'Notifikasi baru',
-          icon: '/platform/barakahku1/assets/icons/icon-192.png',
-          badge: '/platform/barakahku1/assets/icons/icon-192.png',
-          tag: 'barakahku-fcm',
-          vibrate: [200, 100, 200],
-          data: payload.data || {}
-        }
-      );
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey: "AIzaSyDbtIz_-mXJIjkFYOYBfPGq_KSMUTzQgwQ",
+      authDomain: "barakahku-app.firebaseapp.com",
+      projectId: "barakahku-app",
+      storageBucket: "barakahku-app.firebasestorage.app",
+      messagingSenderId: "510231053293",
+      appId: "1:510231053293:web:921b9e574fc614492b5de4"
     });
-    
-    firebaseReady = true;
-    console.log('✅ [SW] Firebase ready');
-    return true;
-  } catch (err) {
-    console.error('❌ [SW] Firebase error:', err.message);
-    return false;
   }
+  
+  messaging = firebase.messaging();
+  messaging.onBackgroundMessage((payload) => {
+    console.log('📩 [SW] Background message:', payload);
+    return self.registration.showNotification(
+      payload.notification?.title || 'BarakahKu',
+      {
+        body: payload.notification?.body || 'Notifikasi baru',
+        icon: '/platform/barakahku1/assets/icons/icon-192.png',
+        badge: '/platform/barakahku1/assets/icons/icon-192.png',
+        tag: 'barakahku-fcm-' + Date.now(),
+        vibrate: [200, 100, 200],
+        data: payload.data || {}
+      }
+    );
+  });
+  
+  firebaseReady = true;
+  console.log('✅ [SW] Firebase ready');
+} catch (err) {
+  console.error('❌ [SW] Firebase error:', err.message);
 }
 
 // ====================================================
@@ -90,18 +85,12 @@ self.addEventListener('activate', (e) => {
       ),
       self.clients.claim()
     ])
-    .then(() => new Promise(resolve => {
-      setTimeout(() => {
-        initFirebase().then(success => {
-          if (success) {
-            self.clients.matchAll().then(clients => {
-              clients.forEach(c => c.postMessage({ type: 'SW_READY', firebaseReady: true }));
-            });
-          }
-          resolve();
-        });
-      }, 500);
-    }))
+    .then(() => {
+      console.log('✅ [SW] Activated, Firebase:', firebaseReady ? 'READY ✅' : 'FAILED ❌');
+      return self.clients.matchAll().then(clients => {
+        clients.forEach(c => c.postMessage({ type: 'SW_READY', firebaseReady }));
+      });
+    })
   );
 });
 
@@ -182,14 +171,8 @@ self.addEventListener('message', (e) => {
   if (e.data?.type === 'SKIP_WAITING') self.skipWaiting();
   
   if (e.data?.type === 'CHECK_FIREBASE') {
-    if (!firebaseReady) {
-      initFirebase().then(success => {
-        e.ports[0].postMessage({ ready: success, hasMessaging: !!messaging });
-      });
-    } else {
-      e.ports[0].postMessage({ ready: firebaseReady, hasMessaging: !!messaging });
-    }
+    e.ports[0].postMessage({ ready: firebaseReady, hasMessaging: !!messaging });
   }
 });
 
-console.log('✅ [SW] v25 ready');
+console.log('✅ [SW] v26 ready, Firebase:', firebaseReady ? 'READY ✅' : 'FAILED ❌');
