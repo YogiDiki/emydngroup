@@ -1,5 +1,5 @@
 // ==============================
-// BarakahKu - app.js v29 (FIXED PERMISSION)
+// BarakahKu - app.js v30 (NOTIFICATION FIX)
 // ==============================
 console.log('📦 [APP] Loading...');
 
@@ -77,7 +77,7 @@ async function initFCM() {
         });
       }
     });
-  
+    
   } catch (err) {
     console.error('❌ [FCM] Error:', err.message);
   } finally {
@@ -138,7 +138,6 @@ document.addEventListener('alpine:init', () => {
     init() {
       console.log('🚀 [APP] Starting...');
       
-      // Check notification status on load
       this.checkNotificationStatus();
       
       this.registerSW();
@@ -157,7 +156,6 @@ document.addEventListener('alpine:init', () => {
       console.log('✅ [APP] Ready');
     },
 
-    // ✅ FIXED: Check notification status on init
     checkNotificationStatus() {
       if (!('Notification' in window)) {
         this.notificationStatus = 'unsupported';
@@ -320,7 +318,7 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-    // ✅ FIXED: Notification permission dengan delay & proper handling
+    // ✅ CRITICAL FIX: Notification permission dengan user gesture yang proper
     async requestNotificationPermission() {
       // Check browser support
       if (!('Notification' in window)) {
@@ -332,80 +330,54 @@ document.addEventListener('alpine:init', () => {
       // Already granted
       if (Notification.permission === 'granted') {
         this.notificationStatus = 'active';
-        const saved = localStorage.getItem('fcm_token');
         
-        if (saved) {
-          const tokenData = JSON.parse(saved);
-          console.log('💾 [FCM] Token tersimpan:', tokenData);
-          
-          // Show notification as confirmation
-          new Notification('BarakahKu', {
-            body: '✅ Notifikasi sudah aktif!\n🔔 Anda akan menerima pengingat sholat',
-            icon: '/platform/barakahku1/assets/icons/icon-192.png',
-            badge: '/platform/barakahku1/assets/icons/icon-192.png',
-            tag: 'barakahku-active'
-          });
-        } else {
-          await initFCM();
-        }
+        new Notification('BarakahKu', {
+          body: '✅ Notifikasi sudah aktif!',
+          icon: '/platform/barakahku1/assets/icons/icon-192.png',
+          badge: '/platform/barakahku1/assets/icons/icon-192.png'
+        });
+        
+        if (!localStorage.getItem('fcm_token')) await initFCM();
         return;
       }
 
       // Already denied
       if (Notification.permission === 'denied') {
         this.notificationStatus = 'denied';
-        
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        
-        let instructions = '❌ Notifikasi diblokir.\n\nAktifkan di Settings:\n\n';
-        
-        if (isIOS) {
-          instructions += '📱 iOS Safari:\n1. Buka Settings > Safari\n2. Pilih Websites > Notifications\n3. Cari emydngroup.com\n4. Ubah ke "Allow"';
-        } else if (isMobile) {
-          instructions += '📱 Android Chrome:\n1. Tap ikon kunci (🔒) di address bar\n2. Pilih "Permissions"\n3. Aktifkan "Notifications"';
-        } else {
-          instructions += '💻 Desktop:\n1. Klik ikon kunci (🔒) di address bar\n2. Pilih "Site settings"\n3. Ubah Notifications ke "Allow"';
-        }
-        
-        alert(instructions);
+        alert('❌ Notifikasi diblokir.\n\nAktifkan di Settings:\n\n📱 Android Chrome:\n1. Tap ikon 🔒 di address bar\n2. Pilih "Permissions"\n3. Aktifkan "Notifications"\n\n📱 iOS Safari:\n1. Buka Settings > Safari\n2. Pilih Websites > Notifications\n3. Cari emydngroup.com\n4. Ubah ke "Allow"');
         return;
       }
 
-      // Request permission with delay (avoid clickjacking detection)
+      // ✅ FIX: Request dalam user gesture context (button click)
       try {
         console.log('🔔 [PERMISSION] Requesting...');
         
-        // CRITICAL: Add 500ms delay before showing permission dialog
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
+        // CRITICAL: Request permission IMMEDIATELY in user gesture
+        // TIDAK ADA DELAY sebelum requestPermission()
         const permission = await Notification.requestPermission();
         console.log('🔔 [PERMISSION] Result:', permission);
         
         if (permission === 'granted') {
           this.notificationStatus = 'active';
           
-          // Init FCM after permission granted
-          setTimeout(async () => {
-            await initFCM();
-            
-            // Show test notification
-            new Notification('BarakahKu', {
-              body: '✅ Notifikasi berhasil diaktifkan!\n🔔 Anda akan menerima pengingat sholat dan bacaan harian',
-              icon: '/platform/barakahku1/assets/icons/icon-192.png',
-              badge: '/platform/barakahku1/assets/icons/icon-192.png',
-              tag: 'barakahku-welcome',
-              vibrate: [200, 100, 200]
-            });
-          }, 1000);
+          // Show test notification
+          new Notification('BarakahKu', {
+            body: '✅ Notifikasi berhasil diaktifkan!',
+            icon: '/platform/barakahku1/assets/icons/icon-192.png',
+            badge: '/platform/barakahku1/assets/icons/icon-192.png',
+            vibrate: [200, 100, 200]
+          });
+          
+          // Init FCM after notification shown (delay is OK here)
+          setTimeout(() => initFCM(), 2000);
         } else {
           this.notificationStatus = 'denied';
-          alert('ℹ️ Izin notifikasi dibatalkan.\n\nAnda bisa mengaktifkannya nanti dari tombol notifikasi.');
+          alert('ℹ️ Izin notifikasi dibatalkan.');
         }
       } catch (error) {
         console.error('❌ [PERMISSION] Error:', error);
         this.notificationStatus = 'denied';
-        alert('❌ Terjadi kesalahan saat meminta izin notifikasi.\n\nCoba refresh halaman dan ulangi lagi.');
+        alert('❌ Terjadi kesalahan.\n\nCoba refresh halaman dan ulangi lagi.');
       }
     },
 
