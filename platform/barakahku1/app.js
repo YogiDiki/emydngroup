@@ -1,7 +1,7 @@
 // ==============================
-// BarakahKu - app.js v34 (Enhanced FCM Logging)
+// BarakahKu - app.js v35 (Fixed Notification Flow)
 // ==============================
-console.log('📦 [APP] Loading v34...');
+console.log('📦 [APP] Loading v35...');
 
 // ====================================================
 // FIREBASE MESSAGING
@@ -72,7 +72,6 @@ async function initFCM() {
     });
     
     if (token) {
-      // Format token untuk mudah di-copy
       const tokenData = {
         token,
         timestamp: new Date().toLocaleString('id-ID'),
@@ -90,7 +89,6 @@ async function initFCM() {
       console.log('Platform:', tokenData.platform);
       console.log('Time:', tokenData.timestamp);
       
-      // Test notification setelah 3 detik
       setTimeout(() => {
         console.log('🧪 [FCM] Testing local notification...');
         if (Notification.permission === 'granted') {
@@ -216,9 +214,9 @@ document.addEventListener('alpine:init', () => {
     ],
 
     init() {
-      console.log('🚀 [APP] Starting v34...');
+      console.log('🚀 [APP] Starting v35...');
       
-      this.updateNotificationStatus();
+      this.checkNotificationStatus();
       
       this.registerSW();
       this.loadQuran();
@@ -233,10 +231,10 @@ document.addEventListener('alpine:init', () => {
         document.querySelectorAll('audio').forEach(a => { if (a !== e.target) a.pause(); });
       }, true);
       
-      console.log('✅ [APP] Ready v34');
+      console.log('✅ [APP] Ready v35');
     },
 
-    updateNotificationStatus() {
+    checkNotificationStatus() {
       if (!('Notification' in window)) {
         this.notificationStatus = 'unsupported';
         console.log('⚠️ [NOTIF] Browser tidak support');
@@ -244,12 +242,11 @@ document.addEventListener('alpine:init', () => {
       }
       
       const perm = Notification.permission;
-      console.log('🔔 [NOTIF] Browser permission:', perm);
+      console.log('🔔 [NOTIF] Current permission:', perm);
       
       if (perm === 'granted') {
         this.notificationStatus = 'active';
         console.log('✅ [NOTIF] Permission granted - Auto-init FCM');
-        
         if (!fcmInit && !fcmInitInProgress) {
           setTimeout(() => initFCM(), 2000);
         }
@@ -258,7 +255,7 @@ document.addEventListener('alpine:init', () => {
         console.log('❌ [NOTIF] Permission denied');
       } else {
         this.notificationStatus = 'inactive';
-        console.log('ℹ️ [NOTIF] Permission default (not determined)');
+        console.log('ℹ️ [NOTIF] Permission default');
       }
     },
 
@@ -471,7 +468,7 @@ document.addEventListener('alpine:init', () => {
     },
 
     async requestNotificationPermission() {
-      console.log('🔔 [PERMISSION] User clicked request button');
+      console.log('🔔 [PERMISSION] User clicked button');
       
       if (!('Notification' in window)) {
         alert('❌ Browser Anda tidak mendukung notifikasi');
@@ -484,8 +481,7 @@ document.addEventListener('alpine:init', () => {
 
       if (currentPerm === 'granted') {
         this.notificationStatus = 'active';
-        alert('✅ Notifikasi sudah aktif!\n\nAnda akan menerima pengingat waktu sholat.');
-        
+        alert('✅ Notifikasi sudah aktif!');
         if (!fcmInit && !fcmInitInProgress) {
           setTimeout(() => initFCM(), 1000);
         }
@@ -494,13 +490,12 @@ document.addEventListener('alpine:init', () => {
 
       if (currentPerm === 'denied') {
         this.notificationStatus = 'denied';
-        alert('❌ Notifikasi diblokir di browser.\n\n📱 Cara mengaktifkan:\n\n1. Tap ikon 🔒 di address bar\n2. Pilih "Site settings" atau "Permissions"\n3. Cari "Notifications"\n4. Ubah ke "Allow"\n5. Refresh halaman');
+        alert('❌ Notifikasi diblokir.\n\n📱 Cara mengaktifkan:\n1. Tap 🔒 di address bar\n2. Pilih "Permissions"\n3. Ubah Notifications ke "Allow"\n4. Refresh halaman');
         return;
       }
 
       try {
         console.log('🔔 [PERMISSION] Requesting...');
-        
         const permission = await Notification.requestPermission();
         console.log('🔔 [PERMISSION] Result:', permission);
         
@@ -508,7 +503,7 @@ document.addEventListener('alpine:init', () => {
           this.notificationStatus = 'active';
           
           new Notification('BarakahKu', {
-            body: '✅ Notifikasi berhasil diaktifkan! Anda akan menerima pengingat waktu sholat.',
+            body: '✅ Notifikasi berhasil diaktifkan!',
             icon: '/platform/barakahku1/assets/icons/icon-192.png',
             badge: '/platform/barakahku1/assets/icons/icon-192.png',
             vibrate: [200, 100, 200],
@@ -519,16 +514,13 @@ document.addEventListener('alpine:init', () => {
           
         } else if (permission === 'denied') {
           this.notificationStatus = 'denied';
-          alert('❌ Izin notifikasi ditolak.\n\nAnda dapat mengaktifkannya kembali di pengaturan browser.');
         } else {
           this.notificationStatus = 'inactive';
-          console.log('ℹ️ Permission dismissed');
         }
         
       } catch (error) {
         console.error('❌ [PERMISSION] Error:', error);
-        this.notificationStatus = 'denied';
-        alert('❌ Terjadi kesalahan saat meminta izin notifikasi.\n\nCoba refresh halaman dan ulangi.');
+        alert('❌ Terjadi kesalahan. Coba refresh dan ulangi.');
       }
     },
 
@@ -648,4 +640,4 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredPrompt = e;
 });
 
-console.log('✅ [APP] Loaded v34');
+console.log('✅ [APP] Loaded v35');
