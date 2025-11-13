@@ -717,7 +717,7 @@
               x-text="currentDoa.terjemah"
             ></p>
 
-            <!-- ✅ Tampilkan sumber hanya jika ada -->
+            <!-- ✅ Sumber doa (hanya muncul jika ada) -->
             <template x-if="currentDoa.sumber">
               <p 
                 class="text-xs text-gray-400 mt-2 italic" 
@@ -730,6 +730,7 @@
     </template>
   </div>
 </div>
+
 
       <!-- Murottal -->
       <div x-show="activeTab === 'murottal'">
