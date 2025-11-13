@@ -1,7 +1,7 @@
 // ==============================
-// BarakahKu - app.js v35 (Fixed Notification Flow)
+// BarakahKu - app.js v36 (Production Ready)
 // ==============================
-console.log('📦 [APP] Loading v35...');
+console.log('📦 [APP] Loading v36...');
 
 // ====================================================
 // FIREBASE MESSAGING
@@ -79,43 +79,11 @@ async function initFCM() {
       };
       
       localStorage.setItem('fcm_token', JSON.stringify(tokenData));
-      
-      console.log('✅ [FCM] Token obtained successfully!');
-      console.log('═══════════════════════════════════════════════════════════');
-      console.log('📋 COPY TOKEN INI KE FIREBASE CONSOLE:');
-      console.log('═══════════════════════════════════════════════════════════');
-      console.log(token);
-      console.log('═══════════════════════════════════════════════════════════');
-      console.log('Platform:', tokenData.platform);
-      console.log('Time:', tokenData.timestamp);
-      
-      setTimeout(() => {
-        console.log('🧪 [FCM] Testing local notification...');
-        if (Notification.permission === 'granted') {
-          const testNotif = new Notification('BarakahKu - Test Notifikasi', {
-            body: '✅ Notifikasi lokal berhasil! Sekarang coba kirim dari Firebase Console.',
-            icon: '/platform/barakahku1/assets/icons/icon-192.png',
-            badge: '/platform/barakahku1/assets/icons/icon-192.png',
-            tag: 'barakahku-test',
-            vibrate: [200, 100, 200],
-            requireInteraction: false
-          });
-          
-          testNotif.onclick = function(event) {
-            event.preventDefault();
-            window.focus();
-            testNotif.close();
-          };
-          
-          console.log('✅ [FCM] Test notification sent');
-        }
-      }, 3000);
+      console.log('✅ [FCM] Token ready');
     }
     
     messaging.onMessage((payload) => {
-      console.log('📩 [FCM] Foreground message received:', payload);
-      console.log('📩 [FCM] Notification data:', payload.notification);
-      console.log('📩 [FCM] Custom data:', payload.data);
+      console.log('📩 [FCM] Message received');
       
       if (Notification.permission === 'granted') {
         const notif = new Notification(payload.notification?.title || 'BarakahKu', {
@@ -133,10 +101,6 @@ async function initFCM() {
           window.focus();
           notif.close();
         };
-        
-        console.log('✅ [FCM] Notification shown:', notif);
-      } else {
-        console.warn('⚠️ [FCM] Permission not granted:', Notification.permission);
       }
     });
     
@@ -214,7 +178,7 @@ document.addEventListener('alpine:init', () => {
     ],
 
     init() {
-      console.log('🚀 [APP] Starting v35...');
+      console.log('🚀 [APP] Starting v36...');
       
       this.checkNotificationStatus();
       
@@ -231,7 +195,7 @@ document.addEventListener('alpine:init', () => {
         document.querySelectorAll('audio').forEach(a => { if (a !== e.target) a.pause(); });
       }, true);
       
-      console.log('✅ [APP] Ready v35');
+      console.log('✅ [APP] Ready v36');
     },
 
     checkNotificationStatus() {
@@ -494,14 +458,14 @@ document.addEventListener('alpine:init', () => {
         return;
       }
 
-      try {
-        console.log('🔔 [PERMISSION] Requesting...');
-        const permission = await Notification.requestPermission();
-        console.log('🔔 [PERMISSION] Result:', permission);
+      console.log('🔔 [PERMISSION] Requesting...');
+      const permission = await Notification.requestPermission();
+      console.log('🔔 [PERMISSION] Result:', permission);
+      
+      if (permission === 'granted') {
+        this.notificationStatus = 'active';
         
-        if (permission === 'granted') {
-          this.notificationStatus = 'active';
-          
+        try {
           new Notification('BarakahKu', {
             body: '✅ Notifikasi berhasil diaktifkan!',
             icon: '/platform/barakahku1/assets/icons/icon-192.png',
@@ -509,18 +473,16 @@ document.addEventListener('alpine:init', () => {
             vibrate: [200, 100, 200],
             tag: 'barakahku-success'
           });
-          
-          setTimeout(() => initFCM(), 2000);
-          
-        } else if (permission === 'denied') {
-          this.notificationStatus = 'denied';
-        } else {
-          this.notificationStatus = 'inactive';
+        } catch (e) {
+          console.warn('⚠️ Notification display failed:', e.message);
         }
         
-      } catch (error) {
-        console.error('❌ [PERMISSION] Error:', error);
-        alert('❌ Terjadi kesalahan. Coba refresh dan ulangi.');
+        setTimeout(() => initFCM(), 2000);
+        
+      } else if (permission === 'denied') {
+        this.notificationStatus = 'denied';
+      } else {
+        this.notificationStatus = 'inactive';
       }
     },
 
@@ -632,7 +594,7 @@ document.addEventListener('alpine:init', () => {
 });
 
 // ====================================================
-// PWA1
+// PWA
 // ====================================================
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -640,4 +602,4 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredPrompt = e;
 });
 
-console.log('✅ [APP] Loaded v35');
+console.log('✅ [APP] Loaded v36');
