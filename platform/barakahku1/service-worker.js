@@ -1,7 +1,7 @@
 // ====================================================
-// BarakahKu - Service Worker v26 (Minimal Fix)
+// BarakahKu - Service Worker v27 (Minimal Fix)
 // ====================================================
-const CACHE_NAME = 'barakahku-v26';
+const CACHE_NAME = 'barakahku-v27';
 const urlsToCache = [
   '/platform/barakahku1/',
   '/platform/barakahku1/index.html',
