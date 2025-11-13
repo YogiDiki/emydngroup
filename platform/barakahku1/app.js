@@ -232,20 +232,29 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-    loadDoa() {
-      this.doaList = [
-        { id: 1, judul: 'Doa Sebelum Makan', arab: 'بِسْمِ اللهِ وَعَلَى بَرَكَةِ اللهِ', latin: 'Bismillahi wa \'ala barakatillah', terjemah: 'Dengan menyebut nama Allah dan atas berkah Allah' },
-        { id: 2, judul: 'Doa Sesudah Makan', arab: 'اَلْحَمْدُ ِللهِ الَّذِىْ اَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِيْنَ', latin: 'Alhamdulillahilladzi ath\'amana wasaqona waja\'alana muslimin', terjemah: 'Segala puji bagi Allah yang telah memberi kami makan dan minum serta menjadikan kami muslim' },
-        { id: 3, judul: 'Doa Bangun Tidur', arab: 'اَلْحَمْدُ ِللهِ الَّذِيْ اَحْيَانَا بَعْدَمَآ اَمَاتَنَا وَاِلَيْهِ النُّشُوْرُ', latin: 'Alhamdu lillahil ladzi ahyana ba\'da ma amatana wa ilaihin nusyur', terjemah: 'Segala puji bagi Allah yang telah menghidupkan kami sesudah kami mati dan hanya kepada-Nya kami kembali' },
-        { id: 4, judul: 'Doa Sebelum Tidur', arab: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا', latin: 'Bismika Allahumma amuutu wa ahyaa', terjemah: 'Dengan nama-Mu ya Allah aku mati dan aku hidup' },
-        { id: 5, judul: 'Doa Masuk Kamar Mandi', arab: 'اَللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِِ وَالْخَبَائِثِ', latin: 'Allahumma inni a\'udzu bika minal khubutsi wal khaba\'its', terjemah: 'Ya Allah, aku berlindung kepada-Mu dari godaan setan laki-laki dan perempuan' },
-        { id: 6, judul: 'Doa Keluar Kamar Mandi', arab: 'غُفْرَانَكَ', latin: 'Ghufraanaka', terjemah: 'Aku mohon ampunan-Mu' },
-        { id: 7, judul: 'Doa Masuk Masjid', arab: 'اَللَّهُمَّ افْتَحْ لِيْ أَبْوَابَ رَحْمَتِكَ', latin: 'Allahummaftah lii abwaaba rahmatika', terjemah: 'Ya Allah, bukakanlah untukku pintu-pintu rahmat-Mu' },
-        { id: 8, judul: 'Doa Keluar Masjid', arab: 'اَللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ', latin: 'Allahumma inni as\'aluka min fadhlika', terjemah: 'Ya Allah, sesungguhnya aku mohon kepada-Mu dari karunia-Mu' },
-        { id: 9, judul: 'Doa Memakai Pakaian', arab: 'اَلْحَمْدُ لِلَّهِ الَّذِيْ كَسَانِيْ هَذَا وَرَزَقَنِيْهِ مِنْ غَيْرِ حَوْلٍ مِنِّيْ وَلاَ قُوَّةٍ', latin: 'Alhamdu lillahil ladzi kasani hadza wa razaqanihi min ghairi haulin minni wa laa quwwata', terjemah: 'Segala puji bagi Allah yang memberi aku pakaian ini dan memberi rizki kepadaku tanpa daya dan kekuatan dariku' },
-        { id: 10, judul: 'Doa Ketika Turun Hujan', arab: 'اَللَّهُمَّ صَيِّبًا نَافِعًا', latin: 'Allahumma shayyiban naafi\'aa', terjemah: 'Ya Allah, turunkanlah hujan yang bermanfaat' }
-      ];
-    },
+   // ==========================
+// DYNAMIC DOA LOADER v2.0
+// ==========================
+async loadDoa() {
+  try {
+    const res = await fetch('/platform/barakahku1/data/doa.json');
+    const data = await res.json();
+
+    this.doaList = data.map((d, i) => ({
+      id: i + 1,
+      judul: d.judul,
+      arab: d.arab,
+      latin: d.latin,
+      arti: d.arti
+    }));
+
+    console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
+  } catch (err) {
+    console.error('❌ [DOA] Gagal memuat doa.json:', err);
+    this.doaList = [];
+  }
+},
+
 
 // =============================
 // OPTIMIZED MUROTTAL LOADER v32
