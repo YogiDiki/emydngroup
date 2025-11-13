@@ -1,7 +1,7 @@
 // ==============================
-// BarakahKu - app.js v33 (FIXED: Permission Display)
+// BarakahKu - app.js v34 (Enhanced FCM Logging)
 // ==============================
-console.log('📦 [APP] Loading v33...');
+console.log('📦 [APP] Loading v34...');
 
 // ====================================================
 // FIREBASE MESSAGING
@@ -72,23 +72,73 @@ async function initFCM() {
     });
     
     if (token) {
-      localStorage.setItem('fcm_token', JSON.stringify({
+      // Format token untuk mudah di-copy
+      const tokenData = {
         token,
         timestamp: new Date().toLocaleString('id-ID'),
         platform: /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
-      }));
-      console.log('✅ [FCM] Token:', token);
+      };
+      
+      localStorage.setItem('fcm_token', JSON.stringify(tokenData));
+      
+      console.log('✅ [FCM] Token obtained successfully!');
+      console.log('═══════════════════════════════════════════════════════════');
+      console.log('📋 COPY TOKEN INI KE FIREBASE CONSOLE:');
+      console.log('═══════════════════════════════════════════════════════════');
+      console.log(token);
+      console.log('═══════════════════════════════════════════════════════════');
+      console.log('Platform:', tokenData.platform);
+      console.log('Time:', tokenData.timestamp);
+      
+      // Test notification setelah 3 detik
+      setTimeout(() => {
+        console.log('🧪 [FCM] Testing local notification...');
+        if (Notification.permission === 'granted') {
+          const testNotif = new Notification('BarakahKu - Test Notifikasi', {
+            body: '✅ Notifikasi lokal berhasil! Sekarang coba kirim dari Firebase Console.',
+            icon: '/platform/barakahku1/assets/icons/icon-192.png',
+            badge: '/platform/barakahku1/assets/icons/icon-192.png',
+            tag: 'barakahku-test',
+            vibrate: [200, 100, 200],
+            requireInteraction: false
+          });
+          
+          testNotif.onclick = function(event) {
+            event.preventDefault();
+            window.focus();
+            testNotif.close();
+          };
+          
+          console.log('✅ [FCM] Test notification sent');
+        }
+      }, 3000);
     }
     
     messaging.onMessage((payload) => {
-      console.log('📩 [FCM] Foreground message:', payload);
+      console.log('📩 [FCM] Foreground message received:', payload);
+      console.log('📩 [FCM] Notification data:', payload.notification);
+      console.log('📩 [FCM] Custom data:', payload.data);
+      
       if (Notification.permission === 'granted') {
-        new Notification(payload.notification?.title || 'BarakahKu', {
+        const notif = new Notification(payload.notification?.title || 'BarakahKu', {
           body: payload.notification?.body || 'Notifikasi baru',
           icon: '/platform/barakahku1/assets/icons/icon-192.png',
-          tag: 'barakahku-fcm',
-          vibrate: [200, 100, 200]
+          badge: '/platform/barakahku1/assets/icons/icon-192.png',
+          tag: 'barakahku-fcm-' + Date.now(),
+          vibrate: [200, 100, 200],
+          requireInteraction: false,
+          data: payload.data || {}
         });
+        
+        notif.onclick = function(event) {
+          event.preventDefault();
+          window.focus();
+          notif.close();
+        };
+        
+        console.log('✅ [FCM] Notification shown:', notif);
+      } else {
+        console.warn('⚠️ [FCM] Permission not granted:', Notification.permission);
       }
     });
     
@@ -117,18 +167,18 @@ document.addEventListener('alpine:init', () => {
     currentSurah: null,
     currentDoa: null,
     doaList: [],
-    selectedDoaCategory: null,  // ← TAMBAH INI
+    selectedDoaCategory: null,
     doaCategories: [
-  { id: 'harian', name: '🕋 Doa Harian', description: 'Doa makan, tidur, masuk rumah', icon: '🕋' },
-  { id: 'ibadah', name: '🕌 Doa Ibadah', description: 'Wudhu, shalat, zakat, puasa', icon: '🕌' },
-  { id: 'keluarga', name: '💖 Doa Keluarga', description: 'Orang tua, anak, rumah tangga', icon: '💖' },
-  { id: 'perjalanan', name: '✈️ Doa Perjalanan', description: 'Naik kendaraan, bepergian', icon: '✈️' },
-  { id: 'perlindungan', name: '🔒 Doa Perlindungan', description: 'Dari gangguan syaitan, bahaya', icon: '🔒' },
-  { id: 'taubat', name: '💭 Doa Taubat', description: 'Memohon ampunan, istighfar', icon: '💭' },
-  { id: 'rezeki', name: '🌧️ Doa Hajat & Rezeki', description: 'Permohonan rizki, keberkahan', icon: '🌧️' },
-  { id: 'quran', name: '📖 Doa dari Al-Qur\'an', description: 'Doa yang langsung dari ayat', icon: '📖' },
-  { id: 'dzikir', name: '🌙 Dzikir Pagi & Petang', description: 'Dzikir shahih dari hadits', icon: '🌙' },
-  { id: 'umum', name: '☪️ Doa Umum', description: 'Hujan, jenazah, dan lainnya', icon: '☪️' }
+      { id: 'harian', name: '🕋 Doa Harian', description: 'Doa makan, tidur, masuk rumah', icon: '🕋' },
+      { id: 'ibadah', name: '🕌 Doa Ibadah', description: 'Wudhu, shalat, zakat, puasa', icon: '🕌' },
+      { id: 'keluarga', name: '💖 Doa Keluarga', description: 'Orang tua, anak, rumah tangga', icon: '💖' },
+      { id: 'perjalanan', name: '✈️ Doa Perjalanan', description: 'Naik kendaraan, bepergian', icon: '✈️' },
+      { id: 'perlindungan', name: '🔒 Doa Perlindungan', description: 'Dari gangguan syaitan, bahaya', icon: '🔒' },
+      { id: 'taubat', name: '💭 Doa Taubat', description: 'Memohon ampunan, istighfar', icon: '💭' },
+      { id: 'rezeki', name: '🌧️ Doa Hajat & Rezeki', description: 'Permohonan rizki, keberkahan', icon: '🌧️' },
+      { id: 'quran', name: '📖 Doa dari Al-Qur\'an', description: 'Doa yang langsung dari ayat', icon: '📖' },
+      { id: 'dzikir', name: '🌙 Dzikir Pagi & Petang', description: 'Dzikir shahih dari hadits', icon: '🌙' },
+      { id: 'umum', name: '☪️ Doa Umum', description: 'Hujan, jenazah, dan lainnya', icon: '☪️' }
     ],   
     murotalList: [],
     jadwal: {},
@@ -166,9 +216,8 @@ document.addEventListener('alpine:init', () => {
     ],
 
     init() {
-      console.log('🚀 [APP] Starting v33...');
+      console.log('🚀 [APP] Starting v34...');
       
-      // ✅ FIXED: Check notification status on init
       this.updateNotificationStatus();
       
       this.registerSW();
@@ -184,10 +233,9 @@ document.addEventListener('alpine:init', () => {
         document.querySelectorAll('audio').forEach(a => { if (a !== e.target) a.pause(); });
       }, true);
       
-      console.log('✅ [APP] Ready v33');
+      console.log('✅ [APP] Ready v34');
     },
 
-    // ✅ NEW: Update status dari browser API langsung
     updateNotificationStatus() {
       if (!('Notification' in window)) {
         this.notificationStatus = 'unsupported';
@@ -195,7 +243,6 @@ document.addEventListener('alpine:init', () => {
         return;
       }
       
-      // ✅ ALWAYS read from Notification.permission (TIDAK dari localStorage)
       const perm = Notification.permission;
       console.log('🔔 [NOTIF] Browser permission:', perm);
       
@@ -203,7 +250,6 @@ document.addEventListener('alpine:init', () => {
         this.notificationStatus = 'active';
         console.log('✅ [NOTIF] Permission granted - Auto-init FCM');
         
-        // Silent init FCM di background (tidak show notification)
         if (!fcmInit && !fcmInitInProgress) {
           setTimeout(() => initFCM(), 2000);
         }
@@ -258,41 +304,41 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-async loadDoa() {
-  try {
-    const res = await fetch('/platform/barakahku1/data/doa.json');
-    const data = await res.json();
-    this.doaList = data.map((d, i) => ({
-      id: i + 1,
-      judul: d.judul,
-      arab: d.arab,
-      latin: d.latin,
-      arti: d.arti,
-      terjemah: d.terjemah || d.arti,
-      sumber: d.sumber || '',        // ← ADA KOMA DI SINI
-      kategori: d.kategori || 'umum'  // ← TAMBAH BARIS INI
-    }));
-    console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
-  } catch (err) {
-    console.error('❌ [DOA] Gagal memuat doa.json:', err);
-    this.doaList = [];
-  }
-},
+    async loadDoa() {
+      try {
+        const res = await fetch('/platform/barakahku1/data/doa.json');
+        const data = await res.json();
+        this.doaList = data.map((d, i) => ({
+          id: i + 1,
+          judul: d.judul,
+          arab: d.arab,
+          latin: d.latin,
+          arti: d.arti,
+          terjemah: d.terjemah || d.arti,
+          sumber: d.sumber || '',
+          kategori: d.kategori || 'umum'
+        }));
+        console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
+      } catch (err) {
+        console.error('❌ [DOA] Gagal memuat doa.json:', err);
+        this.doaList = [];
+      }
+    },
 
-get filteredDoaList() {
-  if (!this.selectedDoaCategory) return this.doaList;
-  return this.doaList.filter(doa => doa.kategori === this.selectedDoaCategory.id);
-},
+    get filteredDoaList() {
+      if (!this.selectedDoaCategory) return this.doaList;
+      return this.doaList.filter(doa => doa.kategori === this.selectedDoaCategory.id);
+    },
 
-selectDoaCategory(category) {
-  this.selectedDoaCategory = category;
-  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-},
+    selectDoaCategory(category) {
+      this.selectedDoaCategory = category;
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    },
 
-backFromDoaDetail() {
-  this.currentDoa = null;
-  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-},
+    backFromDoaDetail() {
+      this.currentDoa = null;
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    },
 
     async loadMurotalList() {
       this.loadingMurottal = true;
@@ -424,7 +470,6 @@ backFromDoaDetail() {
       }
     },
 
-    // ✅ Request permission - hanya saat user klik button
     async requestNotificationPermission() {
       console.log('🔔 [PERMISSION] User clicked request button');
       
@@ -453,7 +498,6 @@ backFromDoaDetail() {
         return;
       }
 
-      // Request permission
       try {
         console.log('🔔 [PERMISSION] Requesting...');
         
@@ -463,7 +507,6 @@ backFromDoaDetail() {
         if (permission === 'granted') {
           this.notificationStatus = 'active';
           
-          // Show success notification
           new Notification('BarakahKu', {
             body: '✅ Notifikasi berhasil diaktifkan! Anda akan menerima pengingat waktu sholat.',
             icon: '/platform/barakahku1/assets/icons/icon-192.png',
@@ -472,7 +515,6 @@ backFromDoaDetail() {
             tag: 'barakahku-success'
           });
           
-          // Init FCM
           setTimeout(() => initFCM(), 2000);
           
         } else if (permission === 'denied') {
@@ -606,4 +648,4 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredPrompt = e;
 });
 
-console.log('✅ [APP] Loaded v33');
+console.log('✅ [APP] Loaded v34');
