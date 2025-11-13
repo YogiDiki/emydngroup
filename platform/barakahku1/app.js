@@ -118,7 +118,18 @@ document.addEventListener('alpine:init', () => {
     currentDoa: null,
     doaList: [],
     selectedDoaCategory: null,  // ← TAMBAH INI
-    doaCategories: [] ,           // ← TAMBAH INI (array 10 kategori)
+    doaCategories: [
+  { id: 'harian', name: '🕋 Doa Harian', description: 'Doa makan, tidur, masuk rumah', icon: '🕋' },
+  { id: 'ibadah', name: '🕌 Doa Ibadah', description: 'Wudhu, shalat, zakat, puasa', icon: '🕌' },
+  { id: 'keluarga', name: '💖 Doa Keluarga', description: 'Orang tua, anak, rumah tangga', icon: '💖' },
+  { id: 'perjalanan', name: '✈️ Doa Perjalanan', description: 'Naik kendaraan, bepergian', icon: '✈️' },
+  { id: 'perlindungan', name: '🔒 Doa Perlindungan', description: 'Dari gangguan syaitan, bahaya', icon: '🔒' },
+  { id: 'taubat', name: '💭 Doa Taubat', description: 'Memohon ampunan, istighfar', icon: '💭' },
+  { id: 'rezeki', name: '🌧️ Doa Hajat & Rezeki', description: 'Permohonan rizki, keberkahan', icon: '🌧️' },
+  { id: 'quran', name: '📖 Doa dari Al-Qur\'an', description: 'Doa yang langsung dari ayat', icon: '📖' },
+  { id: 'dzikir', name: '🌙 Dzikir Pagi & Petang', description: 'Dzikir shahih dari hadits', icon: '🌙' },
+  { id: 'umum', name: '☪️ Doa Umum', description: 'Hujan, jenazah, dan lainnya', icon: '☪️' }
+    ],   
     murotalList: [],
     jadwal: {},
     cityName: 'Memuat...',
