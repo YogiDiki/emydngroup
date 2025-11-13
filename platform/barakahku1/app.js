@@ -1,16 +1,15 @@
 // ==============================
-// BarakahKu - app.js v31 (NOTIFICATION + HEADER FIX)
+// BarakahKu - app.js v32 (FIXED: Permission Flow)
 // ==============================
-console.log('📦 [APP] Loading v31...');
+console.log('📦 [APP] Loading v32...');
 
 // ====================================================
-// FIREBASE MESSAGING - FIX: Prevent infinite loop
+// FIREBASE MESSAGING - FIXED: Prevent auto-trigger
 // ====================================================
 let fcmInit = false;
-let fcmInitInProgress = false; // NEW: Prevent concurrent init
+let fcmInitInProgress = false;
 
 async function initFCM() {
-  // CRITICAL FIX: Check both flags
   if (fcmInit || fcmInitInProgress) {
     console.log('⚠️ [FCM] Already initialized or in progress');
     return;
@@ -21,7 +20,7 @@ async function initFCM() {
     return;
   }
   
-  fcmInitInProgress = true; // Mark as in progress
+  fcmInitInProgress = true;
   
   try {
     const swReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/')
@@ -81,7 +80,6 @@ async function initFCM() {
       console.log('✅ [FCM] Token:', token);
     }
     
-    // FIX: Only register onMessage ONCE
     messaging.onMessage((payload) => {
       console.log('📩 [FCM] Foreground message:', payload);
       if (Notification.permission === 'granted') {
@@ -94,14 +92,14 @@ async function initFCM() {
       }
     });
     
-    fcmInit = true; // Mark as successfully initialized
+    fcmInit = true;
     console.log('✅ [FCM] Initialized successfully');
     
   } catch (err) {
     console.error('❌ [FCM] Error:', err.message);
     fcmInit = false;
   } finally {
-    fcmInitInProgress = false; // FIXED: Remove reset of fcmInit
+    fcmInitInProgress = false;
   }
 }
 
@@ -155,9 +153,11 @@ document.addEventListener('alpine:init', () => {
     ],
 
     init() {
-      console.log('🚀 [APP] Starting v31...');
+      console.log('🚀 [APP] Starting v32...');
       
-      this.checkNotificationStatus();
+      // ✅ FIXED: Remove auto-check notification
+      // Hanya check status tanpa request permission
+      this.checkNotificationStatusOnly();
       
       this.registerSW();
       this.loadQuran();
@@ -172,21 +172,32 @@ document.addEventListener('alpine:init', () => {
         document.querySelectorAll('audio').forEach(a => { if (a !== e.target) a.pause(); });
       }, true);
       
-      console.log('✅ [APP] Ready v31');
+      console.log('✅ [APP] Ready v32');
     },
 
-    checkNotificationStatus() {
+    // ✅ NEW: Check status ONLY, tidak request permission
+    checkNotificationStatusOnly() {
       if (!('Notification' in window)) {
         this.notificationStatus = 'unsupported';
+        console.log('⚠️ [NOTIF] Browser tidak support');
         return;
       }
       
-      if (Notification.permission === 'granted') {
+      const perm = Notification.permission;
+      
+      if (perm === 'granted') {
         this.notificationStatus = 'active';
-      } else if (Notification.permission === 'denied') {
+        console.log('✅ [NOTIF] Already granted');
+        // Auto-init FCM jika sudah granted sebelumnya
+        if (!fcmInit && !fcmInitInProgress) {
+          setTimeout(() => initFCM(), 2000);
+        }
+      } else if (perm === 'denied') {
         this.notificationStatus = 'denied';
+        console.log('❌ [NOTIF] Denied');
       } else {
         this.notificationStatus = 'inactive';
+        console.log('ℹ️ [NOTIF] Not determined');
       }
     },
 
@@ -232,102 +243,88 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-// ==========================
-// DYNAMIC DOA LOADER v3.0 (FIXED: add sumber)
-// ==========================
-async loadDoa() {
-  try {
-    const res = await fetch('/platform/barakahku1/data/doa.json');
-    const data = await res.json();
+    async loadDoa() {
+      try {
+        const res = await fetch('/platform/barakahku1/data/doa.json');
+        const data = await res.json();
 
-    // ✅ Tambahkan properti 'sumber'
-    this.doaList = data.map((d, i) => ({
-      id: i + 1,
-      judul: d.judul,
-      arab: d.arab,
-      latin: d.latin,
-      arti: d.arti,       // kalau doa.json kamu pakai 'arti'
-      terjemah: d.terjemah || d.arti, // fallback aman
-      sumber: d.sumber || ''          // tambahkan sumber
-    }));
+        this.doaList = data.map((d, i) => ({
+          id: i + 1,
+          judul: d.judul,
+          arab: d.arab,
+          latin: d.latin,
+          arti: d.arti,
+          terjemah: d.terjemah || d.arti,
+          sumber: d.sumber || ''
+        }));
 
-    console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
-  } catch (err) {
-    console.error('❌ [DOA] Gagal memuat doa.json:', err);
-    this.doaList = [];
-  }
-},
+        console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
+      } catch (err) {
+        console.error('❌ [DOA] Gagal memuat doa.json:', err);
+        this.doaList = [];
+      }
+    },
 
+    async loadMurotalList() {
+      this.loadingMurottal = true;
 
+      const cached = localStorage.getItem('murotalCache');
+      const cacheTime = localStorage.getItem('murotalCacheTime');
+      const cacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 1000 * 60 * 60 * 6);
 
-// =============================
-// OPTIMIZED MUROTTAL LOADER v32
-// =============================
-async loadMurotalList() {
-  this.loadingMurottal = true;
+      if (cached && cacheValid) {
+        try {
+          this.murotalList = JSON.parse(cached);
+          console.log('⚡ [MUROTTAL] Loaded from cache:', this.murotalList.length);
+          this.loadingMurottal = false;
+          this.prefetchMurottal();
+          return;
+        } catch (e) {
+          console.warn('⚠️ Cache murottal corrupt, refetching...');
+        }
+      }
 
-  // 🧠 Step 1: Cek cache di localStorage dulu
-  const cached = localStorage.getItem('murotalCache');
-  const cacheTime = localStorage.getItem('murotalCacheTime');
-  const cacheValid = cacheTime && (Date.now() - parseInt(cacheTime) < 1000 * 60 * 60 * 6); // 6 jam
+      try {
+        const res = await fetch('https://equran.id/api/v2/surat');
+        const data = await res.json();
+        this.murotalList = data.data.map(s => ({
+          id: s.nomor,
+          nomor: s.nomor,
+          judul: `${s.namaLatin} - ${s.nama}`,
+          qari: 'Mishari Rashid Al-Afasy',
+          audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
+        }));
 
-  if (cached && cacheValid) {
-    try {
-      this.murotalList = JSON.parse(cached);
-      console.log('⚡ [MUROTTAL] Loaded from cache:', this.murottalList.length);
-      this.loadingMurottal = false;
+        localStorage.setItem('murotalCache', JSON.stringify(this.murotalList));
+        localStorage.setItem('murotalCacheTime', Date.now().toString());
+        console.log('✅ [MUROTTAL] Cached', this.murotalList.length, 'items');
+      } catch (err) {
+        console.error('❌ [MUROTTAL] Load error:', err);
+        this.murotalList = [];
+      } finally {
+        this.loadingMurottal = false;
+      }
+    },
 
-      // Prefetch update di background (biar next open lebih cepat)
-      this.prefetchMurottal();
-      return;
-    } catch (e) {
-      console.warn('⚠️ Cache murottal corrupt, refetching...');
-    }
-  }
+    async prefetchMurottal() {
+      try {
+        const res = await fetch('https://equran.id/api/v2/surat');
+        const data = await res.json();
+        const freshList = data.data.map(s => ({
+          id: s.nomor,
+          nomor: s.nomor,
+          judul: `${s.namaLatin} - ${s.nama}`,
+          qari: 'Mishari Rashid Al-Afasy',
+          audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
+        }));
+        localStorage.setItem('murotalCache', JSON.stringify(freshList));
+        localStorage.setItem('murotalCacheTime', Date.now().toString());
+        console.log('🌀 [MUROTTAL] Prefetch updated cache');
+      } catch (err) {
+        console.warn('⚠️ [MUROTTAL] Prefetch failed:', err.message);
+      }
+    },
 
-  // 🕐 Step 2: Kalau belum ada cache, fetch dari API
-  try {
-    const res = await fetch('https://equran.id/api/v2/surat');
-    const data = await res.json();
-    this.murottalList = data.data.map(s => ({
-      id: s.nomor,
-      nomor: s.nomor,
-      judul: `${s.namaLatin} - ${s.nama}`,
-      qari: 'Mishari Rashid Al-Afasy',
-      audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
-    }));
-
-    // ✅ Simpan ke cache
-    localStorage.setItem('murotalCache', JSON.stringify(this.murottalList));
-    localStorage.setItem('murotalCacheTime', Date.now().toString());
-    console.log('✅ [MUROTTAL] Cached', this.murottalList.length, 'items');
-  } catch (err) {
-    console.error('❌ [MUROTTAL] Load error:', err);
-    this.murottalList = [];
-  } finally {
-    this.loadingMurottal = false;
-  }
-},
-
-// 🔄 Helper tambahan: prefetch murottal background update
-async prefetchMurottal() {
-  try {
-    const res = await fetch('https://equran.id/api/v2/surat');
-    const data = await res.json();
-    const freshList = data.data.map(s => ({
-      id: s.nomor,
-      nomor: s.nomor,
-      judul: `${s.namaLatin} - ${s.nama}`,
-      qari: 'Mishari Rashid Al-Afasy',
-      audio: s.audioFull?.['05'] || s.audioFull?.['01'] || ''
-    }));
-    localStorage.setItem('murotalCache', JSON.stringify(freshList));
-    localStorage.setItem('murotalCacheTime', Date.now().toString());
-    console.log('🌀 [MUROTTAL] Prefetch updated cache');
-  } catch (err) {
-    console.warn('⚠️ [MUROTTAL] Prefetch failed:', err.message);
-  }
-},
     async loadJadwal() {
       if (!navigator.geolocation) return;
       
@@ -398,37 +395,37 @@ async prefetchMurottal() {
       }
     },
 
+    // ✅ FIXED: Request permission hanya saat user klik
     async requestNotificationPermission() {
+      console.log('🔔 [PERMISSION] User clicked request button');
+      
       if (!('Notification' in window)) {
         alert('❌ Browser Anda tidak mendukung notifikasi');
         this.notificationStatus = 'unsupported';
         return;
       }
 
-      if (Notification.permission === 'granted') {
+      // Check current permission
+      const currentPerm = Notification.permission;
+      console.log('🔔 [PERMISSION] Current:', currentPerm);
+
+      if (currentPerm === 'granted') {
         this.notificationStatus = 'active';
+        alert('✅ Notifikasi sudah aktif!');
         
-        // FIXED: Show notification ONLY ONCE
-        new Notification('BarakahKu', {
-          body: '✅ Notifikasi sudah aktif!',
-          icon: '/platform/barakahku1/assets/icons/icon-192.png',
-          badge: '/platform/barakahku1/assets/icons/icon-192.png',
-          tag: 'barakahku-status' // Use unique tag
-        });
-        
-        // Init FCM only if not already initialized
         if (!fcmInit && !fcmInitInProgress) {
-          setTimeout(() => initFCM(), 2000);
+          setTimeout(() => initFCM(), 1000);
         }
         return;
       }
 
-      if (Notification.permission === 'denied') {
+      if (currentPerm === 'denied') {
         this.notificationStatus = 'denied';
-        alert('❌ Notifikasi diblokir.\n\nAktifkan di Settings:\n\n📱 Android Chrome:\n1. Tap ikon 🔒 di address bar\n2. Pilih "Permissions"\n3. Aktifkan "Notifications"\n\n📱 iOS Safari:\n1. Buka Settings > Safari\n2. Pilih Websites > Notifications\n3. Cari emydngroup.com\n4. Ubah ke "Allow"');
+        alert('❌ Notifikasi diblokir di browser.\n\n📱 Cara mengaktifkan:\n\n1. Tap ikon 🔒 di address bar\n2. Pilih "Site settings" atau "Permissions"\n3. Cari "Notifications"\n4. Ubah ke "Allow"\n5. Refresh halaman');
         return;
       }
 
+      // Request permission (harus dari user gesture)
       try {
         console.log('🔔 [PERMISSION] Requesting...');
         
@@ -438,23 +435,30 @@ async prefetchMurottal() {
         if (permission === 'granted') {
           this.notificationStatus = 'active';
           
+          // Show success notification
           new Notification('BarakahKu', {
-            body: '✅ Notifikasi berhasil diaktifkan!',
+            body: '✅ Notifikasi berhasil diaktifkan! Anda akan menerima pengingat waktu sholat.',
             icon: '/platform/barakahku1/assets/icons/icon-192.png',
             badge: '/platform/barakahku1/assets/icons/icon-192.png',
             vibrate: [200, 100, 200],
-            tag: 'barakahku-activation' // Unique tag
+            tag: 'barakahku-success'
           });
           
+          // Init FCM after successful permission
           setTimeout(() => initFCM(), 2000);
-        } else {
+          
+        } else if (permission === 'denied') {
           this.notificationStatus = 'denied';
-          alert('ℹ️ Izin notifikasi dibatalkan.');
+          alert('❌ Izin notifikasi ditolak.\n\nAnda dapat mengaktifkannya kembali di pengaturan browser.');
+        } else {
+          this.notificationStatus = 'inactive';
+          console.log('ℹ️ Permission dismissed');
         }
+        
       } catch (error) {
         console.error('❌ [PERMISSION] Error:', error);
         this.notificationStatus = 'denied';
-        alert('❌ Terjadi kesalahan.\n\nCoba refresh halaman dan ulangi lagi.');
+        alert('❌ Terjadi kesalahan saat meminta izin notifikasi.\n\nCoba refresh halaman dan ulangi.');
       }
     },
 
@@ -574,4 +578,4 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredPrompt = e;
 });
 
-console.log('✅ [APP] Loaded v31');
+console.log('✅ [APP] Loaded v32');
