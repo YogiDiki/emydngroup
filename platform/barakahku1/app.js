@@ -232,20 +232,23 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-   // ==========================
-// DYNAMIC DOA LOADER v2.0
+// ==========================
+// DYNAMIC DOA LOADER v3.0 (FIXED: add sumber)
 // ==========================
 async loadDoa() {
   try {
     const res = await fetch('/platform/barakahku1/data/doa.json');
     const data = await res.json();
 
+    // ✅ Tambahkan properti 'sumber'
     this.doaList = data.map((d, i) => ({
       id: i + 1,
       judul: d.judul,
       arab: d.arab,
       latin: d.latin,
-      arti: d.arti
+      arti: d.arti,       // kalau doa.json kamu pakai 'arti'
+      terjemah: d.terjemah || d.arti, // fallback aman
+      sumber: d.sumber || ''          // tambahkan sumber
     }));
 
     console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
@@ -254,6 +257,7 @@ async loadDoa() {
     this.doaList = [];
   }
 },
+
 
 
 // =============================
