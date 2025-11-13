@@ -1,10 +1,10 @@
 // ==============================
-// BarakahKu - app.js v32 (FIXED: Permission Flow)
+// BarakahKu - app.js v33 (FIXED: Permission Display)
 // ==============================
-console.log('📦 [APP] Loading v32...');
+console.log('📦 [APP] Loading v33...');
 
 // ====================================================
-// FIREBASE MESSAGING - FIXED: Prevent auto-trigger
+// FIREBASE MESSAGING
 // ====================================================
 let fcmInit = false;
 let fcmInitInProgress = false;
@@ -153,11 +153,10 @@ document.addEventListener('alpine:init', () => {
     ],
 
     init() {
-      console.log('🚀 [APP] Starting v32...');
+      console.log('🚀 [APP] Starting v33...');
       
-      // ✅ FIXED: Remove auto-check notification
-      // Hanya check status tanpa request permission
-      this.checkNotificationStatusOnly();
+      // ✅ FIXED: Check notification status on init
+      this.updateNotificationStatus();
       
       this.registerSW();
       this.loadQuran();
@@ -172,32 +171,35 @@ document.addEventListener('alpine:init', () => {
         document.querySelectorAll('audio').forEach(a => { if (a !== e.target) a.pause(); });
       }, true);
       
-      console.log('✅ [APP] Ready v32');
+      console.log('✅ [APP] Ready v33');
     },
 
-    // ✅ NEW: Check status ONLY, tidak request permission
-    checkNotificationStatusOnly() {
+    // ✅ NEW: Update status dari browser API langsung
+    updateNotificationStatus() {
       if (!('Notification' in window)) {
         this.notificationStatus = 'unsupported';
         console.log('⚠️ [NOTIF] Browser tidak support');
         return;
       }
       
+      // ✅ ALWAYS read from Notification.permission (TIDAK dari localStorage)
       const perm = Notification.permission;
+      console.log('🔔 [NOTIF] Browser permission:', perm);
       
       if (perm === 'granted') {
         this.notificationStatus = 'active';
-        console.log('✅ [NOTIF] Already granted');
-        // Auto-init FCM jika sudah granted sebelumnya
+        console.log('✅ [NOTIF] Permission granted - Auto-init FCM');
+        
+        // Silent init FCM di background (tidak show notification)
         if (!fcmInit && !fcmInitInProgress) {
           setTimeout(() => initFCM(), 2000);
         }
       } else if (perm === 'denied') {
         this.notificationStatus = 'denied';
-        console.log('❌ [NOTIF] Denied');
+        console.log('❌ [NOTIF] Permission denied');
       } else {
         this.notificationStatus = 'inactive';
-        console.log('ℹ️ [NOTIF] Not determined');
+        console.log('ℹ️ [NOTIF] Permission default (not determined)');
       }
     },
 
@@ -395,7 +397,7 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-    // ✅ FIXED: Request permission hanya saat user klik
+    // ✅ Request permission - hanya saat user klik button
     async requestNotificationPermission() {
       console.log('🔔 [PERMISSION] User clicked request button');
       
@@ -405,13 +407,12 @@ document.addEventListener('alpine:init', () => {
         return;
       }
 
-      // Check current permission
       const currentPerm = Notification.permission;
       console.log('🔔 [PERMISSION] Current:', currentPerm);
 
       if (currentPerm === 'granted') {
         this.notificationStatus = 'active';
-        alert('✅ Notifikasi sudah aktif!');
+        alert('✅ Notifikasi sudah aktif!\n\nAnda akan menerima pengingat waktu sholat.');
         
         if (!fcmInit && !fcmInitInProgress) {
           setTimeout(() => initFCM(), 1000);
@@ -425,7 +426,7 @@ document.addEventListener('alpine:init', () => {
         return;
       }
 
-      // Request permission (harus dari user gesture)
+      // Request permission
       try {
         console.log('🔔 [PERMISSION] Requesting...');
         
@@ -444,7 +445,7 @@ document.addEventListener('alpine:init', () => {
             tag: 'barakahku-success'
           });
           
-          // Init FCM after successful permission
+          // Init FCM
           setTimeout(() => initFCM(), 2000);
           
         } else if (permission === 'denied') {
@@ -578,4 +579,4 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredPrompt = e;
 });
 
-console.log('✅ [APP] Loaded v32');
+console.log('✅ [APP] Loaded v33');
