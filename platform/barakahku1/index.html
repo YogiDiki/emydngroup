@@ -944,6 +944,90 @@
         </div>
       </div>
 
+
+      <!-- Search Overlay -->
+<div x-show="showSearch" 
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20 px-4"
+     @click.self="showSearch = false"
+     style="display: none;">
+  
+  <div class="card-islamic w-full max-w-lg p-5 animate-slide-in-up">
+    <!-- Header Search -->
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-800">🔍 Pencarian</h3>
+      <button @click="showSearch = false" class="text-gray-500 hover:text-gray-700">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Search Input -->
+    <div class="relative mb-4">
+      <input 
+        type="text" 
+        x-model="searchQuery"
+        @keyup="performSearch()"
+        placeholder="Cari surah, doa, atau ayat..."
+        class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-red-900 focus:ring-2 focus:ring-red-900/20 outline-none transition"
+        autofocus
+      />
+      <svg class="w-5 h-5 absolute right-4 top-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+      </svg>
+    </div>
+
+    <!-- Search Results -->
+    <div class="max-h-96 overflow-y-auto space-y-2">
+      <template x-if="!searchQuery || searchQuery.length < 2">
+        <div class="text-center py-8 text-gray-500">
+          <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+          <p class="text-sm">Ketik minimal 2 karakter untuk mencari</p>
+        </div>
+      </template>
+
+      <template x-if="searchQuery && searchQuery.length >= 2 && searchResults.length === 0">
+        <div class="text-center py-8 text-gray-500">
+          <span class="text-4xl mb-2 block">🔍</span>
+          <p class="text-sm">Tidak ada hasil untuk "<span x-text="searchQuery"></span>"</p>
+        </div>
+      </template>
+
+      <template x-if="searchResults.length > 0">
+        <div>
+          <p class="text-xs text-gray-500 mb-3">
+            Ditemukan <span class="font-bold text-red-900" x-text="searchResults.length"></span> hasil
+          </p>
+
+          <template x-for="result in searchResults.slice(0, 10)" :key="result.id">
+            <div 
+              @click="openSearchResult(result)"
+              class="p-3 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg cursor-pointer transition-all mb-2"
+            >
+              <div class="flex items-start gap-3">
+                <span class="text-xl shrink-0" x-text="result.icon"></span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-bold text-gray-800 dark:text-gray-100 mb-1" x-text="result.title"></p>
+                  <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-2" x-text="result.description"></p>
+                  <span class="inline-block mt-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-900 dark:text-red-400 px-2 py-0.5 rounded-full" x-text="result.type"></span>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+
     </main>
 
     <!-- Bottom Navigation -->

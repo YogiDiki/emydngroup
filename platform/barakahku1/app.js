@@ -155,6 +155,8 @@ document.addEventListener('alpine:init', () => {
     notificationStatus: 'inactive',
     loadingQuran: true,
     loadingMurottal: true,
+    searchQuery: '',
+    searchResults: [],
 
     moodSuggestions: {
       sedih: { ayat: 'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا', arti: 'Sesungguhnya bersama kesulitan ada kemudahan', ref: 'QS. Al-Insyirah: 6' },
@@ -585,6 +587,61 @@ document.addEventListener('alpine:init', () => {
         const [fH, fM] = this.jadwal.Fajr.split(':').map(Number);
         const isNight = now >= (mH * 60 + mM) || now < (fH * 60 + fM);
         if (isNight && !this.darkMode) console.log('🌙 Malam hari');
+      }
+    },
+
+    performSearch() {
+      if (!this.searchQuery || this.searchQuery.length < 2) {
+        this.searchResults = [];
+        return;
+      }
+
+      const query = this.searchQuery.toLowerCase();
+      const results = [];
+
+      this.quran.forEach(surah => {
+        if (surah.namaLatin.toLowerCase().includes(query) || 
+            surah.arti.toLowerCase().includes(query)) {
+          results.push({
+            id: 'surah-' + surah.nomor,
+            type: 'Surah',
+            icon: '📖',
+            title: surah.namaLatin,
+            description: surah.arti + ' • ' + surah.jumlahAyat + ' Ayat',
+            data: surah
+          });
+        }
+      });
+
+      this.doaList.forEach(doa => {
+        if (doa.judul.toLowerCase().includes(query) || 
+            doa.arti?.toLowerCase().includes(query)) {
+          results.push({
+            id: 'doa-' + doa.id,
+            type: 'Doa',
+            icon: '🙏',
+            title: doa.judul,
+            description: doa.arti || doa.terjemah,
+            data: doa
+          });
+        }
+      });
+
+      this.searchResults = results;
+    },
+
+    openSearchResult(result) {
+      this.showSearch = false;
+      this.searchQuery = '';
+      this.searchResults = [];
+
+      if (result.type === 'Surah') {
+        this.activeTab = 'quran';
+        setTimeout(() => this.loadSurah(result.data.nomor), 100);
+      } else if (result.type === 'Doa') {
+        this.activeTab = 'doa';
+        this.currentDoa = result.data;
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
       }
     }
 
