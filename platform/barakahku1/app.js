@@ -1,18 +1,27 @@
 // ==============================
-// BarakahKu - app.js v30 (NOTIFICATION FIX)
+// BarakahKu - app.js v31 (NOTIFICATION + HEADER FIX)
 // ==============================
-console.log('📦 [APP] Loading...');
+console.log('📦 [APP] Loading v31...');
 
 // ====================================================
-// FIREBASE MESSAGING
+// FIREBASE MESSAGING - FIX: Prevent infinite loop
 // ====================================================
 let fcmInit = false;
+let fcmInitInProgress = false; // NEW: Prevent concurrent init
 
 async function initFCM() {
-  if (fcmInit) return console.log('⚠️ [FCM] Already initialized');
-  if (Notification.permission !== 'granted') return;
+  // CRITICAL FIX: Check both flags
+  if (fcmInit || fcmInitInProgress) {
+    console.log('⚠️ [FCM] Already initialized or in progress');
+    return;
+  }
   
-  fcmInit = true;
+  if (Notification.permission !== 'granted') {
+    console.log('⚠️ [FCM] Permission not granted');
+    return;
+  }
+  
+  fcmInitInProgress = true; // Mark as in progress
   
   try {
     const swReg = await navigator.serviceWorker.getRegistration('/platform/barakahku1/')
@@ -21,7 +30,12 @@ async function initFCM() {
     await new Promise((resolve) => {
       const timeout = setTimeout(resolve, 3000);
       const mc = new MessageChannel();
-      mc.port1.onmessage = (e) => { if (e.data.ready) { clearTimeout(timeout); resolve(); } };
+      mc.port1.onmessage = (e) => { 
+        if (e.data.ready) { 
+          clearTimeout(timeout); 
+          resolve(); 
+        } 
+      };
       swReg.active?.postMessage({ type: 'CHECK_FIREBASE' }, [mc.port2]);
     });
     
@@ -67,7 +81,9 @@ async function initFCM() {
       console.log('✅ [FCM] Token:', token);
     }
     
+    // FIX: Only register onMessage ONCE
     messaging.onMessage((payload) => {
+      console.log('📩 [FCM] Foreground message:', payload);
       if (Notification.permission === 'granted') {
         new Notification(payload.notification?.title || 'BarakahKu', {
           body: payload.notification?.body || 'Notifikasi baru',
@@ -78,22 +94,25 @@ async function initFCM() {
       }
     });
     
+    fcmInit = true; // Mark as successfully initialized
+    console.log('✅ [FCM] Initialized successfully');
+    
   } catch (err) {
     console.error('❌ [FCM] Error:', err.message);
-  } finally {
     fcmInit = false;
+  } finally {
+    fcmInitInProgress = false; // FIXED: Remove reset of fcmInit
   }
 }
 
 // ====================================================
-// ALPINE.JS - DEFINE DATA BEFORE ALPINE STARTS
+// ALPINE.JS
 // ====================================================
 
 document.addEventListener('alpine:init', () => {
   console.log('🎨 [ALPINE] Initializing data...');
   
   Alpine.data('app', () => ({
-    // State variables
     activeTab: 'beranda',
     showSearch: false,
     quran: [],
@@ -136,7 +155,7 @@ document.addEventListener('alpine:init', () => {
     ],
 
     init() {
-      console.log('🚀 [APP] Starting...');
+      console.log('🚀 [APP] Starting v31...');
       
       this.checkNotificationStatus();
       
@@ -153,7 +172,7 @@ document.addEventListener('alpine:init', () => {
         document.querySelectorAll('audio').forEach(a => { if (a !== e.target) a.pause(); });
       }, true);
       
-      console.log('✅ [APP] Ready');
+      console.log('✅ [APP] Ready v31');
     },
 
     checkNotificationStatus() {
@@ -318,57 +337,54 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-    // ✅ CRITICAL FIX: Notification permission dengan user gesture yang proper
     async requestNotificationPermission() {
-      // Check browser support
       if (!('Notification' in window)) {
         alert('❌ Browser Anda tidak mendukung notifikasi');
         this.notificationStatus = 'unsupported';
         return;
       }
 
-      // Already granted
       if (Notification.permission === 'granted') {
         this.notificationStatus = 'active';
         
+        // FIXED: Show notification ONLY ONCE
         new Notification('BarakahKu', {
           body: '✅ Notifikasi sudah aktif!',
           icon: '/platform/barakahku1/assets/icons/icon-192.png',
-          badge: '/platform/barakahku1/assets/icons/icon-192.png'
+          badge: '/platform/barakahku1/assets/icons/icon-192.png',
+          tag: 'barakahku-status' // Use unique tag
         });
         
-        if (!localStorage.getItem('fcm_token')) await initFCM();
+        // Init FCM only if not already initialized
+        if (!fcmInit && !fcmInitInProgress) {
+          setTimeout(() => initFCM(), 2000);
+        }
         return;
       }
 
-      // Already denied
       if (Notification.permission === 'denied') {
         this.notificationStatus = 'denied';
         alert('❌ Notifikasi diblokir.\n\nAktifkan di Settings:\n\n📱 Android Chrome:\n1. Tap ikon 🔒 di address bar\n2. Pilih "Permissions"\n3. Aktifkan "Notifications"\n\n📱 iOS Safari:\n1. Buka Settings > Safari\n2. Pilih Websites > Notifications\n3. Cari emydngroup.com\n4. Ubah ke "Allow"');
         return;
       }
 
-      // ✅ FIX: Request dalam user gesture context (button click)
       try {
         console.log('🔔 [PERMISSION] Requesting...');
         
-        // CRITICAL: Request permission IMMEDIATELY in user gesture
-        // TIDAK ADA DELAY sebelum requestPermission()
         const permission = await Notification.requestPermission();
         console.log('🔔 [PERMISSION] Result:', permission);
         
         if (permission === 'granted') {
           this.notificationStatus = 'active';
           
-          // Show test notification
           new Notification('BarakahKu', {
             body: '✅ Notifikasi berhasil diaktifkan!',
             icon: '/platform/barakahku1/assets/icons/icon-192.png',
             badge: '/platform/barakahku1/assets/icons/icon-192.png',
-            vibrate: [200, 100, 200]
+            vibrate: [200, 100, 200],
+            tag: 'barakahku-activation' // Unique tag
           });
           
-          // Init FCM after notification shown (delay is OK here)
           setTimeout(() => initFCM(), 2000);
         } else {
           this.notificationStatus = 'denied';
@@ -497,4 +513,4 @@ window.addEventListener('beforeinstallprompt', (e) => {
   window.deferredPrompt = e;
 });
 
-console.log('✅ [APP] Loaded');
+console.log('✅ [APP] Loaded v31');

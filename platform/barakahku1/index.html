@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="id" x-data="app" class="h-full">
 <head>
-  <meta charset="UTF-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#7c1d1d" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="BarakahKu">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="format-detection" content="telephone=no">
-</head>
+<!-- CRITICAL: PWA Fullscreen Meta Tags -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+<!-- Theme colors -->
+<meta name="theme-color" content="#7c1d1d" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1a1a" />
+
+<!-- Apple PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="BarakahKu" />
+
+<!-- Android PWA -->
+<meta name="mobile-web-app-capable" content="yes" />
+
+<!-- Disable auto-detection -->
+<meta name="format-detection" content="telephone=no" />
   
-  <title> BarakahKu - Emydn Group</title>
+  <title>BarakahKu - Emydn Group</title>
   <link rel="manifest" href="/platform/barakahku1/manifest.json" />
   <link rel="icon" href="/platform/barakahku1/assets/icons/icon-192.png" />
   
@@ -26,16 +32,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* Tambahkan ini di CSS */
+    /* ========================================
+       FIX: PWA FULLSCREEN (Browser Header)
+       ======================================== */
+    
+    /* Base reset untuk mencegah scroll bounce */
     html {
       height: 100%;
       overflow: hidden;
+      position: fixed;
+      width: 100%;
     }
     
     body {
       height: 100vh;
       height: -webkit-fill-available;
       overflow: hidden;
+      overscroll-behavior: none;
+      position: fixed;
+      width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* CRITICAL: Fullscreen mode detection & fix */
+    @media (display-mode: standalone) {
+      html, body {
+        height: 100vh;
+        height: -webkit-fill-available;
+      }
+    }
+    
+    /* iOS Safari standalone mode */
+    @media (display-mode: standalone) and (-webkit-touch-callout: none) {
+      body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
     }
     
     /* Safe area support untuk notch devices */
@@ -47,34 +79,21 @@
       padding-bottom: env(safe-area-inset-bottom);
     }
     
-/* PWA Fullscreen Fix */
-html {
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  height: 100vh;
-  height: -webkit-fill-available;
-  overflow: hidden;
-  /* Prevent bounce scroll */
-  overscroll-behavior: none;
-}
-
-/* Handle notch devices */
-@supports(padding: max(0px)) {
-  .safe-area-padding {
-    padding-top: max(12px, env(safe-area-inset-top));
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
-    padding-left: max(12px, env(safe-area-inset-left));
-    padding-right: max(12px, env(safe-area-inset-right));
-  }
-}
-
-    /* Pastikan konten tidak terpotong */
+    @supports(padding: max(0px)) {
+      .safe-area-padding {
+        padding-top: max(12px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+      }
+    }
+    
+    /* Container harus flex untuk fullscreen proper */
     .pwa-container {
       min-height: 100vh;
       min-height: -webkit-fill-available;
+      display: flex;
+      flex-direction: column;
     }
     
     /* Existing styles tetap dipertahankan */
@@ -88,7 +107,6 @@ body {
       line-height: 2.75rem; 
       font-weight: 700;
     }
-    
     
     .gradient-maroon {
       background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 50%, #b91c1c 100%);
@@ -226,29 +244,27 @@ body {
     }
 
     /* Notification Status Animations */
-@keyframes pulse-success {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
-}
-@keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes bounce-bell {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-15deg); }
-  75% { transform: rotate(15deg); }
-}
-.animate-pulse-success { animation: pulse-success 2s ease-in-out infinite; }
-.animate-slide-in-up { animation: slide-in-up 0.5s ease-out; }
-.animate-bounce-bell { display: inline-block; animation: bounce-bell 0.8s ease-in-out; }
-
+    @keyframes pulse-success {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    @keyframes slide-in-up {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce-bell {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-15deg); }
+      75% { transform: rotate(15deg); }
+    }
+    .animate-pulse-success { animation: pulse-success 2s ease-in-out infinite; }
+    .animate-slide-in-up { animation: slide-in-up 0.5s ease-out; }
+    .animate-bounce-bell { display: inline-block; animation: bounce-bell 0.8s ease-in-out; }
   </style>
   
- <!-- Load app.js DULU untuk register alpine:init, BARU Alpine.js -->
-<script src="/platform/barakahku1/app.js"></script>
-<script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-
+  <!-- Load app.js DULU untuk register alpine:init, BARU Alpine.js -->
+  <script src="/platform/barakahku1/app.js"></script>
+  <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <body class="h-full">
   <div class="flex flex-col h-full max-w-lg mx-auto shadow-2xl relative pwa-container">
@@ -257,7 +273,7 @@ body {
     
     <!-- Header -->
     <header class="gradient-maroon text-white px-5 py-4 shadow-lg relative overflow-hidden">
-       <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
+      <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
       
       <div class="relative z-10">
         <div class="flex items-center justify-between mb-3">
@@ -881,7 +897,6 @@ body {
     </nav>
 
   </div>
-
 
 </body>
 </html>
