@@ -117,6 +117,8 @@ document.addEventListener('alpine:init', () => {
     currentSurah: null,
     currentDoa: null,
     doaList: [],
+    selectedDoaCategory: null,  // ← TAMBAH INI
+    doaCategories: [] ,           // ← TAMBAH INI (array 10 kategori)
     murotalList: [],
     jadwal: {},
     cityName: 'Memuat...',
@@ -245,27 +247,41 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-    async loadDoa() {
-      try {
-        const res = await fetch('/platform/barakahku1/data/doa.json');
-        const data = await res.json();
+async loadDoa() {
+  try {
+    const res = await fetch('/platform/barakahku1/data/doa.json');
+    const data = await res.json();
+    this.doaList = data.map((d, i) => ({
+      id: i + 1,
+      judul: d.judul,
+      arab: d.arab,
+      latin: d.latin,
+      arti: d.arti,
+      terjemah: d.terjemah || d.arti,
+      sumber: d.sumber || '',        // ← ADA KOMA DI SINI
+      kategori: d.kategori || 'umum'  // ← TAMBAH BARIS INI
+    }));
+    console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
+  } catch (err) {
+    console.error('❌ [DOA] Gagal memuat doa.json:', err);
+    this.doaList = [];
+  }
+},
 
-        this.doaList = data.map((d, i) => ({
-          id: i + 1,
-          judul: d.judul,
-          arab: d.arab,
-          latin: d.latin,
-          arti: d.arti,
-          terjemah: d.terjemah || d.arti,
-          sumber: d.sumber || ''
-        }));
+get filteredDoaList() {
+  if (!this.selectedDoaCategory) return this.doaList;
+  return this.doaList.filter(doa => doa.kategori === this.selectedDoaCategory.id);
+},
 
-        console.log('✅ [DOA] Loaded', this.doaList.length, 'doa dari doa.json');
-      } catch (err) {
-        console.error('❌ [DOA] Gagal memuat doa.json:', err);
-        this.doaList = [];
-      }
-    },
+selectDoaCategory(category) {
+  this.selectedDoaCategory = category;
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+},
+
+backFromDoaDetail() {
+  this.currentDoa = null;
+  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+},
 
     async loadMurotalList() {
       this.loadingMurottal = true;
