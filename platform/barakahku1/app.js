@@ -619,7 +619,7 @@ document.addEventListener('alpine:init', () => {
           results.push({
             id: 'doa-' + doa.id,
             type: 'Doa',
-            icon: '🙏',
+            icon: '🤲',
             title: doa.judul,
             description: doa.arti || doa.terjemah,
             data: doa
