@@ -260,6 +260,47 @@
     .animate-pulse-success { animation: pulse-success 2s ease-in-out infinite; }
     .animate-slide-in-up { animation: slide-in-up 0.5s ease-out; }
     .animate-bounce-bell { display: inline-block; animation: bounce-bell 0.8s ease-in-out; }
+
+/* Floating Back Button - Fixed di pojok kiri atas */
+.floating-back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: linear-gradient(135deg, #7c1d1d 0%, #991b1b 100%);
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(124, 29, 29, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.floating-back-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(124, 29, 29, 0.6);
+}
+
+.floating-back-btn:active {
+  transform: scale(0.95);
+}
+
+/* Header hanya untuk beranda */
+.header-beranda {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Safe area untuk tab lain (tanpa header) */
+.content-with-floating-btn {
+  padding-top: 20px;
+}
+
   </style>
   
   <!-- Load app.js DULU untuk register alpine:init, BARU Alpine.js -->
@@ -271,93 +312,126 @@
     <!-- Safe area untuk notch devices -->
     <div class="safe-top"></div>
     
-    <!-- Header -->
-    <header class="gradient-maroon text-white px-5 py-4 shadow-lg relative overflow-hidden">
-      <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
-      
-      <div class="relative z-10">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2">
-            <div class="bg-white rounded-full p-1.5 shadow-md">
-              <img src="/platform/barakahku1/assets/icons/icon-192.png" class="w-7 h-7 rounded-full">
-            </div>
-              
-            <div>
-              <h1 class="text-xl font-bold tracking-wide">BarakahKu</h1>
-              <p class="text-xs opacity-90">Teman Ibadah Harian</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2">
-            <button @click="toggleDarkMode()" class="p-2 hover:bg-white/20 rounded-full transition-all" title="Toggle Dark Mode">
-              <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-              </svg>
-              <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-              </svg>
-            </button>
-            <button @click="showSearch = !showSearch" class="p-2 hover:bg-white/20 rounded-full transition-all">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-              </svg>
-            </button>
-          </div>
+ <!-- Header - HANYA tampil di Beranda -->
+<header 
+  x-show="activeTab === 'beranda'" 
+  x-transition:enter="transition ease-out duration-300"
+  x-transition:enter-start="opacity-0 transform -translate-y-full"
+  x-transition:enter-end="opacity-100 transform translate-y-0"
+  x-transition:leave="transition ease-in duration-200"
+  x-transition:leave-start="opacity-100 transform translate-y-0"
+  x-transition:leave-end="opacity-0 transform -translate-y-full"
+  class="gradient-maroon text-white px-5 py-4 shadow-lg relative overflow-hidden header-beranda"
+  style="display: none;">
+  
+  <div class="absolute inset-0 opacity-10 islamic-pattern"></div>
+  
+  <div class="relative z-10">
+    <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center gap-2">
+        <div class="bg-white rounded-full p-1.5 shadow-md">
+          <img src="/platform/barakahku1/assets/icons/icon-192.png" class="w-7 h-7 rounded-full">
         </div>
-        
-        <!-- Date Info -->
-        <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-2 mb-3 border border-white/20">
-          <div class="flex items-center justify-between text-sm">
-            <div class="flex items-center gap-2">
-              <span>📅</span>
-              <span x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></span>
-            </div>
-          </div>
-          <div class="text-xs opacity-90 mt-1">
-            <span x-text="hijriDate"></span>
-          </div>          
+          
+        <div>
+          <h1 class="text-xl font-bold tracking-wide">BarakahKu</h1>
+          <p class="text-xs opacity-90">Teman Ibadah Harian</p>
         </div>
-        
-        <!-- Prayer Times -->
-        <template x-if="jadwal.Fajr">
-          <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20">
-            <div class="flex items-center justify-between text-xs mb-3">
-              <div class="flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                </svg>
-                <span class="opacity-90 font-medium" x-text="cityName"></span>
-              </div>
-              <button @click="loadJadwal()" class="opacity-80 hover:opacity-100 underline transition">Perbarui</button>
-            </div>
-            <div class="grid grid-cols-5 gap-2 text-xs">
-              <div class="text-center">
-                <div class="opacity-80 mb-1">Subuh</div>
-                <div class="time-badge" x-text="jadwal.Fajr"></div>
-              </div>
-              <div class="text-center">
-                <div class="opacity-80 mb-1">Dzuhur</div>
-                <div class="time-badge" x-text="jadwal.Dhuhr"></div>
-              </div>
-              <div class="text-center">
-                <div class="opacity-80 mb-1">Ashar</div>
-                <div class="time-badge" x-text="jadwal.Asr"></div>
-              </div>
-              <div class="text-center">
-                <div class="opacity-80 mb-1">Maghrib</div>
-                <div class="time-badge" x-text="jadwal.Maghrib"></div>
-              </div>
-              <div class="text-center">
-                <div class="opacity-80 mb-1">Isya</div>
-                <div class="time-badge" x-text="jadwal.Isha"></div>
-              </div>
-            </div>
-          </div>
-        </template>
       </div>
-    </header>
+      <div class="flex items-center gap-2">
+        <button @click="toggleDarkMode()" class="p-2 hover:bg-white/20 rounded-full transition-all" title="Toggle Dark Mode">
+          <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+          <svg x-show="darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </button>
+        <button @click="showSearch = !showSearch" class="p-2 hover:bg-white/20 rounded-full transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Date Info -->
+    <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-2 mb-3 border border-white/20">
+      <div class="flex items-center justify-between text-sm">
+        <div class="flex items-center gap-2">
+          <span>📅</span>
+          <span x-text="new Date().toLocaleDateString('id-ID', {weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'})"></span>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-1">
+        <span x-text="hijriDate"></span>
+      </div>          
+    </div>
+    
+    <!-- Prayer Times -->
+    <template x-if="jadwal.Fajr">
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20">
+        <div class="flex items-center justify-between text-xs mb-3">
+          <div class="flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+            </svg>
+            <span class="opacity-90 font-medium" x-text="cityName"></span>
+          </div>
+          <button @click="loadJadwal()" class="opacity-80 hover:opacity-100 underline transition">Perbarui</button>
+        </div>
+        <div class="grid grid-cols-5 gap-2 text-xs">
+          <div class="text-center">
+            <div class="opacity-80 mb-1">Subuh</div>
+            <div class="time-badge" x-text="jadwal.Fajr"></div>
+          </div>
+          <div class="text-center">
+            <div class="opacity-80 mb-1">Dzuhur</div>
+            <div class="time-badge" x-text="jadwal.Dhuhr"></div>
+          </div>
+          <div class="text-center">
+            <div class="opacity-80 mb-1">Ashar</div>
+            <div class="time-badge" x-text="jadwal.Asr"></div>
+          </div>
+          <div class="text-center">
+            <div class="opacity-80 mb-1">Maghrib</div>
+            <div class="time-badge" x-text="jadwal.Maghrib"></div>
+          </div>
+          <div class="text-center">
+            <div class="opacity-80 mb-1">Isya</div>
+            <div class="time-badge" x-text="jadwal.Isha"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</header>
 
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto pb-28 bg-cream safe-bottom">
+
+
+
+      <!-- ========================================= -->
+  <!-- FLOATING BACK BUTTON - Untuk semua tab kecuali Beranda -->
+  <!-- ========================================= -->
+  <button 
+    x-show="activeTab !== 'beranda'" 
+    @click="activeTab = 'beranda'"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-0"
+    x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-0"
+    class="floating-back-btn"
+    title="Kembali ke Beranda"
+    style="display: none;">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+    </svg>
+  </button>
+
 
       <!-- Beranda -->
       <div x-show="activeTab === 'beranda'">
@@ -600,14 +674,7 @@
             </div>
           </template>
 
-          <template x-if="currentSurah">
-            <div class="space-y-4">
-              <button @click="currentSurah = null" class="flex items-center gap-2 text-red-900 hover:text-red-700 font-semibold">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                Kembali ke Daftar Surah
-              </button>
+
 
               <div class="card-islamic p-5 bg-gradient-to-br from-red-900 to-red-700 text-white text-center">
                 <h2 class="text-2xl font-bold" x-text="currentSurah.namaLatin"></h2>
