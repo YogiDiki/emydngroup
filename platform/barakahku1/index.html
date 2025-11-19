@@ -929,7 +929,7 @@
                       <p class="text-xs text-gray-500 mb-2" x-text="masjid.address"></p>
                       <div class="flex items-center gap-2">
                         <span class="text-xs bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-400 px-2 py-1 rounded-full font-semibold">
-                          📍 <span x-text="masjid.distance + ' km'"></span>
+                          📍 <span x-text="masjid.distanceMeters < 1000 ? masjid.distanceMeters + ' m' : masjid.distance + ' km'"></span>>
                         </span>
                       </div>
                     </div>
