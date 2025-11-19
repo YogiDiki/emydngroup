@@ -530,124 +530,92 @@ document.addEventListener('alpine:init', () => {
   try {
     const { latitude, longitude } = this.userCoords;
     
-    // PERBAIKAN: Query yang lebih inklusif untuk menangkap SEMUA tempat ibadah muslim
-    // Termasuk masjid kecil, musholla, surau yang sangat dekat
+    // Query SEDERHANA tapi efektif - tangkap SEMUA yang ada
     const query = `[out:json][timeout:25];
 (
-  // Masjid dengan tag religion=muslim
-  node["amenity"="place_of_worship"]["religion"="muslim"](around:3000,${latitude},${longitude});
-  way["amenity"="place_of_worship"]["religion"="muslim"](around:3000,${latitude},${longitude});
-  
-  // Masjid tanpa tag religion (sering terjadi di Indonesia)
-  node["amenity"="place_of_worship"]["name"~"[Mm]asjid|[Mm]ushol(l)?a|[Ss]urau",i](around:3000,${latitude},${longitude});
-  way["amenity"="place_of_worship"]["name"~"[Mm]asjid|[Mm]ushol(l)?a|[Ss]urau",i](around:3000,${latitude},${longitude});
-  
-  // Building dengan tag mosque
+  node["amenity"="place_of_worship"](around:3000,${latitude},${longitude});
+  way["amenity"="place_of_worship"](around:3000,${latitude},${longitude});
   node["building"="mosque"](around:3000,${latitude},${longitude});
   way["building"="mosque"](around:3000,${latitude},${longitude});
-  
-  // Musholla/Surau dengan amenity tersendiri
-  node["amenity"="mosque"](around:3000,${latitude},${longitude});
-  way["amenity"="mosque"](around:3000,${latitude},${longitude});
-  
-  // Masjid dengan tag name yang jelas
-  node["name"~"[Mm]asjid|[Mm]ushol(l)?a|[Ss]urau",i](around:3000,${latitude},${longitude});
-  way["name"~"[Mm]asjid|[Mm]ushol(l)?a|[Ss]urau",i](around:3000,${latitude},${longitude});
 );
 out body;
 >;
 out skel qt;`;
     
-    console.log('🕌 [MASJID] Searching dengan query inklusif...');
+    console.log('🕌 [MASJID] Searching...');
     
     const res = await fetch('https://overpass-api.de/api/interpreter', { 
       method: 'POST', 
-      body: query,
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      body: query
     });
     
     if (!res.ok) {
-      throw new Error('Overpass API error: ' + res.status);
+      throw new Error('API error: ' + res.status);
     }
     
     const data = await res.json();
     console.log('🕌 [MASJID] Found elements:', data.elements.length);
     
-    // Proses semua elemen tanpa filter ketat
-    const seenLocations = new Set(); // Untuk menghindari duplikat
+    // Proses semua elemen
+    const seenLocations = new Set();
     const mosques = [];
     
     data.elements.forEach(el => {
       if (!el.tags) return;
       
       // Hitung koordinat
-      let lat = el.lat;
-      let lon = el.lon;
+      let lat = el.lat || el.center?.lat;
+      let lon = el.lon || el.center?.lon;
       
-      // Untuk way/relation, ambil dari center
-      if (!lat && el.center) {
-        lat = el.center.lat;
-        lon = el.center.lon;
-      }
-      
-      // Skip jika tidak ada koordinat
       if (!lat || !lon) return;
       
-      // Cek duplikat berdasarkan koordinat (toleransi 0.0001 derajat ≈ 11 meter)
+      // Cek duplikat
       const locationKey = `${lat.toFixed(4)},${lon.toFixed(4)}`;
       if (seenLocations.has(locationKey)) return;
       seenLocations.add(locationKey);
       
-      // Generate nama
-      const name = el.tags.name || 
-                   el.tags['name:id'] || 
-                   el.tags['name:en'] || 
-                   (el.tags['building'] === 'mosque' ? 'Masjid' : 'Tempat Ibadah');
+      // Filter: HANYA ambil yang muslim atau nama ada kata masjid/musholla
+      const name = el.tags.name || '';
+      const religion = el.tags.religion || '';
+      const building = el.tags.building || '';
       
-      // Generate alamat
-      const address = el.tags['addr:full'] || 
-                     el.tags['addr:street'] || 
-                     el.tags['addr:city'] || 
-                     el.tags['addr:housename'] ||
-                     'Alamat tidak tersedia';
+      const isMuslim = religion.toLowerCase() === 'muslim';
+      const isMosqueBuilding = building.toLowerCase() === 'mosque';
+      const hasMosqueName = /masjid|mushol|mushol|surau/i.test(name);
+      
+      // Skip kalau bukan muslim
+      if (!isMuslim && !isMosqueBuilding && !hasMosqueName) return;
       
       const distance = this.calculateDistance(latitude, longitude, lat, lon);
       
-      // PENTING: Jangan filter berdasarkan nama, terima semua
       mosques.push({
-        name,
-        address,
+        name: name || 'Masjid',
+        address: el.tags['addr:full'] || el.tags['addr:street'] || 'Alamat tidak tersedia',
         lat,
         lon,
         distance: distance.toFixed(2),
-        distanceMeters: Math.round(distance * 1000), // Untuk display
-        tags: el.tags // Simpan tags untuk debugging
+        distanceMeters: Math.round(distance * 1000)
       });
     });
     
-    console.log('🕌 [MASJID] Processed mosques:', mosques.length);
+    console.log('🕌 [MASJID] Processed:', mosques.length);
     
-    // Sort by distance dan ambil 25 terdekat
+    // Sort by distance
     this.nearbyMosques = mosques
       .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance))
       .slice(0, 25);
     
-    console.log('🕌 [MASJID] Final list:', this.nearbyMosques.length);
+    console.log('🕌 [MASJID] Final:', this.nearbyMosques.length);
     
     if (this.nearbyMosques.length > 0) {
-      console.log('✅ [MASJID] Terdekat:', this.nearbyMosques[0].name, '-', this.nearbyMosques[0].distanceMeters, 'meter');
-      console.log('🕌 [MASJID] Tags:', this.nearbyMosques[0].tags);
-    }
-    
-    if (!this.nearbyMosques.length) {
-      alert('ℹ️ Tidak ada masjid ditemukan dalam radius 3km\n\nKemungkinan:\n- Data OpenStreetMap belum lengkap di area ini\n- GPS belum akurat\n\nSilakan coba refresh atau pindah lokasi');
+      console.log('✅ Terdekat:', this.nearbyMosques[0].name, '-', this.nearbyMosques[0].distanceMeters, 'm');
+    } else {
+      alert('ℹ️ Tidak ada masjid dalam radius 3km');
     }
     
   } catch (err) {
     console.error('❌ [MASJID] Error:', err);
-    alert('❌ Gagal mencari masjid: ' + err.message);
+    alert('❌ Gagal: ' + err.message);
   } finally {
     this.loadingMosques = false;
   }
