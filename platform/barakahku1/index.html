@@ -657,61 +657,62 @@
         </div>
       </div>
 
-      <!-- Qur'an -->
-      <div x-show="activeTab === 'quran'">
-        <div class="p-5">
-          <template x-if="!currentSurah">
-            <div class="space-y-3">
-              <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
-                <p class="text-sm opacity-90 font-medium">Al-Qur'an Digital</p>
-                <p class="text-2xl font-bold mt-1">114 Surah Lengkap</p>
-              </div>
-              
-              <template x-for="surah in quran" :key="surah.nomor">
-                <div @click="loadSurah(surah.nomor)" class="card-islamic p-4 hover:shadow-lg transition-all cursor-pointer">
-                  <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-xl flex items-center justify-center text-base shadow-md shrink-0">
-                      <span x-text="surah.nomor"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <h3 class="font-bold text-gray-800 text-base mb-0.5" x-text="surah.namaLatin"></h3>
-                      <p class="text-xs text-gray-500" x-text="surah.arti + ' • ' + surah.jumlahAyat + ' Ayat'"></p>
-                    </div>
-                    <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                    </svg>
-                  </div>
-                </div>
-              </template>
-            </div>
-          </template>
-
-
-
-              <div class="card-islamic p-5 bg-gradient-to-br from-red-900 to-red-700 text-white text-center">
-                <h2 class="text-2xl font-bold" x-text="currentSurah.namaLatin"></h2>
-                <p class="text-sm opacity-90 mt-1" x-text="currentSurah.ayat.length + ' Ayat'"></p>
-              </div>
-
-              <template x-for="ayat in currentSurah.ayat" :key="ayat.nomorAyat">
-                <div class="card-islamic p-5">
-                  <div class="flex items-center justify-between mb-4">
-                    <div class="w-9 h-9 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-lg flex items-center justify-center text-sm shadow">
-                      <span x-text="ayat.nomorAyat"></span>
-                    </div>
-                    <button @click="bookmarkAyat(ayat.nomorAyat)" class="text-sm text-red-900 hover:text-red-700 font-medium flex items-center gap-1.5 transition">
-                      <span>🔖</span> Simpan Ayat
-                    </button>
-                  </div>
-                  <p class="font-arabic text-right text-gray-800 leading-loose mb-4" x-text="ayat.arab"></p>
-                  <p class="text-sm text-gray-600 italic mb-3 leading-relaxed" x-text="ayat.latin"></p>
-                  <p class="text-sm text-gray-700 leading-relaxed" x-text="ayat.teks"></p>
-                </div>
-              </template>
-            </div>
-          </template>
+ <!-- Qur'an -->
+<div x-show="activeTab === 'quran'">
+  <div class="p-5">
+    <template x-if="!currentSurah">
+      <div class="space-y-3">
+        <div class="card-islamic p-4 bg-gradient-to-br from-red-900 to-red-700 text-white">
+          <p class="text-sm opacity-90 font-medium">Al-Qur'an Digital</p>
+          <p class="text-2xl font-bold mt-1">114 Surah Lengkap</p>
         </div>
+        
+        <template x-for="surah in quran" :key="surah.nomor">
+          <div @click="loadSurah(surah.nomor)" class="card-islamic p-4 hover:shadow-lg transition-all cursor-pointer">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-xl flex items-center justify-center text-base shadow-md shrink-0">
+                <span x-text="surah.nomor"></span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-bold text-gray-800 text-base mb-0.5" x-text="surah.namaLatin"></h3>
+                <p class="text-xs text-gray-500" x-text="surah.arti + ' • ' + surah.jumlahAyat + ' Ayat'"></p>
+              </div>
+              <svg class="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </div>
+        </template>
       </div>
+    </template>
+
+    <!-- INI YANG HILANG - TAMBAHKAN PEMBUKA TEMPLATE -->
+    <template x-if="currentSurah">
+      <div class="space-y-4">
+        <div class="card-islamic p-5 bg-gradient-to-br from-red-900 to-red-700 text-white text-center">
+          <h2 class="text-2xl font-bold" x-text="currentSurah.namaLatin"></h2>
+          <p class="text-sm opacity-90 mt-1" x-text="currentSurah.ayat.length + ' Ayat'"></p>
+        </div>
+
+        <template x-for="ayat in currentSurah.ayat" :key="ayat.nomorAyat">
+          <div class="card-islamic p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-9 h-9 bg-gradient-to-br from-red-900 to-red-700 text-white font-bold rounded-lg flex items-center justify-center text-sm shadow">
+                <span x-text="ayat.nomorAyat"></span>
+              </div>
+              <button @click="bookmarkAyat(ayat.nomorAyat)" class="text-sm text-red-900 hover:text-red-700 font-medium flex items-center gap-1.5 transition">
+                <span>🔖</span> Simpan Ayat
+              </button>
+            </div>
+            <p class="font-arabic text-right text-gray-800 leading-loose mb-4" x-text="ayat.arab"></p>
+            <p class="text-sm text-gray-600 italic mb-3 leading-relaxed" x-text="ayat.latin"></p>
+            <p class="text-sm text-gray-700 leading-relaxed" x-text="ayat.teks"></p>
+          </div>
+        </template>
+      </div>
+    </template>
+  </div>
+</div>
 
 <!-- Doa -->
 <div x-show="activeTab === 'doa'">
