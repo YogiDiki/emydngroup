@@ -409,16 +409,7 @@
     <!-- Include Footer -->
     <div id="footer"></div>
 
-    <!-- Script untuk load header & footer (jika pakai component terpisah) -->
-    <script>
-        fetch('/components/header.html')
-            .then(response => response.text())
-            .then(data => document.getElementById('header').innerHTML = data);
-
-        fetch('/components/footer.html')
-            .then(response => response.text())
-            .then(data => document.getElementById('footer').innerHTML = data);
-    </script>
+<script src="/assets/js/include.js"></script>
 
 </body>
 </html>
